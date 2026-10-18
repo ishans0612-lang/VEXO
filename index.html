@@ -1,2262 +1,977 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#635bff">
+<meta name="description" content="VEXO — Your personal learning workspace">
 <title>VEXO — Learn Beyond Limits</title>
 
 <style>
-:root {
-  --bg: #f5f7fb;
-  --panel: #ffffff;
-  --text: #172033;
-  --muted: #697386;
-  --line: #e5e9f2;
-  --primary: #635bff;
-  --accent: #16b8a6;
-  --danger: #e24b65;
-  --font: 16px;
+:root{
+  --bg:#f5f6fc;
+  --surface:#fff;
+  --text:#20233a;
+  --muted:#747991;
+  --border:#e8e9f2;
+  --primary:#635bff;
+  --primary-light:#eeedff;
+  --green:#159c78;
+  --red:#e05260;
+  --shadow:0 8px 30px rgba(36,38,80,.055);
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: var(--font)/1.5 system-ui, sans-serif;
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  transition:background .2s,color .2s;
 }
-button, input, textarea, select { font: inherit; }
-button {
-  cursor: pointer;
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 14px;
-  background: var(--primary);
-  color: white;
-  font-weight: 650;
+body.dark{
+  --bg:#111321;--surface:#1b1e30;--text:#f2f3ff;
+  --muted:#a0a4bd;--border:#30334a;
+  --primary:#918aff;--primary-light:#302d50;
+  --shadow:0 8px 30px rgba(0,0,0,.15);
 }
-input, textarea, select {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--panel);
-  color: var(--text);
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--primary);outline-offset:2px
 }
-textarea { min-height: 100px; }
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-weight: 650;
+.app{min-height:100vh}
+.sidebar{
+  width:245px;position:fixed;inset:0 auto 0 0;
+  background:var(--surface);border-right:1px solid var(--border);
+  padding:24px 15px;display:flex;flex-direction:column;z-index:10;
+  overflow-y:auto;
 }
-.app {
-  display: grid;
-  grid-template-columns: 245px 1fr;
-  min-height: 100vh;
+.brand{display:flex;align-items:center;gap:11px;padding:0 9px 28px}
+.brand-logo{
+  width:43px;height:43px;border-radius:14px;
+  background:linear-gradient(135deg,#827aff,#5045e8);
+  display:grid;place-items:center;color:white;font-size:23px;font-weight:900
 }
-.sidebar {
-  background: var(--panel);
-  border-right: 1px solid var(--line);
-  padding: 20px 12px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
+.brand-name{font-size:23px;font-weight:900;letter-spacing:1px}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px}
+.nav-label{
+  font-size:10px;font-weight:800;color:var(--muted);
+  letter-spacing:1.5px;padding:10px 12px
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.4rem;
-  font-weight: 900;
-  padding: 0 10px 22px;
+.nav{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:12px;border:0;border-radius:11px;background:transparent;
+  color:var(--muted);text-align:left;margin:2px 0;font-size:14px
 }
-.logo {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: linear-gradient(135deg,#766dff,#16b8a6);
-  color: white;
+.nav:hover,.nav.active{background:var(--primary-light);color:var(--primary)}
+.nav .ico{width:21px;text-align:center;font-size:17px}
+.sidebar-bottom{margin-top:auto;padding-top:20px}
+.main{margin-left:245px;padding:26px 32px;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
+.topbar h1{font-size:25px;margin:0 0 5px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.actions{display:flex;gap:9px;align-items:center}
+.btn{
+  border:1px solid var(--border);background:var(--surface);color:var(--text);
+  padding:10px 14px;border-radius:10px;font-weight:650;font-size:13px
 }
-.nav-label {
-  padding: 12px;
-  color: var(--muted);
-  font-size: .72rem;
-  font-weight: 800;
-  letter-spacing: .1em;
+.btn:hover{filter:brightness(.97)}
+.btn.primary{background:var(--primary);color:white;border-color:var(--primary)}
+.btn.danger{color:var(--red)}
+.icon-btn{width:42px;height:42px;padding:0;font-size:18px}
+.menu-btn{display:none}
+.page{display:none}
+.page.active{display:block}
+.hero{
+  background:linear-gradient(115deg,#625bff,#8976ff);
+  color:white;border-radius:20px;padding:30px;position:relative;overflow:hidden;
+  margin-bottom:23px
 }
-.nav {
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin: 3px 0;
-  background: transparent;
-  color: var(--muted);
+.hero:after{
+  content:"✦";position:absolute;right:32px;top:15px;
+  font-size:100px;opacity:.14
 }
-.nav.active, .nav:hover {
-  background: #efefff;
-  color: var(--primary);
+.hero h2{font-size:26px;margin:0 0 10px}
+.hero p{max-width:520px;line-height:1.7;color:#f0efff}
+.hero .btn{background:white;color:#554ae8;border:0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:20px;box-shadow:var(--shadow);min-width:0
 }
-.main { min-width: 0; }
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 22px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  z-index: 5;
+.stat-icon{
+  width:42px;height:42px;border-radius:13px;display:grid;
+  place-items:center;font-size:20px;background:var(--primary-light);margin-bottom:17px
 }
-.topbar h2 { font-size: 1.05rem; }
-.search { flex: 1; }
-.content {
-  padding: 24px;
-  max-width: 1450px;
-  margin: auto;
+.stat-number{font-size:29px;font-weight:850;margin:4px 0}
+.card h3{font-size:16px;margin:0 0 14px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.card-head h3{margin:0}
+.section-title{font-size:19px;margin:28px 0 15px}
+.progress-track{height:7px;background:var(--border);border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:20px;transition:width .2s}
+.quick{display:flex;gap:10px;flex-wrap:wrap}
+.quick .btn{flex:1;min-width:115px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
+.field input,.field textarea,.field select,.search{
+  width:100%;background:var(--bg);color:var(--text);
+  border:1px solid var(--border);border-radius:10px;padding:12px
 }
-.page { display: none; }
-.page.active { display: block; }
-.page-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+.field textarea{min-height:115px;resize:vertical}
+.search{max-width:300px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.note-list,.task-list,.item-list{display:grid;gap:12px}
+.note-card{border:1px solid var(--border);border-radius:13px;padding:16px;background:var(--surface)}
+.note-card h4{margin:0 0 7px;overflow-wrap:anywhere}
+.note-card p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.note-meta{font-size:11px;color:var(--muted);margin-bottom:8px}
+.note-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.note-actions .btn{padding:7px 10px;font-size:12px}
+.empty{text-align:center;color:var(--muted);padding:32px 10px}
+.task-row{display:flex;align-items:center;gap:11px;padding:13px;border-bottom:1px solid var(--border)}
+.task-row:last-child{border-bottom:0}
+.task-row input{accent-color:var(--primary);width:17px;height:17px}
+.task-row.done .task-text{text-decoration:line-through;color:var(--muted)}
+.task-text{flex:1;overflow-wrap:anywhere}
+.badge{font-size:10px;border-radius:20px;background:var(--primary-light);color:var(--primary);padding:5px 8px}
+.quiz-option{
+  display:block;width:100%;text-align:left;margin:9px 0;
+  padding:13px;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface);color:var(--text)
 }
-.page-head h1 { margin: 0; }
-.muted { color: var(--muted); }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr));
-  gap: 15px;
+.quiz-option:hover{border-color:var(--primary)}
+.quiz-option.correct{border-color:var(--green);background:#159c7815}
+.quiz-option.wrong{border-color:var(--red);background:#e0526015}
+.flashcard{
+  min-height:220px;display:grid;place-items:center;text-align:center;
+  border:1px solid var(--border);border-radius:17px;padding:26px;
+  background:var(--surface);font-size:22px;line-height:1.6;cursor:pointer
 }
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-top: 18px;
+.chat-box{
+  height:320px;overflow-y:auto;padding:14px;border-radius:12px;
+  background:var(--bg);border:1px solid var(--border);margin-bottom:14px
 }
-.card {
-  min-width: 0;
-  padding: 18px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  margin-bottom: 14px;
+.chat-msg{padding:11px 13px;border-radius:12px;margin:8px 0;max-width:90%;white-space:pre-wrap;overflow-wrap:anywhere}
+.chat-msg.user{background:var(--primary);color:white;margin-left:auto}
+.chat-msg.bot{background:var(--surface);border:1px solid var(--border)}
+.footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
+.toast{
+  position:fixed;bottom:22px;right:22px;z-index:30;
+  background:var(--text);color:var(--surface);padding:13px 18px;
+  border-radius:12px;box-shadow:var(--shadow);display:none;max-width:90vw
 }
-.card h3 { margin-top: 0; }
-.stat { display: flex; gap: 12px; align-items: center; }
-.stat strong { display: block; font-size: 1.6rem; }
-.icon {
-  width: 43px;
-  height: 43px;
-  display: grid;
-  place-items: center;
-  background: #efefff;
-  border-radius: 13px;
+.toast.show{display:block}
+hr{border:0;border-top:1px solid var(--border);margin:18px 0}
+@media(max-width:1050px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .main{padding:22px}
 }
-.row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.between { justify-content: space-between; }
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.full { grid-column: 1/-1; }
-.item {
-  padding: 13px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  margin-top: 10px;
-  overflow-wrap: anywhere;
-}
-.item h4 { margin: 0 0 6px; }
-.item p { white-space: pre-wrap; }
-.item-actions { display: flex; gap: 7px; }
-.item-actions button { padding: 7px 10px; }
-.secondary { background: #eeefff; color: var(--primary); }
-.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
-.danger { background: var(--danger); }
-.pill {
-  display: inline-block;
-  background: #e8faf5;
-  color: #087e70;
-  padding: 4px 9px;
-  border-radius: 20px;
-  font-size: .8rem;
-}
-.progress {
-  height: 9px;
-  background: var(--line);
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 10px 0;
-}
-.progress span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg,var(--primary),var(--accent));
-}
-.empty { padding: 20px; text-align: center; color: var(--muted); }
-.notice {
-  padding: 12px;
-  border-radius: 10px;
-  background: #fff7df;
-  color: #76520b;
-  margin-bottom: 15px;
-}
-.quiz-option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin: 8px 0;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--line);
-}
-.quiz-option.selected { border-color: var(--primary); }
-.modal-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  background: #11182788;
-  place-items: center;
-  padding: 15px;
-}
-.modal-backdrop.open { display: grid; }
-.modal {
-  width: min(600px,100%);
-  max-height: 90vh;
-  overflow: auto;
-  background: var(--panel);
-  color: var(--text);
-  padding: 22px;
-  border-radius: 18px;
-}
-.toast {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  background: #172033;
-  color: white;
-  padding: 12px 16px;
-  border-radius: 10px;
-  z-index: 50;
-}
-.mobile-menu { display: none; }
-
-body.dark {
-  --bg: #101421;
-  --panel: #191f30;
-  --text: #eef2ff;
-  --muted: #a2abc0;
-  --line: #2b3449;
-}
-body.dark .nav.active,
-body.dark .nav:hover,
-body.dark .secondary {
-  background: #302d61;
-  color: #ddd9ff;
-}
-body.dark .icon { background: #302d61; }
-
-@media(max-width:1000px) {
-  .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .two-col { grid-template-columns: 1fr; }
-}
-@media(max-width:700px) {
-  .app { display: block; }
-  .sidebar {
-    position: fixed;
-    left: -270px;
-    width: 250px;
-    z-index: 15;
-    transition: left .2s;
-  }
-  .sidebar.open { left: 0; }
-  .mobile-menu { display: inline-block; }
-  .content { padding: 14px; }
-  .topbar { padding: 12px; gap: 7px; }
-  .topbar h2 { display: none; }
-  .form-grid { grid-template-columns: 1fr; }
-  .full { grid-column: auto; }
-  .card { padding: 14px; }
-}
-@media print {
-  .sidebar,.topbar,.no-print { display: none!important; }
-  .app { display: block; }
+@media(max-width:700px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s;width:260px}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow)}
+  .main{margin-left:0;padding:17px}
+  .menu-btn{display:inline-block}
+  .topbar h1{font-size:21px}
+  .grid,.grid.two,.grid.three{grid-template-columns:1fr}
+  .hero{padding:23px}
+  .hero h2{font-size:23px}
+  .toolbar{align-items:stretch}
+  .search{max-width:none}
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-
 <aside class="sidebar" id="sidebar">
   <div class="brand">
-    <div class="logo">V</div>
-    <div>VEXO<small style="display:block;font-size:10px">LEARN BEYOND LIMITS</small></div>
+    <div class="brand-logo">V</div>
+    <div><div class="brand-name">VEXO</div><div class="brand-sub">LEARN BEYOND LIMITS</div></div>
   </div>
 
   <div class="nav-label">WORKSPACE</div>
-  <button class="nav active" data-page="dashboard">⌂ Dashboard</button>
-  <button class="nav" data-page="notes">▤ My Notes</button>
-  <button class="nav" data-page="courses">▣ Courses</button>
-  <button class="nav" data-page="quiz">✎ Quiz & Tests</button>
-  <button class="nav" data-page="flashcards">▧ Flashcards</button>
-  <button class="nav" data-page="planner">◷ Study Planner</button>
-  <button class="nav" data-page="progress">▥ Progress</button>
+  <button class="nav active" data-page="dashboard"><span class="ico">⌂</span>Dashboard</button>
+  <button class="nav" data-page="notes"><span class="ico">▤</span>My Notes</button>
+  <button class="nav" data-page="tasks"><span class="ico">✓</span>My Tasks</button>
+  <button class="nav" data-page="planner"><span class="ico">▦</span>Study Planner</button>
 
-  <div class="nav-label">LEARN & SHARE</div>
-  <button class="nav" data-page="doubts">❔ Doubt Room</button>
-  <button class="nav" data-page="ai">✦ AI Study Hub</button>
-  <button class="nav" data-page="certificates">🏅 Certificates</button>
+  <div class="nav-label">LEARNING TOOLS</div>
+  <button class="nav" data-page="quiz"><span class="ico">✎</span>Quick Quiz</button>
+  <button class="nav" data-page="flashcards"><span class="ico">▣</span>Flashcards</button>
+  <button class="nav" data-page="ai"><span class="ico">✧</span>AI Study Hub</button>
 
-  <div class="nav-label">SYSTEM</div>
-  <button class="nav" data-page="notifications">♧ Notifications</button>
-  <button class="nav" data-page="settings">⚙ Settings</button>
-
-  <p class="muted" style="font-size:12px;padding:10px">
-    VEXO · Saved in this browser
-  </p>
+  <div class="sidebar-bottom">
+    <button class="nav" data-page="settings"><span class="ico">⚙</span>Settings & Backup</button>
+    <div class="card" style="padding:14px;margin-top:12px">
+      <div style="font-weight:800;font-size:13px">Keep learning ✨</div>
+      <p class="muted small">Small steps. Big progress.</p>
+    </div>
+  </div>
 </aside>
 
 <main class="main">
-<header class="topbar">
-  <button class="ghost mobile-menu" id="menuBtn">☰</button>
-  <h2>VEXO</h2>
-  <input class="search" id="globalSearch"
-    placeholder="Search notes, courses and questions...">
-  <button class="secondary" id="quickAdd">＋ Add</button>
-  <button class="ghost" id="themeToggle">☾</button>
-</header>
-
-<div class="content">
-
-<section class="page active" id="page-dashboard">
-  <div class="page-head">
-    <div>
-      <h1>Welcome back, learner!</h1>
-      <p class="muted">Your learning space, all in one place.</p>
-    </div>
-    <button data-goto="courses">Start studying</button>
-  </div>
-
-  <div class="grid">
-    <div class="card stat"><div class="icon">▤</div><div>Saved notes<strong id="statNotes">0</strong></div></div>
-    <div class="card stat"><div class="icon">▣</div><div>My courses<strong id="statCourses">0</strong></div></div>
-    <div class="card stat"><div class="icon">✓</div><div>Quiz attempts<strong id="statAttempts">0</strong></div></div>
-    <div class="card stat"><div class="icon">◷</div><div>Study tasks<strong id="statTasks">0</strong></div></div>
-  </div>
-
-  <div class="two-col">
-    <div class="card">
-      <div class="row between"><h3>Recent notes</h3><button class="secondary" data-goto="notes">View all</button></div>
-      <div id="recentNotes"></div>
-    </div>
-    <div class="card">
-      <div class="row between"><h3>Upcoming tasks</h3><button class="secondary" data-goto="planner">View all</button></div>
-      <div id="upcomingTasks"></div>
-    </div>
-  </div>
-
-  <div class="two-col">
-    <div class="card"><h3>Learning progress</h3><div id="dashboardProgress"></div></div>
-    <div class="card">
-      <h3>Quick actions</h3>
-      <div class="row">
-        <button class="secondary" data-goto="notes">Create note</button>
-        <button class="secondary" data-goto="quiz">Take quiz</button>
-        <button class="secondary" data-goto="planner">Plan study</button>
-        <button class="secondary" data-goto="doubts">Ask doubt</button>
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="btn icon-btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="muted small" id="pageSubtitle">Your personal learning workspace</div>
       </div>
     </div>
-  </div>
-</section>
-
-<section class="page" id="page-notes">
-  <div class="page-head"><h1>My Notes</h1><button id="newNoteBtn">＋ New note</button></div>
-  <div class="card">
-    <div class="form-grid">
-      <div><label>Title</label><input id="noteTitle" placeholder="e.g. Photosynthesis"></div>
-      <div><label>Subject</label><input id="noteSubject" placeholder="e.g. Biology"></div>
-      <div class="full"><label>Content</label><textarea id="noteContent" placeholder="Write your notes..."></textarea></div>
-      <div class="full row"><button id="saveNoteBtn">Save note</button><button class="ghost" id="cancelNoteBtn">Clear</button></div>
+    <div class="actions">
+      <button class="btn icon-btn" id="themeBtn" aria-label="Toggle theme">☾</button>
     </div>
-  </div>
-  <div class="row between"><h3>All notes</h3><input id="noteFilter" style="max-width:250px" placeholder="Filter notes"></div>
-  <div id="notesList"></div>
-</section>
+  </header>
 
-<section class="page" id="page-courses">
-  <div class="page-head"><h1>Courses</h1></div>
-  <div class="card">
-    <div class="form-grid">
-      <div><label>Course name</label><input id="courseName"></div>
-      <div><label>Subject</label><input id="courseSubject"></div>
-      <div><label>Goal / description</label><input id="courseGoal"></div>
-      <div><label>Progress (%)</label><input id="courseProgress" type="number" min="0" max="100" value="0"></div>
-      <div class="full"><button id="saveCourseBtn">Save course</button></div>
+  <section class="page active" id="page-dashboard">
+    <div class="hero">
+      <h2>Welcome to VEXO 🚀</h2>
+      <p>Your learning journey starts here. Organize your notes, complete tasks, practice quizzes and keep making progress.</p>
+      <button class="btn" data-go="notes">✚ Create a Note</button>
     </div>
-  </div>
-  <div id="coursesList"></div>
-</section>
 
-<section class="page" id="page-quiz">
-  <div class="page-head"><h1>Quiz & Tests</h1></div>
-  <div class="notice">Practice mode: the timer and random order are for practice only. This browser-only quiz is not secure against cheating.</div>
-  <div class="two-col">
+    <div class="grid">
+      <div class="card"><div class="stat-icon">▤</div><div class="muted small">Total Notes</div><div class="stat-number" id="statNotes">0</div><div class="muted small">Saved in this browser</div></div>
+      <div class="card"><div class="stat-icon">✓</div><div class="muted small">Tasks Completed</div><div class="stat-number" id="statTasks">0</div><div class="muted small" id="taskSummary">0 tasks remaining</div></div>
+      <div class="card"><div class="stat-icon">▣</div><div class="muted small">Flashcards</div><div class="stat-number" id="statCards">0</div><div class="muted small">Your study cards</div></div>
+      <div class="card"><div class="stat-icon">✎</div><div class="muted small">Quiz Attempts</div><div class="stat-number" id="statQuizzes">0</div><div class="muted small">Practice makes progress</div></div>
+    </div>
+
+    <div class="grid two">
+      <div class="card">
+        <div class="card-head"><h3>Task Progress</h3><span class="badge" id="progressLabel">0%</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <p class="muted small" id="progressText">Add a task to get started.</p>
+        <button class="btn" data-go="tasks">View Tasks →</button>
+      </div>
+      <div class="card">
+        <h3>Quick Actions</h3>
+        <div class="quick">
+          <button class="btn" data-go="notes">＋ New Note</button>
+          <button class="btn" data-go="tasks">＋ Add Task</button>
+          <button class="btn" data-go="quiz">Start Quiz</button>
+          <button class="btn" data-go="flashcards">Study Cards</button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Recent Notes</h2>
+    <div class="note-list" id="recentNotes"></div>
+  </section>
+
+  <section class="page" id="page-notes">
+    <div class="grid two">
+      <div class="card">
+        <h3 id="noteFormTitle">Create a Note</h3>
+        <form id="noteForm">
+          <input type="hidden" id="noteId">
+          <div class="field"><label for="noteTitle">Note Title</label><input id="noteTitle" maxlength="120" required placeholder="e.g. Chapter 1 — Biology"></div>
+          <div class="field"><label for="noteSubject">Subject</label><input id="noteSubject" maxlength="60" placeholder="e.g. Science"></div>
+          <div class="field"><label for="noteContent">Your Notes</label><textarea id="noteContent" maxlength="30000" required placeholder="Write your notes here..."></textarea></div>
+          <button class="btn primary" type="submit" id="saveNoteBtn">Save Note</button>
+          <button class="btn" type="button" id="cancelEditBtn" hidden>Cancel Edit</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>My Notes</h3><span class="badge" id="noteCount">0 notes</span></div>
+        <input class="search" id="noteSearch" placeholder="Search notes..." aria-label="Search notes">
+        <div class="note-list" id="notesList" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="page-tasks">
     <div class="card">
-      <h3>Science & General Knowledge</h3>
-      <p class="muted">5 questions · random order · 5-minute timer</p>
-      <button id="startQuizBtn">Start quiz</button>
-      <div id="quizArea"></div>
+      <h3>Add a Task</h3>
+      <form id="taskForm">
+        <div class="grid two" style="margin-bottom:0">
+          <div class="field"><label for="taskTitle">Task</label><input id="taskTitle" maxlength="180" required placeholder="What do you need to do?"></div>
+          <div class="field"><label for="taskDate">Due Date</label><input id="taskDate" type="date"></div>
+        </div>
+        <button class="btn primary" type="submit">＋ Add Task</button>
+      </form>
     </div>
-    <div class="card"><h3>Past results</h3><div id="quizHistory"></div></div>
-  </div>
-</section>
+    <div class="card" style="margin-top:18px">
+      <div class="card-head"><h3>My Tasks</h3><button class="btn" id="clearCompleted">Clear Completed</button></div>
+      <div class="task-list" id="tasksList"></div>
+    </div>
+  </section>
 
-<section class="page" id="page-flashcards">
-  <div class="page-head"><h1>Flashcards</h1></div>
-  <div class="card">
-    <label>Front / question</label><input id="flashFront">
-    <label>Back / answer</label><input id="flashBack">
-    <button id="saveFlashBtn" style="margin-top:12px">Add flashcard</button>
-  </div>
-  <div class="two-col">
-    <div class="card"><h3>Review cards</h3><div id="flashReview"></div><button class="secondary" id="revealFlashBtn">Reveal answer</button><button id="nextFlashBtn">Next card</button></div>
-    <div class="card"><h3>Your cards</h3><div id="flashList"></div></div>
-  </div>
-</section>
-
-<section class="page" id="page-planner">
-  <div class="page-head"><h1>Study Planner</h1></div>
-  <div class="card">
-    <label>Task</label><input id="taskTitle">
-    <label>Due date</label><input id="taskDate" type="date">
-    <label>Subject</label><input id="taskSubject">
-    <label>Study time (minutes)</label><input id="taskDuration" type="number" value="30" min="5">
-    <button id="saveTaskBtn" style="margin-top:12px">Add task</button>
-  </div>
-  <div id="tasksList"></div>
-</section>
-
-<section class="page" id="page-progress">
-  <div class="page-head"><h1>Progress Analytics</h1><button id="shareProgressBtn">Share report</button></div>
-  <div class="grid">
-    <div class="card">Average score<strong id="averageScore">—</strong></div>
-    <div class="card">Completed courses<strong id="completedCourses">0</strong></div>
-    <div class="card">Tasks completed<strong id="tasksCompleted">0</strong></div>
-    <div class="card">Total attempts<strong id="totalAttempts">0</strong></div>
-  </div>
-  <div class="two-col">
-    <div class="card"><h3>Subject analysis</h3><div id="subjectAnalytics"></div></div>
-    <div class="card"><h3>What to improve next</h3><div id="improvementTips"></div></div>
-  </div>
-</section>
-
-<section class="page" id="page-doubts">
-  <div class="page-head"><h1>Doubt Room</h1></div>
-  <div class="notice">Demo only: doubts stay in this browser. They are not sent to other students or teachers.</div>
-  <div class="card">
-    <label>Your question</label><textarea id="doubtQuestion"></textarea>
-    <label>Subject</label><input id="doubtSubject">
-    <label>Your explanation (optional)</label><textarea id="doubtAnswer"></textarea>
-    <button id="saveDoubtBtn" style="margin-top:12px">Save doubt</button>
-  </div>
-  <div id="doubtsList"></div>
-</section>
-
-<section class="page" id="page-ai">
-  <div class="page-head"><h1>AI Study Hub</h1></div>
-  <div class="notice">These are built-in study templates, not a live AI model. No paid API is used.</div>
-  <div class="two-col">
+  <section class="page" id="page-planner">
     <div class="card">
-      <h3>Study guide</h3>
-      <label>Topic</label><input id="aiTopic">
-      <label>Learning level</label>
-      <select id="aiLevel"><option>Simple</option><option>School level</option><option>Advanced</option></select>
-      <button id="explainBtn" style="margin-top:12px">Create study guide</button>
-      <div id="aiOutput"></div>
+      <h3>Study Planner</h3>
+      <p class="muted small">Plan what you want to study today.</p>
+      <form id="planForm">
+        <div class="grid two" style="margin-bottom:0">
+          <div class="field"><label for="planDate">Study Date</label><input id="planDate" type="date" required></div>
+          <div class="field"><label for="planSubject">Subject / Activity</label><input id="planSubject" maxlength="120" required placeholder="e.g. Mathematics revision"></div>
+        </div>
+        <div class="field"><label for="planDuration">Duration (minutes)</label><input id="planDuration" type="number" min="5" max="600" value="30" required></div>
+        <button class="btn primary" type="submit">＋ Add to Plan</button>
+      </form>
     </div>
+    <div class="card" style="margin-top:18px">
+      <h3>My Study Schedule</h3>
+      <div class="item-list" id="planList"></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-quiz">
     <div class="card">
-      <h3>Study tools</h3>
-      <button id="makeQuestionsBtn">Revision prompts from notes</button>
-      <button id="makePlanBtn" style="margin-top:10px">Create 3-day study plan</button>
-     <div class="item-card">
-  <h3>🤖 Use Real AI</h3>
-  <p>Choose an AI assistant and start chatting.</p>
-
-  <a href="https://chatgpt.com/"
-     target="_blank"
-     rel="noopener noreferrer"
-     class="btn btn-primary">
-    Open ChatGPT
-  </a>
-
-  <a href="https://gemini.google.com/"
-     target="_blank"
-     rel="noopener noreferrer"
-     class="btn btn-secondary">
-    Open Google Gemini
-  </a>
-</div> <div class="item-card">
-  <h3>🤖 Use Real AI</h3>
-  <p>Choose an AI assistant and start chatting.</p>
-
-  <a href="https://chatgpt.com/"
-     target="_blank"
-     rel="noopener noreferrer"
-     class="btn btn-primary">
-    Open ChatGPT
-  </a>
-
-  <a href="https://gemini.google.com/"
-     target="_blank"
-     rel="noopener noreferrer"
-     class="btn btn-secondary">
-    Open Google Gemini
-  </a>
-      </div><div id="aiToolsOutput"></div>
+      <div class="card-head"><h3>Quick Knowledge Quiz</h3><span class="badge" id="quizCounter">Question 1</span></div>
+      <div class="progress-track"><div class="progress-fill" id="quizProgress" style="width:0%"></div></div>
+      <div id="quizArea" style="margin-top:22px"></div>
+      <div id="quizFeedback" class="muted small" aria-live="polite"></div>
+      <div class="actions" style="margin-top:18px">
+        <button class="btn primary" id="quizNext" disabled>Next Question →</button>
+        <button class="btn" id="quizRestart">Restart Quiz</button>
+      </div>
     </div>
-  </div>
-</section>
+    <p class="muted small" style="margin-top:12px">Practice questions are built into this app. They do not require an AI API.</p>
+  </section>
 
-<section class="page" id="page-certificates">
-  <div class="page-head"><h1>Certificates</h1></div>
-  <div class="notice">Personal practice certificate only; not an accredited or independently verified qualification.</div>
-  <div class="card">
-    <label>Learner name</label><input id="certName">
-    <label>Achievement</label><input id="certAchievement" placeholder="e.g. Algebra Basics">
-    <button id="generateCertBtn" style="margin-top:12px">Generate certificate</button>
-  </div>
-  <div id="certView"></div>
-</section>
+  <section class="page" id="page-flashcards">
+    <div class="grid two">
+      <div class="card">
+        <h3>Create a Flashcard</h3>
+        <form id="flashForm">
+          <div class="field"><label for="flashFront">Question / Front</label><textarea id="flashFront" maxlength="1500" required placeholder="What do you want to remember?"></textarea></div>
+          <div class="field"><label for="flashBack">Answer / Back</label><textarea id="flashBack" maxlength="3000" required placeholder="Write the answer..."></textarea></div>
+          <button class="btn primary" type="submit">Save Flashcard</button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Study Flashcards</h3><span class="badge" id="flashCounter">0 cards</span></div>
+        <div class="flashcard" id="flashDisplay" role="button" tabindex="0" aria-label="Flip flashcard">Create a card to begin</div>
+        <p class="muted small" style="text-align:center">Tap the card to flip it.</p>
+        <div class="actions" style="justify-content:center;flex-wrap:wrap">
+          <button class="btn" id="flashPrev">← Previous</button>
+          <button class="btn primary" id="flashFlip">Flip Card</button>
+          <button class="btn" id="flashNext">Next →</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>All Flashcards</h3>
+      <div class="item-list" id="flashList"></div>
+    </div>
+  </section>
 
-<section class="page" id="page-notifications">
-  <div class="page-head"><h1>Notifications</h1><button class="ghost" id="clearNotifications">Clear</button></div>
-  <div id="notificationsList"></div>
-</section>
+  <section class="page" id="page-ai">
+    <div class="card">
+      <h3>✧ AI Study Hub</h3>
+      <p class="muted">Ask a question or get help with your studies. This built-in helper works without an API, but it is not a connected AI model.</p>
+      <div class="chat-box" id="chatBox" aria-live="polite">
+        <div class="chat-msg bot">Hello! Ask me a study question. I can provide basic study tips, but complex answers need a real AI service.</div>
+      </div>
+      <form id="chatForm">
+        <div class="field"><label for="chatInput">Your question</label><textarea id="chatInput" maxlength="2000" required placeholder="Ask a question..."></textarea></div>
+        <button class="btn primary" type="submit">Send Question</button>
+      </form>
+      <hr>
+      <p class="muted small">Advanced AI requires a secure backend and an AI provider. Never place a private API key directly in public HTML or JavaScript.</p>
+    </div>
+  </section>
 
-<section class="page" id="page-settings">
-  <div class="page-head"><h1>Settings</h1></div>
-  <div class="card">
-    <h3>Language</h3><label>Interface language</label><select id="languageSelect"></select>
-    <p class="muted">English, Bengali and Hindi have built-in translations for selected interface text. Other languages are listed, but translations must be added to the code. User notes are not automatically translated.</p>
-    <hr>
-    <h3>Appearance</h3>
-    <label>Theme</label><select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option></select>
-    <label>Accent color</label><input id="accentColor" type="color" value="#635bff">
-    <label>Font size</label><select id="fontSizeSelect"><option value="14px">Small</option><option value="16px">Medium</option><option value="18px">Large</option><option value="20px">Extra large</option></select>
-    <hr>
-    <h3>Backup & Restore</h3>
-    <button id="exportBtn">Export data</button>
-    <button class="secondary" id="importBtn">Restore backup</button>
-    <input type="file" id="importFile" accept=".json,application/json" hidden>
-    <hr>
-    <h3>Data & Privacy</h3>
-    <p class="muted">Data is stored in this browser. It is not a cloud database. Clearing browser data may erase it.</p>
-    <button class="danger" id="resetBtn">Delete all local data</button>
-  </div>
-  <p class="muted">VEXO is a website. No offline/PWA mode is included.</p>
-</section>
+  <section class="page" id="page-settings">
+    <div class="grid two">
+      <div class="card">
+        <h3>Appearance</h3>
+        <p class="muted small">Choose the theme for your workspace.</p>
+        <button class="btn" id="settingsTheme">Toggle Light / Dark Mode</button>
+      </div>
+      <div class="card">
+        <h3>Data Backup</h3>
+        <p class="muted small">Export your notes, tasks, plans and flashcards to a JSON file.</p>
+        <button class="btn primary" id="exportBtn">↓ Export Backup</button>
+        <hr>
+        <div class="field"><label for="importFile">Restore from a VEXO JSON backup</label><input id="importFile" type="file" accept=".json,application/json"></div>
+        <button class="btn" id="importBtn">↑ Restore Backup</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3>Storage Information</h3>
+      <p class="muted small">Your information is stored in this browser using localStorage. It is not automatically synced to other devices or accounts. Export a backup regularly.</p>
+      <button class="btn danger" id="clearDataBtn">Delete All Local Data</button>
+    </div>
+  </section>
 
-</div>
+  <footer class="footer">VEXO • LEARN BEYOND LIMITS • Your learning, your journey.</footer>
 </main>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <div class="row between"><h2 id="modalTitle">VEXO</h2><button class="ghost" id="closeModal">✕</button></div>
-    <div id="modalBody"></div>
-  </div>
-</div>
-<div id="toast" class="toast" hidden></div>
-  <script>
+<script>
 "use strict";
 
-/* VEXO — PART 2/3
-   Notes, courses, flashcards, planner, quiz,
-   progress, doubts, AI study tools and persistence.
-*/
+const $ = id => document.getElementById(id);
+const STORE_KEY = "vexo_workspace_v1";
 
-const $ = (id) => document.getElementById(id);
-
-const STORE_KEY = "vexo_study_data_v1";
-
-const defaultData = {
+const defaultData = () => ({
   notes: [],
-  courses: [],
-  flashcards: [],
   tasks: [],
-  quizHistory: [],
-  doubts: [],
-  notifications: [],
-  settings: {
-    language: "en",
-    theme: "light",
-    accent: "#6c63ff",
-    fontSize: "16"
+  plans: [],
+  flashcards: [],
+  quizAttempts: 0,
+  dark: false
+});
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return defaultData();
+    const saved = JSON.parse(raw);
+    return {
+      ...defaultData(),
+      ...saved,
+      notes: Array.isArray(saved.notes) ? saved.notes : [],
+      tasks: Array.isArray(saved.tasks) ? saved.tasks : [],
+      plans: Array.isArray(saved.plans) ? saved.plans : [],
+      flashcards: Array.isArray(saved.flashcards) ? saved.flashcards : [],
+      quizAttempts: Number(saved.quizAttempts) || 0
+    };
+  }catch(error){
+    return defaultData();
   }
-};
+}
 
 let data = loadData();
-let editingNoteId = null;
-let activeQuiz = null;
+let toastTimer;
 let flashIndex = 0;
-let flashRevealed = false;
+let flashFlipped = false;
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
 
-function uid() {
-  return Date.now().toString(36) +
-    Math.random().toString(36).slice(2, 8);
-}
-
-function loadData() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE_KEY));
-    if (!saved || typeof saved !== "object") {
-      return structuredClone(defaultData);
-    }
-
-    return {
-      ...structuredClone(defaultData),
-      ...saved,
-      settings: {
-        ...defaultData.settings,
-        ...(saved.settings || {})
-      }
-    };
-  } catch (error) {
-    return structuredClone(defaultData);
-  }
-}
-
-function saveData() {
-  try {
+function saveData(){
+  try{
     localStorage.setItem(STORE_KEY, JSON.stringify(data));
-  } catch (error) {
-    toast("Could not save. Browser storage may be full.");
+    return true;
+  }catch(error){
+    notify("Storage full or unavailable. Export your data.");
+    return false;
   }
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
+function makeId(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[char]);
 }
 
-function formatDate(value) {
-  if (!value) return "No date";
-  const date = new Date(value + "T00:00:00");
-  return Number.isNaN(date.getTime())
-    ? value
-    : date.toLocaleDateString();
+function formatDate(value){
+  if(!value) return "";
+  return escapeHTML(value);
 }
 
-function toast(message) {
-  const element = $("toast");
-  if (!element) return;
-
-  element.textContent = message;
-  element.classList.add("show");
-
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => {
-    element.classList.remove("show");
-  }, 2600);
+function notify(message){
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
-function openModal(title, content) {
-  $("modalTitle").textContent = title;
-  $("modalBody").innerHTML = content;
-  $("modalBackdrop").classList.add("show");
-}
+const pageNames = {
+  dashboard:["Dashboard","Your personal learning workspace"],
+  notes:["My Notes","Capture and organize your knowledge"],
+  tasks:["My Tasks","One step at a time"],
+  planner:["Study Planner","Plan your learning time"],
+  quiz:["Quick Quiz","Practice and test your knowledge"],
+  flashcards:["Flashcards","Remember more with active recall"],
+  ai:["AI Study Hub","A simple built-in study helper"],
+  settings:["Settings & Backup","Manage your preferences and data"]
+};
 
-function closeModal() {
-  $("modalBackdrop").classList.remove("show");
-}
-
-function navigate(page) {
-  const target = document.getElementById("page-" + page);
-  if (!target) return;
-
-  document.querySelectorAll(".page").forEach((section) => {
-    section.classList.remove("active");
+function navigate(page){
+  if(!pageNames[page]) return;
+  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".nav").forEach(el => {
+    el.classList.toggle("active", el.dataset.page === page);
   });
-
-  target.classList.add("active");
-
-  document.querySelectorAll("[data-page]").forEach((button) => {
-    button.classList.toggle(
-      "active",
-      button.dataset.page === page
-    );
-  });
-
-  const titles = {
-    dashboard: "Dashboard",
-    notes: "My Notes",
-    courses: "My Courses",
-    quiz: "Quiz & Tests",
-    flashcards: "Flashcards",
-    planner: "Study Planner",
-    progress: "My Progress",
-    doubts: "Doubt Room",
-    ai: "AI Study Hub",
-    certificates: "Certificates",
-    notifications: "Notifications",
-    settings: "Settings"
-  };
-
-  const heading = $("pageTitle");
-  if (heading) heading.textContent = titles[page] || page;
-
-  $("sidebar")?.classList.remove("open");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  $("page-" + page).classList.add("active");
+  $("pageTitle").textContent = pageNames[page][0];
+  $("pageSubtitle").textContent = pageNames[page][1];
+  $("sidebar").classList.remove("open");
+  if(page === "notes") renderNotes();
+  if(page === "tasks") renderTasks();
+  if(page === "planner") renderPlans();
+  if(page === "flashcards") renderFlashcards();
+  if(page === "quiz") renderQuiz();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-document.addEventListener("click", (event) => {
-  const pageButton = event.target.closest("[data-page]");
-  if (pageButton) {
-    navigate(pageButton.dataset.page);
-    return;
-  }
-
-  const gotoButton = event.target.closest("[data-goto]");
-  if (gotoButton) {
-    navigate(gotoButton.dataset.goto);
-    return;
-  }
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => navigate(button.dataset.page));
+});
+document.querySelectorAll("[data-go]").forEach(button => {
+  button.addEventListener("click", () => navigate(button.dataset.go));
 });
 
-$("menuBtn")?.addEventListener("click", () => {
-  $("sidebar")?.classList.toggle("open");
-});
+$("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
 
-$("closeModal")?.addEventListener("click", closeModal);
+function applyTheme(){
+  document.body.classList.toggle("dark", Boolean(data.dark));
+  $("themeBtn").textContent = data.dark ? "☀" : "☾";
+}
+function toggleTheme(){
+  data.dark = !data.dark;
+  applyTheme();
+  saveData();
+}
+$("themeBtn").addEventListener("click", toggleTheme);
+$("settingsTheme").addEventListener("click", toggleTheme);
 
-$("modalBackdrop")?.addEventListener("click", (event) => {
-  if (event.target === $("modalBackdrop")) closeModal();
-});
+function renderDashboard(){
+  const completed = data.tasks.filter(task => task.done).length;
+  const total = data.tasks.length;
+  const percent = total ? Math.round(completed / total * 100) : 0;
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeModal();
-});
+  $("statNotes").textContent = data.notes.length;
+  $("statTasks").textContent = completed;
+  $("statCards").textContent = data.flashcards.length;
+  $("statQuizzes").textContent = data.quizAttempts;
+  $("taskSummary").textContent = `${total - completed} tasks remaining`;
+  $("progressLabel").textContent = percent + "%";
+  $("progressFill").style.width = percent + "%";
+  $("progressText").textContent = total
+    ? `${completed} of ${total} tasks completed.`
+    : "Add a task to get started.";
 
-/* ---------------- NOTES ---------------- */
-
-function renderNotes() {
-  const list = $("notesList");
-  if (!list) return;
-
-  const query = ($("noteFilter")?.value || "").toLowerCase();
-
-  const notes = [...data.notes]
-    .filter((note) => {
-      const text = [
-        note.title,
-        note.subject,
-        note.content
-      ].join(" ").toLowerCase();
-
-      return text.includes(query);
-    })
-    .sort((a, b) => b.updatedAt - a.updatedAt);
-
-  if (!notes.length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <h3>No notes found</h3>
-        <p>Create your first note to get started.</p>
-      </div>`;
-  } else {
-    list.innerHTML = notes.map((note) => `
-      <article class="item-card">
-        <div class="item-top">
-          <div>
-            <h3>${escapeHTML(note.title)}</h3>
-            <small>${escapeHTML(note.subject || "General")} ·
-              ${new Date(note.updatedAt).toLocaleDateString()}</small>
-          </div>
-        </div>
-        <p>${escapeHTML(note.content).slice(0, 260)}
-          ${note.content.length > 260 ? "…" : ""}</p>
-        <div class="item-actions">
-          <button class="btn btn-secondary"
-            data-edit-note="${note.id}">Edit</button>
-          <button class="btn btn-danger"
-            data-delete-note="${note.id}">Delete</button>
-        </div>
-      </article>
-    `).join("");
-  }
-
-  const recent = $("recentNotes");
-  if (recent) {
-    recent.innerHTML = [...data.notes]
-      .sort((a, b) => b.updatedAt - a.updatedAt)
-      .slice(0, 4)
-      .map((note) => `
-        <div class="mini-item">
-          <strong>${escapeHTML(note.title)}</strong>
-          <small>${escapeHTML(note.subject || "General")}</small>
-        </div>
-      `).join("") || "<p>No notes yet.</p>";
-  }
+  const recent = [...data.notes].sort((a,b) => b.updated - a.updated).slice(0,3);
+  $("recentNotes").innerHTML = recent.length ? recent.map(note => `
+    <article class="note-card">
+      <div class="note-meta">${escapeHTML(note.subject || "General")} • ${new Date(note.updated).toLocaleDateString()}</div>
+      <h4>${escapeHTML(note.title)}</h4>
+      <p>${escapeHTML(note.content.slice(0,180))}${note.content.length > 180 ? "…" : ""}</p>
+      <div class="note-actions"><button class="btn" data-edit-note="${escapeHTML(note.id)}">Edit Note</button></div>
+    </article>
+  `).join("") : '<div class="card empty">No notes yet. Create your first note!</div>';
 }
 
-function clearNoteForm() {
-  editingNoteId = null;
-  $("noteTitle").value = "";
-  $("noteSubject").value = "";
-  $("noteContent").value = "";
+function resetNoteForm(){
+  $("noteForm").reset();
+  $("noteId").value = "";
+  $("noteFormTitle").textContent = "Create a Note";
   $("saveNoteBtn").textContent = "Save Note";
+  $("cancelEditBtn").hidden = true;
 }
 
-$("saveNoteBtn")?.addEventListener("click", () => {
+$("noteForm").addEventListener("submit", event => {
+  event.preventDefault();
   const title = $("noteTitle").value.trim();
   const subject = $("noteSubject").value.trim();
   const content = $("noteContent").value.trim();
+  if(!title || !content) return notify("Enter a title and note content.");
 
-  if (!title || !content) {
-    toast("Enter a note title and content.");
-    return;
-  }
+  const existingId = $("noteId").value;
+  const now = Date.now();
 
-  if (editingNoteId) {
-    const note = data.notes.find((item) => item.id === editingNoteId);
-
-    if (note) {
-      note.title = title;
-      note.subject = subject;
-      note.content = content;
-      note.updatedAt = Date.now();
-    }
-  } else {
-    data.notes.push({
-      id: uid(),
-      title,
-      subject,
-      content,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    });
+  if(existingId){
+    const note = data.notes.find(item => item.id === existingId);
+    if(!note) return notify("Note not found.");
+    Object.assign(note,{title,subject,content,updated:now});
+    notify("Note updated!");
+  }else{
+    data.notes.unshift({id:makeId(),title,subject,content,created:now,updated:now});
+    notify("Note saved!");
   }
 
   saveData();
-  clearNoteForm();
+  resetNoteForm();
   renderAll();
-  toast("Note saved!");
 });
 
-$("cancelNoteBtn")?.addEventListener("click", clearNoteForm);
-$("newNoteBtn")?.addEventListener("click", () => {
-  clearNoteForm();
-  $("noteTitle")?.focus();
-});
-$("noteFilter")?.addEventListener("input", renderNotes);
+$("cancelEditBtn").addEventListener("click", resetNoteForm);
+$("noteSearch").addEventListener("input", renderNotes);
 
-$("notesList")?.addEventListener("click", (event) => {
+function renderNotes(){
+  const query = $("noteSearch").value.trim().toLowerCase();
+  const notes = [...data.notes]
+    .filter(note => `${note.title} ${note.subject} ${note.content}`.toLowerCase().includes(query))
+    .sort((a,b) => b.updated - a.updated);
+
+  $("noteCount").textContent = `${notes.length} note${notes.length === 1 ? "" : "s"}`;
+  $("notesList").innerHTML = notes.length ? notes.map(note => `
+    <article class="note-card">
+      <div class="note-meta">${escapeHTML(note.subject || "General")} • ${new Date(note.updated).toLocaleDateString()}</div>
+      <h4>${escapeHTML(note.title)}</h4>
+      <p>${escapeHTML(note.content.length > 280 ? note.content.slice(0,280) + "…" : note.content)}</p>
+      <div class="note-actions">
+        <button class="btn" data-edit-note="${escapeHTML(note.id)}">Edit</button>
+        <button class="btn danger" data-delete-note="${escapeHTML(note.id)}">Delete</button>
+      </div>
+    </article>
+  `).join("") : '<div class="empty">No matching notes found.</div>';
+}
+
+function editNote(id){
+  const note = data.notes.find(item => item.id === id);
+  if(!note) return;
+  $("noteId").value = note.id;
+  $("noteTitle").value = note.title;
+  $("noteSubject").value = note.subject || "";
+  $("noteContent").value = note.content;
+  $("noteFormTitle").textContent = "Edit Note";
+  $("saveNoteBtn").textContent = "Update Note";
+  $("cancelEditBtn").hidden = false;
+  navigate("notes");
+  $("noteTitle").focus();
+}
+
+document.addEventListener("click", event => {
   const edit = event.target.closest("[data-edit-note]");
   const remove = event.target.closest("[data-delete-note]");
-
-  if (edit) {
-    const note = data.notes.find(
-      (item) => item.id === edit.dataset.editNote
-    );
-    if (!note) return;
-
-    editingNoteId = note.id;
-    $("noteTitle").value = note.title;
-    $("noteSubject").value = note.subject || "";
-    $("noteContent").value = note.content;
-    $("saveNoteBtn").textContent = "Update Note";
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  if (remove) {
-    const id = remove.dataset.deleteNote;
-
-    openModal(
-      "Delete note?",
-      `<p>This action cannot be undone.</p>
-       <div class="item-actions">
-         <button class="btn btn-danger" id="confirmDeleteNote">
-           Delete
-         </button>
-         <button class="btn btn-secondary" id="cancelDeleteNote">
-           Cancel
-         </button>
-       </div>`
-    );
-
-    $("confirmDeleteNote").onclick = () => {
-      data.notes = data.notes.filter((item) => item.id !== id);
+  if(edit) editNote(edit.dataset.editNote);
+  if(remove){
+    const note = data.notes.find(item => item.id === remove.dataset.deleteNote);
+    if(note && confirm(`Delete "${note.title}"?`)){
+      data.notes = data.notes.filter(item => item.id !== note.id);
       saveData();
-      closeModal();
       renderAll();
-      toast("Note deleted.");
-    };
-
-    $("cancelDeleteNote").onclick = closeModal;
+      notify("Note deleted.");
+    }
   }
 });
 
-/* ---------------- COURSES ---------------- */
+$("taskForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const title = $("taskTitle").value.trim();
+  if(!title) return;
+  data.tasks.unshift({
+    id:makeId(),title,
+    date:$("taskDate").value,
+    done:false,
+    created:Date.now()
+  });
+  saveData();
+  $("taskForm").reset();
+  renderAll();
+  notify("Task added!");
+});
 
-function renderCourses() {
-  const list = $("coursesList");
-  if (!list) return;
-
-  if (!data.courses.length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <h3>No courses yet</h3>
-        <p>Add a subject or course to track your progress.</p>
-      </div>`;
-    return;
-  }
-
-  list.innerHTML = data.courses.map((course) => `
-    <article class="item-card">
-      <div class="item-top">
-        <div>
-          <h3>${escapeHTML(course.name)}</h3>
-          <small>${escapeHTML(course.subject || "General")}</small>
-        </div>
-        <strong>${course.progress}%</strong>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" style="width:${course.progress}%"></div>
-      </div>
-      <p>${escapeHTML(course.goal || "Keep learning!")}</p>
-      <div class="item-actions">
-        <button class="btn btn-secondary"
-          data-progress-course="${course.id}">Update progress</button>
-        <button class="btn btn-danger"
-          data-delete-course="${course.id}">Delete</button>
-      </div>
-    </article>
-  `).join("");
+function renderTasks(){
+  const tasks = [...data.tasks].sort((a,b) => Number(a.done)-Number(b.done) || (a.date || "").localeCompare(b.date || ""));
+  $("tasksList").innerHTML = tasks.length ? tasks.map(task => `
+    <div class="task-row ${task.done ? "done" : ""}">
+      <input type="checkbox" data-task-toggle="${escapeHTML(task.id)}" ${task.done ? "checked" : ""} aria-label="Complete task">
+      <span class="task-text">${escapeHTML(task.title)}${task.date ? `<div class="muted small">Due: ${formatDate(task.date)}</div>` : ""}</span>
+      <button class="btn danger" data-task-delete="${escapeHTML(task.id)}">Delete</button>
+    </div>
+  `).join("") : '<div class="empty">No tasks yet. Add your first task above.</div>';
 }
 
-$("saveCourseBtn")?.addEventListener("click", () => {
-  const name = $("courseName").value.trim();
-  const subject = $("courseSubject").value.trim();
-  const goal = $("courseGoal").value.trim();
-  const progress = Math.max(
-    0,
-    Math.min(100, Number($("courseProgress").value) || 0)
-  );
-
-  if (!name) {
-    toast("Enter a course name.");
-    return;
-  }
-
-  data.courses.push({
-    id: uid(),
-    name,
-    subject,
-    goal,
-    progress,
-    createdAt: Date.now()
-  });
-
-  $("courseName").value = "";
-  $("courseSubject").value = "";
-  $("courseGoal").value = "";
-  $("courseProgress").value = "0";
-
-  saveData();
-  renderAll();
-  toast("Course added!");
-});
-
-$("coursesList")?.addEventListener("click", (event) => {
-  const update = event.target.closest("[data-progress-course]");
-  const remove = event.target.closest("[data-delete-course]");
-
-  if (update) {
-    const course = data.courses.find(
-      (item) => item.id === update.dataset.progressCourse
-    );
-    if (!course) return;
-
-    openModal("Update progress", `
-      <p>${escapeHTML(course.name)}</p>
-      <label for="newCourseProgress">Progress: 0–100%</label>
-      <input id="newCourseProgress" type="number"
-        min="0" max="100" value="${course.progress}">
-      <div class="item-actions">
-        <button class="btn btn-primary" id="applyCourseProgress">
-          Save
-        </button>
-      </div>
-    `);
-
-    $("applyCourseProgress").onclick = () => {
-      const value = Number($("newCourseProgress").value);
-      if (!Number.isFinite(value) || value < 0 || value > 100) {
-        toast("Enter a value between 0 and 100.");
-        return;
-      }
-
-      course.progress = value;
-      saveData();
-      closeModal();
-      renderAll();
-      toast("Progress updated.");
-    };
-  }
-
-  if (remove) {
-    const id = remove.dataset.deleteCourse;
-    data.courses = data.courses.filter((item) => item.id !== id);
+$("tasksList").addEventListener("change", event => {
+  const id = event.target.dataset.taskToggle;
+  if(!id) return;
+  const task = data.tasks.find(item => item.id === id);
+  if(task){
+    task.done = event.target.checked;
     saveData();
     renderAll();
-    toast("Course deleted.");
   }
 });
+$("tasksList").addEventListener("click", event => {
+  const button = event.target.closest("[data-task-delete]");
+  if(!button) return;
+  data.tasks = data.tasks.filter(task => task.id !== button.dataset.taskDelete);
+  saveData();
+  renderAll();
+  notify("Task deleted.");
+});
+$("clearCompleted").addEventListener("click", () => {
+  data.tasks = data.tasks.filter(task => !task.done);
+  saveData();
+  renderAll();
+  notify("Completed tasks cleared.");
+});
 
-/* ---------------- FLASHCARDS ---------------- */
-
-function renderFlashcards() {
-  const list = $("flashList");
-  const review = $("flashReview");
-
-  if (list) {
-    list.innerHTML = data.flashcards.map((card, index) => `
-      <article class="item-card">
-        <strong>${escapeHTML(card.front)}</strong>
-        <p>${escapeHTML(card.back).slice(0, 120)}</p>
-        <button class="btn btn-danger"
-          data-delete-flash="${card.id}">Delete</button>
-      </article>
-    `).join("") || "<p>No flashcards yet.</p>";
+$("planDate").value = new Date().toISOString().slice(0,10);
+$("taskDate").min = "";
+$("planForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const subject = $("planSubject").value.trim();
+  const duration = Number($("planDuration").value);
+  const date = $("planDate").value;
+  if(!subject || !date || !Number.isFinite(duration) || duration < 5 || duration > 600){
+    return notify("Check your plan details.");
   }
+  data.plans.push({id:makeId(),subject,duration,date});
+  saveData();
+  $("planSubject").value = "";
+  renderPlans();
+  notify("Study plan added!");
+});
 
-  if (review) {
-    if (!data.flashcards.length) {
-      review.innerHTML = "<p>Add a flashcard to begin reviewing.</p>";
-    } else {
-      flashIndex = flashIndex % data.flashcards.length;
-      const card = data.flashcards[flashIndex];
-
-      review.innerHTML = `
-        <div class="flashcard">
-          <small>Card ${flashIndex + 1} of ${data.flashcards.length}</small>
-          <h3>${escapeHTML(card.front)}</h3>
-          <div id="flashAnswer" ${flashRevealed ? "" : 'hidden'}>
-            <hr>
-            <p>${escapeHTML(card.back)}</p>
-          </div>
-        </div>`;
-    }
-  }
+function renderPlans(){
+  const plans = [...data.plans].sort((a,b) => a.date.localeCompare(b.date));
+  $("planList").innerHTML = plans.length ? plans.map(plan => `
+    <div class="task-row">
+      <span class="task-text"><strong>${escapeHTML(plan.subject)}</strong><div class="muted small">${formatDate(plan.date)} • ${Number(plan.duration)} minutes</div></span>
+      <button class="btn danger" data-plan-delete="${escapeHTML(plan.id)}">Delete</button>
+    </div>
+  `).join("") : '<div class="empty">Your study schedule is empty.</div>';
 }
-
-$("saveFlashBtn")?.addEventListener("click", () => {
-  const front = $("flashFront").value.trim();
-  const back = $("flashBack").value.trim();
-
-  if (!front || !back) {
-    toast("Enter both the question and answer.");
-    return;
-  }
-
-  data.flashcards.push({ id: uid(), front, back });
-  $("flashFront").value = "";
-  $("flashBack").value = "";
-  flashIndex = data.flashcards.length - 1;
-  flashRevealed = false;
-
+$("planList").addEventListener("click", event => {
+  const button = event.target.closest("[data-plan-delete]");
+  if(!button) return;
+  data.plans = data.plans.filter(plan => plan.id !== button.dataset.planDelete);
   saveData();
-  renderAll();
-  toast("Flashcard saved!");
+  renderPlans();
+  notify("Plan deleted.");
 });
 
-$("revealFlashBtn")?.addEventListener("click", () => {
-  flashRevealed = !flashRevealed;
-  renderFlashcards();
-});
-
-$("nextFlashBtn")?.addEventListener("click", () => {
-  if (!data.flashcards.length) return;
-  flashIndex = (flashIndex + 1) % data.flashcards.length;
-  flashRevealed = false;
-  renderFlashcards();
-});
-
-$("flashList")?.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-delete-flash]");
-  if (!button) return;
-
-  data.flashcards = data.flashcards.filter(
-    (card) => card.id !== button.dataset.deleteFlash
-  );
-
-  flashIndex = 0;
-  flashRevealed = false;
-  saveData();
-  renderAll();
-  toast("Flashcard deleted.");
-});
-
-/* ---------------- STUDY PLANNER ---------------- */
-
-function renderTasks() {
-  const list = $("tasksList");
-  const upcoming = $("upcomingTasks");
-
-  const tasks = [...data.tasks].sort((a, b) =>
-    (a.date || "9999").localeCompare(b.date || "9999")
-  );
-
-  if (list) {
-    list.innerHTML = tasks.map((task) => `
-      <article class="item-card ${task.done ? "completed" : ""}">
-        <div class="item-top">
-          <div>
-            <h3>${escapeHTML(task.title)}</h3>
-            <small>${escapeHTML(task.subject || "General")} ·
-              ${formatDate(task.date)}</small>
-          </div>
-          <strong>${task.duration} min</strong>
-        </div>
-        <div class="item-actions">
-          <button class="btn btn-secondary"
-            data-toggle-task="${task.id}">
-            ${task.done ? "Mark incomplete" : "Mark complete"}
-          </button>
-          <button class="btn btn-danger"
-            data-delete-task="${task.id}">Delete</button>
-        </div>
-      </article>
-    `).join("") || "<p>No study tasks planned.</p>";
-  }
-
-  if (upcoming) {
-    upcoming.innerHTML = tasks
-      .filter((task) => !task.done)
-      .slice(0, 4)
-      .map((task) => `
-        <div class="mini-item">
-          <strong>${escapeHTML(task.title)}</strong>
-          <small>${formatDate(task.date)} · ${task.duration} min</small>
-        </div>
-      `).join("") || "<p>No upcoming tasks.</p>";
-  }
-}
-
-$("saveTaskBtn")?.addEventListener("click", () => {
-  const title = $("taskTitle").value.trim();
-  const date = $("taskDate").value;
-  const subject = $("taskSubject").value.trim();
-  const duration = Math.max(
-    5,
-    Math.min(1440, Number($("taskDuration").value) || 30)
-  );
-
-  if (!title) {
-    toast("Enter a task name.");
-    return;
-  }
-
-  data.tasks.push({
-    id: uid(),
-    title,
-    date,
-    subject,
-    duration,
-    done: false,
-    createdAt: Date.now()
-  });
-
-  $("taskTitle").value = "";
-  $("taskDate").value = "";
-  $("taskSubject").value = "";
-  $("taskDuration").value = "30";
-
-  saveData();
-  renderAll();
-  toast("Study task added!");
-});
-
-$("tasksList")?.addEventListener("click", (event) => {
-  const toggle = event.target.closest("[data-toggle-task]");
-  const remove = event.target.closest("[data-delete-task]");
-
-  if (toggle) {
-    const task = data.tasks.find(
-      (item) => item.id === toggle.dataset.toggleTask
-    );
-    if (task) task.done = !task.done;
-  }
-
-  if (remove) {
-    data.tasks = data.tasks.filter(
-      (item) => item.id !== remove.dataset.deleteTask
-    );
-  }
-
-  saveData();
-  renderAll();
-});
-
-/* ---------------- QUIZ ENGINE ---------------- */
-
-/* These are sample questions. Add your own questions in Part 3. */
-const quizQuestions = [
-  {
-    subject: "Science",
-    question: "Which planet is known as the Red Planet?",
-    options: ["Earth", "Mars", "Venus", "Jupiter"],
-    answer: 1,
-    explanation: "Mars appears reddish because of iron oxide on its surface."
-  },
-  {
-    subject: "Science",
-    question: "What is the chemical formula of water?",
-    options: ["CO2", "O2", "H2O", "NaCl"],
-    answer: 2,
-    explanation: "A water molecule contains two hydrogen atoms and one oxygen atom."
-  },
-  {
-    subject: "Mathematics",
-    question: "What is 12 × 8?",
-    options: ["84", "92", "96", "108"],
-    answer: 2,
-    explanation: "12 multiplied by 8 equals 96."
-  },
-  {
-    subject: "Mathematics",
-    question: "What is the square of 9?",
-    options: ["18", "72", "81", "99"],
-    answer: 2,
-    explanation: "9 × 9 = 81."
-  },
-  {
-    subject: "General Knowledge",
-    question: "What is the capital of India?",
-    options: ["Mumbai", "New Delhi", "Kolkata", "Chennai"],
-    answer: 1,
-    explanation: "New Delhi is the capital of India."
-  }
+const questions = [
+  {q:"Which planet is known as the Red Planet?",o:["Venus","Mars","Jupiter","Mercury"],a:1,why:"Mars appears reddish because of iron oxide on its surface."},
+  {q:"What is 12 × 8?",o:["86","92","96","108"],a:2,why:"12 multiplied by 8 equals 96."},
+  {q:"Which gas do plants absorb during photosynthesis?",o:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],a:2,why:"Plants use carbon dioxide, water and light to make sugars."},
+  {q:"What is the largest ocean on Earth?",o:["Atlantic","Indian","Arctic","Pacific"],a:3,why:"The Pacific Ocean is the largest."},
+  {q:"How many sides does a hexagon have?",o:["Five","Six","Seven","Eight"],a:1,why:"A hexagon has six sides."},
+  {q:"Which is the closest star to Earth?",o:["Sirius","Polaris","The Sun","Proxima Centauri"],a:2,why:"The Sun is our nearest star."},
+  {q:"What is the chemical formula for water?",o:["CO2","H2O","O2","NaCl"],a:1,why:"A water molecule contains two hydrogen atoms and one oxygen atom."},
+  {q:"Which organ pumps blood around the human body?",o:["Lungs","Brain","Liver","Heart"],a:3,why:"The heart pumps blood through the circulatory system."}
 ];
 
-function shuffle(items) {
-  const result = [...items];
-
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-
-  return result;
-}
-
-function startQuiz() {
-  activeQuiz = {
-    questions: shuffle(quizQuestions),
-    index: 0,
-    score: 0,
-    answers: [],
-    startedAt: Date.now()
-  };
-
-  renderQuizQuestion();
-}
-
-function renderQuizQuestion() {
+function renderQuiz(){
   const area = $("quizArea");
-  if (!area || !activeQuiz) return;
+  $("quizFeedback").textContent = "";
+  $("quizNext").disabled = true;
+  quizAnswered = false;
 
-  if (activeQuiz.index >= activeQuiz.questions.length) {
-    finishQuiz();
+  if(quizIndex >= questions.length){
+    area.innerHTML = `
+      <h2>Quiz Complete! 🎉</h2>
+      <p>You scored <strong>${quizScore} / ${questions.length}</strong>.</p>
+      <p class="muted">Keep practicing to improve your knowledge.</p>`;
+    $("quizCounter").textContent = "Finished";
+    $("quizProgress").style.width = "100%";
+    $("quizNext").textContent = "Finish";
+    $("quizNext").disabled = false;
     return;
   }
 
-  const question = activeQuiz.questions[activeQuiz.index];
+  const item = questions[quizIndex];
+  $("quizCounter").textContent = `Question ${quizIndex + 1} of ${questions.length}`;
+  $("quizProgress").style.width = `${quizIndex / questions.length * 100}%`;
+  $("quizNext").textContent = quizIndex === questions.length - 1 ? "See Results →" : "Next Question →";
+  area.innerHTML = `<h3>${escapeHTML(item.q)}</h3>` + item.o.map((option,index) => `
+    <button class="quiz-option" data-answer="${index}">${escapeHTML(option)}</button>
+  `).join("");
 
-  area.innerHTML = `
-    <div class="quiz-question">
-      <small>Question ${activeQuiz.index + 1}
-        of ${activeQuiz.questions.length}</small>
-      <h3>${escapeHTML(question.question)}</h3>
-      <div class="quiz-options">
-        ${question.options.map((option, index) => `
-          <button class="quiz-option"
-            data-answer="${index}">
-            ${escapeHTML(option)}
-          </button>
-        `).join("")}
-      </div>
-      <p id="quizFeedback"></p>
-      <button class="btn btn-primary" id="nextQuizQuestion" disabled>
-        ${activeQuiz.index === activeQuiz.questions.length - 1
-          ? "Finish quiz" : "Next question"}
-      </button>
-    </div>`;
-}
-
-function finishQuiz() {
-  if (!activeQuiz) return;
-
-  const total = activeQuiz.questions.length;
-  const percentage = Math.round((activeQuiz.score / total) * 100);
-
-  const result = {
-    id: uid(),
-    score: activeQuiz.score,
-    total,
-    percentage,
-    date: new Date().toISOString(),
-    durationSeconds: Math.round(
-      (Date.now() - activeQuiz.startedAt) / 1000
-    )
-  };
-
-  data.quizHistory.push(result);
-  saveData();
-
-  $("quizArea").innerHTML = `
-    <div class="result-card">
-      <h2>Quiz complete!</h2>
-      <p>Your score</p>
-      <h1>${result.score} / ${result.total}</h1>
-      <h3>${percentage}%</h3>
-      <p>${percentage >= 80
-        ? "Great work! Keep practising."
-        : "Good effort. Review the answers and try again."}</p>
-      <button class="btn btn-primary" id="restartQuiz">
-        Try again
-      </button>
-    </div>`;
-
-  activeQuiz = null;
-  renderAll();
-}
-
-$("startQuizBtn")?.addEventListener("click", startQuiz);
-
-$("quizArea")?.addEventListener("click", (event) => {
-  if (event.target.closest("#restartQuiz")) {
-    startQuiz();
-    return;
-  }
-
-  if (!activeQuiz) return;
-
-  const answerButton = event.target.closest("[data-answer]");
-  if (answerButton) {
-    const question = activeQuiz.questions[activeQuiz.index];
-
-    if (activeQuiz.answers[activeQuiz.index] !== undefined) return;
-
-    const selected = Number(answerButton.dataset.answer);
-    const correct = selected === question.answer;
-
-    activeQuiz.answers[activeQuiz.index] = selected;
-
-    if (correct) activeQuiz.score++;
-
-    $("quizArea").querySelectorAll("[data-answer]").forEach((button) => {
-      button.disabled = true;
-
-      if (Number(button.dataset.answer) === question.answer) {
-        button.classList.add("correct");
-      } else if (button === answerButton && !correct) {
-        button.classList.add("incorrect");
-      }
+  area.querySelectorAll("[data-answer]").forEach(button => {
+    button.addEventListener("click", () => {
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const chosen = Number(button.dataset.answer);
+      if(chosen === item.a) quizScore++;
+      area.querySelectorAll("[data-answer]").forEach(option => {
+        option.disabled = true;
+        if(Number(option.dataset.answer) === item.a) option.classList.add("correct");
+      });
+      if(chosen !== item.a) button.classList.add("wrong");
+      $("quizFeedback").textContent = `${chosen === item.a ? "Correct! " : "Not quite. "}${item.why}`;
+      $("quizNext").disabled = false;
     });
-
-    $("quizFeedback").textContent =
-      (correct ? "Correct! " : "Not quite. ") + question.explanation;
-
-    $("nextQuizQuestion").disabled = false;
-  }
-
-  if (event.target.closest("#nextQuizQuestion")) {
-    activeQuiz.index++;
-    renderQuizQuestion();
-  }
-});
-
-function renderQuizHistory() {
-  const list = $("quizHistory");
-  if (!list) return;
-
-  list.innerHTML = [...data.quizHistory]
-    .reverse()
-    .slice(0, 10)
-    .map((item) => `
-      <div class="mini-item">
-        <strong>${item.percentage}% — ${item.score}/${item.total}</strong>
-        <small>${new Date(item.date).toLocaleString()}</small>
-      </div>
-    `).join("") || "<p>No quiz attempts yet.</p>";
+  });
 }
 
-/* ---------------- PROGRESS ---------------- */
-
-function renderProgress() {
-  const averageScore = data.quizHistory.length
-    ? Math.round(
-        data.quizHistory.reduce((sum, item) => sum + item.percentage, 0) /
-        data.quizHistory.length
-      )
-    : 0;
-
-  const completedCourses = data.courses.filter(
-    (course) => course.progress >= 100
-  ).length;
-
-  const completedTasks = data.tasks.filter((task) => task.done).length;
-
-  if ($("averageScore")) $("averageScore").textContent = averageScore + "%";
-  if ($("completedCourses")) {
-    $("completedCourses").textContent = completedCourses;
-  }
-  if ($("tasksCompleted")) {
-    $("tasksCompleted").textContent = completedTasks;
-  }
-  if ($("totalAttempts")) {
-    $("totalAttempts").textContent = data.quizHistory.length;
-  }
-
-  if ($("dashboardProgress")) {
-    const total = data.courses.length;
-    const average = total
-      ? Math.round(
-          data.courses.reduce((sum, course) => sum + course.progress, 0) /
-          total
-        )
-      : 0;
-
-    $("dashboardProgress").textContent = average + "%";
-  }
-
-  if ($("subjectAnalytics")) {
-    $("subjectAnalytics").innerHTML = data.courses.map((course) => `
-      <div class="analytics-row">
-        <div class="item-top">
-          <span>${escapeHTML(course.name)}</span>
-          <strong>${course.progress}%</strong>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${course.progress}%"></div>
-        </div>
-      </div>
-    `).join("") || "<p>Add courses to see your analytics.</p>";
-  }
-
-  if ($("improvementTips")) {
-    const tips = [];
-
-    if (!data.notes.length) tips.push("Create notes after each study session.");
-    if (!data.courses.length) tips.push("Add a course and set a learning goal.");
-    if (!data.quizHistory.length) tips.push("Take a quiz to measure your knowledge.");
-    if (data.tasks.some((task) => !task.done)) {
-      tips.push("Review your planner and complete a pending task.");
-    }
-    if (averageScore < 70 && data.quizHistory.length) {
-      tips.push("Review mistakes and retake a quiz.");
-    }
-    if (!tips.length) tips.push("Keep your learning streak going!");
-
-    $("improvementTips").innerHTML = tips.map((tip) => `
-      <div class="mini-item">${escapeHTML(tip)}</div>
-    `).join("");
-  }
-
-  if ($("shareProgressBtn")) {
-    $("shareProgressBtn").onclick = () => {
-      const text = [
-        "My VEXO Study Progress",
-        "Average quiz score: " + averageScore + "%",
-        "Completed courses: " + completedCourses,
-        "Completed tasks: " + completedTasks,
-        "Quiz attempts: " + data.quizHistory.length
-      ].join("\n");
-
-      if (navigator.share) {
-        navigator.share({ title: "VEXO Study Progress", text })
-          .catch(() => {});
-      } else if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(text)
-          .then(() => toast("Progress copied!"))
-          .catch(() => openModal("My progress", `<pre>${escapeHTML(text)}</pre>`));
-      } else {
-        openModal("My progress", `<pre>${escapeHTML(text)}</pre>`);
-      }
-    };
-  }
-}
-
-/* ---------------- DOUBT ROOM ---------------- */
-
-function renderDoubts() {
-  const list = $("doubtsList");
-  if (!list) return;
-
-  list.innerHTML = [...data.doubts].reverse().map((doubt) => `
-    <article class="item-card">
-      <small>${escapeHTML(doubt.subject || "General")} ·
-        ${new Date(doubt.createdAt).toLocaleDateString()}</small>
-      <h3>${escapeHTML(doubt.question)}</h3>
-      ${doubt.answer
-        ? `<p><strong>My notes:</strong> ${escapeHTML(doubt.answer)}</p>`
-        : "<p>No answer or notes added yet.</p>"}
-      <div class="item-actions">
-        <button class="btn btn-secondary"
-          data-answer-doubt="${doubt.id}">Add / edit notes</button>
-        <button class="btn btn-danger"
-          data-delete-doubt="${doubt.id}">Delete</button>
-      </div>
-    </article>
-  `).join("") || "<p>No doubts saved yet.</p>";
-}
-
-$("saveDoubtBtn")?.addEventListener("click", () => {
-  const question = $("doubtQuestion").value.trim();
-  const subject = $("doubtSubject").value.trim();
-  const answer = $("doubtAnswer").value.trim();
-
-  if (!question) {
-    toast("Write your question first.");
+$("quizNext").addEventListener("click", () => {
+  if(quizIndex >= questions.length){
+    navigate("dashboard");
     return;
   }
+  if(!quizAnswered) return;
+  quizIndex++;
+  if(quizIndex >= questions.length){
+    data.quizAttempts++;
+    saveData();
+    renderDashboard();
+  }
+  renderQuiz();
+});
+$("quizRestart").addEventListener("click", () => {
+  quizIndex = 0;
+  quizScore = 0;
+  renderQuiz();
+});
 
-  data.doubts.push({
-    id: uid(),
-    question,
-    subject,
-    answer,
-    createdAt: Date.now()
-  });
-
-  $("doubtQuestion").value = "";
-  $("doubtSubject").value = "";
-  $("doubtAnswer").value = "";
-
+$("flashForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const front = $("flashFront").value.trim();
+  const back = $("flashBack").value.trim();
+  if(!front || !back) return;
+  data.flashcards.push({id:makeId(),front,back});
   saveData();
+  $("flashForm").reset();
+  flashIndex = data.flashcards.length - 1;
+  flashFlipped = false;
   renderAll();
-  toast("Doubt saved on this device.");
-});
-
-$("doubtsList")?.addEventListener("click", (event) => {
-  const answerButton = event.target.closest("[data-answer-doubt]");
-  const deleteButton = event.target.closest("[data-delete-doubt]");
-
-  if (answerButton) {
-    const doubt = data.doubts.find(
-      (item) => item.id === answerButton.dataset.answerDoubt
-    );
-    if (!doubt) return;
-
-    openModal("Add your study notes", `
-      <p>${escapeHTML(doubt.question)}</p>
-      <textarea id="doubtNotesEditor" rows="5"
-        placeholder="Write the explanation or notes here...">${escapeHTML(doubt.answer)}</textarea>
-      <button class="btn btn-primary" id="saveDoubtNotes">Save notes</button>
-    `);
-
-    $("saveDoubtNotes").onclick = () => {
-      doubt.answer = $("doubtNotesEditor").value.trim();
-      saveData();
-      closeModal();
-      renderDoubts();
-      toast("Notes saved.");
-    };
-  }
-
-  if (deleteButton) {
-    data.doubts = data.doubts.filter(
-      (item) => item.id !== deleteButton.dataset.deleteDoubt
-    );
-    saveData();
-    renderDoubts();
-    toast("Doubt deleted.");
-  }
-});
-
-/* ---------------- AI STUDY HUB (LOCAL DEMO) ---------------- */
-
-function localExplanation(topic, level) {
-  const name = topic.trim();
-
-  return `
-    <h3>${escapeHTML(name)}</h3>
-    <p><strong>Level:</strong> ${escapeHTML(level)}</p>
-    <p><strong>Start here:</strong> Write a one-sentence definition of
-      ${escapeHTML(name)}.</p>
-    <p><strong>Learn in steps:</strong></p>
-    <ol>
-      <li>Understand the key terms.</li>
-      <li>Study one simple example.</li>
-      <li>Explain the idea in your own words.</li>
-      <li>Practise questions and check your mistakes.</li>
-    </ol>
-    <p><strong>Important:</strong> This is a study template, not an
-      AI-generated factual explanation. Verify subject facts with
-      your textbook or teacher.</p>`;
-}
-
-$("explainBtn")?.addEventListener("click", () => {
-  const topic = $("aiTopic").value.trim();
-  const level = $("aiLevel").value;
-
-  if (!topic) {
-    toast("Enter a topic first.");
-    return;
-  }
-
-  $("aiOutput").innerHTML = localExplanation(topic, level);
-});
-
-$("makeQuestionsBtn")?.addEventListener("click", () => {
-  const topic = $("aiTopic").value.trim();
-
-  if (!topic) {
-    toast("Enter a topic first.");
-    return;
-  }
-
-  $("aiToolsOutput").innerHTML = `
-    <h3>Practice questions: ${escapeHTML(topic)}</h3>
-    <ol>
-      <li>Define ${escapeHTML(topic)} in your own words.</li>
-      <li>List three important facts about ${escapeHTML(topic)}.</li>
-      <li>Give one real-world example of ${escapeHTML(topic)}.</li>
-      <li>What is one common misunderstanding about it?</li>
-      <li>Summarize the topic in five sentences.</li>
-    </ol>
-    <p>These are generated from a local template, not from a live AI model.</p>`;
-});
-
-$("makePlanBtn")?.addEventListener("click", () => {
-  const topic = $("aiTopic").value.trim();
-
-  if (!topic) {
-    toast("Enter a topic first.");
-    return;
-  }
-
-  const plan = [
-    ["10 minutes", "Read the overview of " + topic],
-    ["15 minutes", "Study definitions and examples"],
-    ["10 minutes", "Write short notes"],
-    ["10 minutes", "Answer practice questions"],
-    ["5 minutes", "Review what you learned"]
-  ];
-
-  $("aiToolsOutput").innerHTML = `
-    <h3>Study plan: ${escapeHTML(topic)}</h3>
-    <p>Total time: 50 minutes</p>
-    ${plan.map(([time, task]) => `
-      <div class="mini-item">
-        <strong>${escapeHTML(time)}</strong>
-        <p>${escapeHTML(task)}</p>
-      </div>
-    `).join("")}`;
-});
-
-/* PART 3/3 CONTINUES HERE */
-
-/* ---------------- CERTIFICATES ---------------- */
-
-$("generateCertBtn")?.addEventListener("click", () => {
-  const name = $("certName").value.trim();
-  const achievement = $("certAchievement").value.trim();
-
-  if (!name || !achievement) {
-    toast("Enter your name and achievement.");
-    return;
-  }
-
-  const certificateId = "VEXO-" +
-    Date.now().toString(36).toUpperCase();
-
-  $("certView").innerHTML = `
-    <div class="certificate" id="printCertificate">
-      <div class="certificate-inner">
-        <p class="certificate-brand">VEXO</p>
-        <h1>Certificate of Achievement</h1>
-        <p>This personal learning certificate is presented to</p>
-        <h2>${escapeHTML(name)}</h2>
-        <p>For completing the learning achievement</p>
-        <h3>${escapeHTML(achievement)}</h3>
-        <p>Date: ${new Date().toLocaleDateString()}</p>
-        <small>Reference: ${certificateId}</small>
-        <p class="certificate-note">
-          Personal certificate generated by VEXO.
-          This is not an externally accredited qualification.
-        </p>
-        <button class="btn btn-primary no-print"
-          onclick="window.print()">Print / Save PDF</button>
-      </div>
-    </div>`;
-
-  toast("Personal certificate created!");
-});
-
-/* ---------------- NOTIFICATIONS ---------------- */
-
-function buildNotifications() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const generated = [];
-
-  data.tasks
-    .filter((task) => !task.done && task.date)
-    .forEach((task) => {
-      const taskDate = new Date(task.date + "T00:00:00");
-      const difference = Math.round(
-        (taskDate.getTime() - today.getTime()) / 86400000
-      );
-
-      if (difference < 0) {
-        generated.push({
-          id: "task-" + task.id,
-          title: "Overdue study task",
-          message: task.title + " was scheduled for " +
-            formatDate(task.date) + ".",
-          type: "warning",
-          date: task.date
-        });
-      } else if (difference === 0) {
-        generated.push({
-          id: "task-" + task.id,
-          title: "Study task due today",
-          message: task.title + " is scheduled for today.",
-          type: "info",
-          date: task.date
-        });
-      } else if (difference === 1) {
-        generated.push({
-          id: "task-" + task.id,
-          title: "Study task coming up",
-          message: task.title + " is scheduled for tomorrow.",
-          type: "info",
-          date: task.date
-        });
-      }
-    });
-
-  data.notifications = generated;
-}
-
-function renderNotifications() {
-  const list = $("notificationsList");
-  if (!list) return;
-
-  buildNotifications();
-
-  list.innerHTML = data.notifications.map((notification) => `
-    <article class="item-card">
-      <h3>${escapeHTML(notification.title)}</h3>
-      <p>${escapeHTML(notification.message)}</p>
-      <small>${formatDate(notification.date)}</small>
-    </article>
-  `).join("") || `
-    <div class="empty-state">
-      <h3>You're all caught up!</h3>
-      <p>No study reminders right now.</p>
-    </div>`;
-}
-
-$("clearNotifications")?.addEventListener("click", () => {
-  toast("Notifications show your current pending tasks.");
-  renderNotifications();
-});
-
-/* ---------------- LANGUAGE SETTINGS ---------------- */
-
-/*
-  The selector includes English and all 22 Indian
-  Eighth Schedule languages. A selectable language does
-  not mean the whole interface is translated yet.
-*/
-
-const languageNames = {
-  en: "English",
-  as: "Assamese",
-  bn: "বাংলা (Bengali)",
-  brx: "Bodo",
-  doi: "Dogri",
-  gu: "Gujarati",
-  hi: "हिन्दी (Hindi)",
-  kn: "Kannada",
-  ks: "Kashmiri",
-  kok: "Konkani",
-  mai: "Maithili",
-  ml: "Malayalam",
-  mni: "Manipuri / Meitei",
-  mr: "Marathi",
-  ne: "Nepali",
-  or: "Odia",
-  pa: "Punjabi",
-  sa: "Sanskrit",
-  sat: "Santali",
-  sd: "Sindhi",
-  ta: "Tamil",
-  te: "Telugu",
-  ur: "Urdu"
-};
-
-const interfaceTranslations = {
-  en: {
-    dashboard: "Dashboard",
-    notes: "My Notes",
-    courses: "My Courses",
-    quiz: "Quiz & Tests",
-    flashcards: "Flashcards",
-    planner: "Study Planner",
-    progress: "My Progress",
-    doubts: "Doubt Room",
-    ai: "AI Study Hub",
-    certificates: "Certificates",
-    notifications: "Notifications",
-    settings: "Settings"
-  },
-  bn: {
-    dashboard: "ড্যাশবোর্ড",
-    notes: "আমার নোট",
-    courses: "আমার কোর্স",
-    quiz: "কুইজ ও পরীক্ষা",
-    flashcards: "ফ্ল্যাশকার্ড",
-    planner: "পড়াশোনার পরিকল্পনা",
-    progress: "আমার অগ্রগতি",
-    doubts: "প্রশ্ন ও নোট",
-    ai: "AI স্টাডি হাব",
-    certificates: "সার্টিফিকেট",
-    notifications: "নোটিফিকেশন",
-    settings: "সেটিংস"
-  },
-  hi: {
-    dashboard: "डैशबोर्ड",
-    notes: "मेरे नोट्स",
-    courses: "मेरे कोर्स",
-    quiz: "क्विज़ और टेस्ट",
-    flashcards: "फ्लैशकार्ड",
-    planner: "पढ़ाई की योजना",
-    progress: "मेरी प्रगति",
-    doubts: "प्रश्न और नोट्स",
-    ai: "AI स्टडी हब",
-    certificates: "प्रमाणपत्र",
-    notifications: "सूचनाएँ",
-    settings: "सेटिंग्स"
-  }
-};
-
-function populateLanguages() {
-  const select = $("languageSelect");
-  if (!select) return;
-
-  select.innerHTML = Object.entries(languageNames)
-    .map(([code, name]) => `
-      <option value="${code}">${escapeHTML(name)}</option>
-    `).join("");
-
-  select.value = data.settings.language || "en";
-}
-
-function applyLanguage() {
-  const lang = data.settings.language || "en";
-  const dictionary = interfaceTranslations[lang] ||
-    interfaceTranslations.en;
-
-  document.querySelectorAll("[data-page]").forEach((button) => {
-    const key = button.dataset.page;
-    const label = button.querySelector(".nav-label");
-
-    if (label && dictionary[key]) {
-      label.textContent = dictionary[key];
-    }
-  });
-
-  const activePage = document.querySelector(".page.active");
-  if (activePage) {
-    const key = activePage.id.replace("page-", "");
-    const heading = $("pageTitle");
-    if (heading) {
-      heading.textContent = dictionary[key] ||
-        interfaceTranslations.en[key] ||
-        key;
-    }
-  }
-
-  document.documentElement.lang =
-    lang === "bn" ? "bn" : lang === "hi" ? "hi" : "en";
-}
-
-$("languageSelect")?.addEventListener("change", (event) => {
-  data.settings.language = event.target.value;
-  saveData();
-  applyLanguage();
-
-  if (!interfaceTranslations[event.target.value]) {
-    toast("Language selected. Full translation is not available yet.");
-  } else {
-    toast("Language preference updated.");
-  }
-});
-
-/* ---------------- THEME AND APPEARANCE ---------------- */
-
-function applySettings() {
-  const settings = data.settings;
-
-  document.documentElement.style.setProperty(
-    "--accent",
-    settings.accent || "#6c63ff"
-  );
-
-  document.documentElement.style.fontSize =
-    (settings.fontSize || "16") + "px";
-
-  const dark = settings.theme === "dark";
-
-  document.body.classList.toggle("dark-mode", dark);
-  document.documentElement.dataset.theme = dark ? "dark" : "light";
-
-  if ($("themeSelect")) {
-    $("themeSelect").value = settings.theme || "light";
-  }
-
-  if ($("accentColor")) {
-    $("accentColor").value = settings.accent || "#6c63ff";
-  }
-
-  if ($("fontSizeSelect")) {
-    $("fontSizeSelect").value = settings.fontSize || "16";
-  }
-
-  if ($("themeToggle")) {
-    $("themeToggle").setAttribute(
-      "aria-label",
-      dark ? "Switch to light mode" : "Switch to dark mode"
-    );
-  }
-
-  applyLanguage();
-}
-
-$("themeToggle")?.addEventListener("click", () => {
-  data.settings.theme =
-    data.settings.theme === "dark" ? "light" : "dark";
-
-  saveData();
-  applySettings();
-});
-
-$("themeSelect")?.addEventListener("change", (event) => {
-  data.settings.theme = event.target.value;
-  saveData();
-  applySettings();
-});
-
-$("accentColor")?.addEventListener("input", (event) => {
-  data.settings.accent = event.target.value;
-  document.documentElement.style.setProperty(
-    "--accent",
-    data.settings.accent
-  );
-  saveData();
-});
-
-$("fontSizeSelect")?.addEventListener("change", (event) => {
-  data.settings.fontSize = event.target.value;
-  saveData();
-  applySettings();
-});
-
-/* ---------------- GLOBAL SEARCH ---------------- */
-
-$("globalSearch")?.addEventListener("keydown", (event) => {
-  if (event.key !== "Enter") return;
-
-  const query = event.target.value.trim().toLowerCase();
-  if (!query) return;
-
-  const note = data.notes.find((item) =>
-    [item.title, item.subject, item.content]
-      .join(" ")
-      .toLowerCase()
-      .includes(query)
-  );
-
-  if (note) {
-    navigate("notes");
-    $("noteFilter").value = query;
-    renderNotes();
-    return;
-  }
-
-  const course = data.courses.find((item) =>
-    [item.name, item.subject, item.goal]
-      .join(" ")
-      .toLowerCase()
-      .includes(query)
-  );
-
-  if (course) {
-    navigate("courses");
-    return;
-  }
-
-  toast("No matching note or course found.");
-});
-
-/* ---------------- QUICK ADD ---------------- */
-
-$("quickAdd")?.addEventListener("click", () => {
-  openModal("Quick Add", `
-    <p>What would you like to create?</p>
-    <div class="item-actions">
-      <button class="btn btn-primary" id="quickNote">New note</button>
-      <button class="btn btn-secondary" id="quickTask">New task</button>
-      <button class="btn btn-secondary" id="quickCourse">New course</button>
-      <button class="btn btn-secondary" id="quickFlash">New flashcard</button>
-    </div>
-  `);
-
-  $("quickNote").onclick = () => {
-    closeModal();
-    navigate("notes");
-    $("noteTitle")?.focus();
-  };
-
-  $("quickTask").onclick = () => {
-    closeModal();
-    navigate("planner");
-    $("taskTitle")?.focus();
-  };
-
-  $("quickCourse").onclick = () => {
-    closeModal();
-    navigate("courses");
-    $("courseName")?.focus();
-  };
-
-  $("quickFlash").onclick = () => {
-    closeModal();
-    navigate("flashcards");
-    $("flashFront")?.focus();
-  };
-});
-
-/* ---------------- EXPORT / IMPORT ---------------- */
-
-$("exportBtn")?.addEventListener("click", () => {
-  const backup = {
-    app: "VEXO",
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    data
-  };
-
-  const blob = new Blob(
-    [JSON.stringify(backup, null, 2)],
-    { type: "application/json" }
-  );
-
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-
-  anchor.href = url;
-  anchor.download = "vexo-backup-" +
-    new Date().toISOString().slice(0, 10) + ".json";
-
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
-
-  toast("Backup exported!");
-});
-
-$("importBtn")?.addEventListener("click", () => {
-  $("importFile")?.click();
-});
-
-$("importFile")?.addEventListener("change", async (event) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  try {
-    const text = await file.text();
-    const backup = JSON.parse(text);
-    const incoming = backup.data || backup;
-
-    const validArrayKeys = [
-      "notes",
-      "courses",
-      "flashcards",
-      "tasks",
-      "quizHistory",
-      "doubts",
-      "notifications"
-    ];
-
-    if (!incoming || typeof incoming !== "object") {
-      throw new Error("Invalid backup.");
-    }
-
-    for (const key of validArrayKeys) {
-      if (
-        incoming[key] !== undefined &&
-        !Array.isArray(incoming[key])
-      ) {
-        throw new Error("Invalid data in " + key);
-      }
-    }
-
-    openModal("Restore backup?", `
-      <p>Importing will replace your current VEXO data on this device.
-      Export a backup first if you need to keep it.</p>
-      <div class="item-actions">
-        <button class="btn btn-danger" id="confirmImport">
-          Replace data
-        </button>
-        <button class="btn btn-secondary" id="cancelImport">
-          Cancel
-        </button>
-      </div>
-    `);
-
-    $("confirmImport").onclick = () => {
-      const next = structuredClone(defaultData);
-
-      for (const key of validArrayKeys) {
-        if (Array.isArray(incoming[key])) {
-          next[key] = incoming[key];
-        }
-      }
-
-      next.settings = {
-        ...defaultData.settings,
-        ...(incoming.settings || {})
-      };
-
-      data = next;
-      saveData();
-      closeModal();
-      initializeApp();
-      toast("Backup restored.");
-    };
-
-    $("cancelImport").onclick = closeModal;
-  } catch (error) {
-    toast("Could not import this backup file.");
-  } finally {
-    event.target.value = "";
-  }
-});
-
-/* ---------------- RESET DATA ---------------- */
-
-$("resetBtn")?.addEventListener("click", () => {
-  openModal("Reset VEXO data?", `
-    <p>This deletes your saved notes, courses, tasks, flashcards,
-    doubts and quiz history from this browser.</p>
-    <p><strong>Export a backup first if you want to keep them.</strong></p>
-    <div class="item-actions">
-      <button class="btn btn-danger" id="confirmReset">
-        Delete all data
-      </button>
-      <button class="btn btn-secondary" id="cancelReset">
-        Cancel
-      </button>
-    </div>
-  `);
-
-  $("confirmReset").onclick = () => {
-    data = structuredClone(defaultData);
-    saveData();
-    closeModal();
-    initializeApp();
-    toast("VEXO data reset.");
-  };
-
-  $("cancelReset").onclick = closeModal;
-});
-
-/* ---------------- DASHBOARD STATS ---------------- */
-
-function renderDashboardStats() {
-  if ($("statNotes")) {
-    $("statNotes").textContent = data.notes.length;
-  }
-
-  if ($("statCourses")) {
-    $("statCourses").textContent = data.courses.length;
-  }
-
-  if ($("statAttempts")) {
-    $("statAttempts").textContent = data.quizHistory.length;
-  }
-
-  if ($("statTasks")) {
-    $("statTasks").textContent =
-      data.tasks.filter((task) => !task.done).length;
-  }
-}
-
-/* ---------------- RENDER ALL ---------------- */
-
-function renderAll() {
-  renderNotes();
-  renderCourses();
   renderFlashcards();
-  renderTasks();
-  renderQuizHistory();
-  renderProgress();
-  renderDoubts();
-  renderNotifications();
-  renderDashboardStats();
+  notify("Flashcard saved!");
+});
+
+function renderFlashcards(){
+  const cards = data.flashcards;
+  if(flashIndex >= cards.length) flashIndex = Math.max(0,cards.length-1);
+  $("flashCounter").textContent = cards.length ? `${flashIndex+1} / ${cards.length}` : "0 cards";
+  const current = cards[flashIndex];
+  $("flashDisplay").textContent = current ? (flashFlipped ? current.back : current.front) : "Create a card to begin";
+  $("flashList").innerHTML = cards.length ? cards.map((card,index) => `
+    <div class="task-row">
+      <span class="task-text"><strong>${escapeHTML(card.front.slice(0,100))}</strong><div class="muted small">${escapeHTML(card.back.slice(0,120))}</div></span>
+      <button class="btn" data-flash-study="${index}">Study</button>
+      <button class="btn danger" data-flash-delete="${escapeHTML(card.id)}">Delete</button>
+    </div>
+  `).join("") : '<div class="empty">No flashcards yet. Create one above.</div>';
 }
-
-function initializeApp() {
-  populateLanguages();
-
-  if ($("languageSelect")) {
-    $("languageSelect").value = data.settings.language || "en";
+function flipFlash(){
+  if(!data.flashcards.length) return;
+  flashFlipped = !flashFlipped;
+  renderFlashcards();
+}
+$("flashDisplay").addEventListener("click",flipFlash);
+$("flashDisplay").addEventListener("keydown",event => {
+  if(event.key === "Enter" || event.key === " "){
+    event.preventDefault();
+    flipFlash();
   }
+});
+$("flashFlip").addEventListener("click",flipFlash);
+$("flashPrev").addEventListener("click",() => {
+  if(!data.flashcards.length) return;
+  flashIndex = (flashIndex - 1 + data.flashcards.length) % data.flashcards.length;
+  flashFlipped = false;
+  renderFlashcards();
+});
+$("flashNext").addEventListener("click",() => {
+  if(!data.flashcards.length) return;
+  flashIndex = (flashIndex + 1) % data.flashcards.length;
+  flashFlipped = false;
+  renderFlashcards();
+});
+$("flashList").addEventListener("click",event => {
+  const study = event.target.closest("[data-flash-study]");
+  const remove = event.target.closest("[data-flash-delete]");
+  if(study){
+    flashIndex = Number(study.dataset.flashStudy);
+    flashFlipped = false;
+    renderFlashcards();
+  }
+  if(remove){
+    data.flashcards = data.flashcards.filter(card => card.id !== remove.dataset.flashDelete);
+    flashIndex = Math.min(flashIndex,Math.max(0,data.flashcards.length-1));
+    flashFlipped = false;
+    saveData();
+    renderAll();
+    renderFlashcards();
+    notify("Flashcard deleted.");
+  }
+});
 
-  applySettings();
+function addChatMessage(text,who){
+  const box = $("chatBox");
+  const msg = document.createElement("div");
+  msg.className = "chat-msg " + who;
+  msg.textContent = text;
+  box.appendChild(msg);
+  box.scrollTop = box.scrollHeight;
+}
+$("chatForm").addEventListener("submit",event => {
+  event.preventDefault();
+  const question = $("chatInput").value.trim();
+  if(!question) return;
+  addChatMessage(question,"user");
+  $("chatInput").value = "";
+  const q = question.toLowerCase();
+  let answer = "I am the built-in VEXO helper, not a connected AI model yet. Try breaking your question into smaller parts, checking your textbook, and saving useful points in My Notes. To get real AI answers, VEXO needs a secure AI service connection.";
+  if(q.includes("study") || q.includes("পড়া") || q.includes("porashona")){
+    answer = "Try this study routine: 1) Choose one small topic. 2) Study for 25 minutes. 3) Close your book and recall what you learned. 4) Test yourself with flashcards. 5) Take a short break.";
+  }else if(q.includes("note")){
+    answer = "Open My Notes, enter a title and your content, then press Save Note. Your notes are saved in this browser.";
+  }else if(q.includes("quiz")){
+    answer = "Open Quick Quiz in the sidebar to practice the built-in questions and see your score.";
+  }else if(q.includes("flashcard")){
+    answer = "Create a question on the front and its answer on the back. Then tap the card to test your memory.";
+  }
+  setTimeout(() => addChatMessage(answer,"bot"),150);
+});
+
+$("exportBtn").addEventListener("click",() => {
+  const blob = new Blob([JSON.stringify({
+    app:"VEXO",version:1,exportedAt:new Date().toISOString(),data
+  },null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "vexo-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  notify("Backup exported.");
+});
+
+$("importBtn").addEventListener("click",async() => {
+  const file = $("importFile").files[0];
+  if(!file) return notify("Choose a backup JSON file first.");
+  try{
+    const parsed = JSON.parse(await file.text());
+    const incoming = parsed.data || parsed;
+    if(!incoming || !Array.isArray(incoming.notes) ||
+       !Array.isArray(incoming.tasks) ||
+       !Array.isArray(incoming.plans) ||
+       !Array.isArray(incoming.flashcards)){
+      throw new Error("Invalid backup");
+    }
+    if(!confirm("Restore this backup? Current VEXO data will be replaced.")) return;
+    data = {
+      ...defaultData(),
+      notes:incoming.notes,
+      tasks:incoming.tasks,
+      plans:incoming.plans,
+      flashcards:incoming.flashcards,
+      quizAttempts:Number(incoming.quizAttempts)||0,
+      dark:Boolean(incoming.dark)
+    };
+    if(!saveData()) return;
+    applyTheme();
+    renderAll();
+    renderFlashcards();
+    notify("Backup restored!");
+  }catch(error){
+    notify("Invalid backup file. Your data was not changed.");
+  }
+});
+
+$("clearDataBtn").addEventListener("click",() => {
+  if(!confirm("Delete all VEXO notes, tasks, plans and flashcards from this browser? Export a backup first if needed.")) return;
+  data = defaultData();
+  saveData();
+  applyTheme();
+  resetNoteForm();
   renderAll();
+  renderFlashcards();
+  notify("Local data cleared.");
+});
 
-  const dateInput = $("taskDate");
-  if (dateInput && !dateInput.value) {
-    dateInput.min = new Date().toISOString().slice(0, 10);
-  }
+function renderAll(){
+  renderDashboard();
+  renderNotes();
+  renderTasks();
+  renderPlans();
+  renderFlashcards();
 }
 
-/* ---------------- START VEXO ---------------- */
-
-document.addEventListener("DOMContentLoaded", initializeApp);
-
-if (document.readyState !== "loading") {
-  initializeApp();
-}
-
+applyTheme();
+renderAll();
+renderQuiz();
 </script>
 </body>
 </html>
