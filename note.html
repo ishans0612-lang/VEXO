@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEXO Notes</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0b1020;
+      color: #f1f5f9;
+      font-family: Arial, sans-serif;
+    }
+    .app { max-width: 750px; margin: auto; }
+    h1 { color: #818cf8; }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      font: inherit;
+    }
+    input, textarea, select {
+      background: #172033;
+      color: white;
+    }
+    textarea { min-height: 130px; resize: vertical; }
+    button {
+      background: #6366f1;
+      color: white;
+      border: 0;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .note {
+      background: #172033;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+    .note h3 { margin-bottom: 8px; }
+    .category { color: #a5b4fc; font-size: 13px; }
+    .actions { display: flex; gap: 8px; }
+    .actions button { flex: 1; }
+    .delete { background: #dc2626; }
+    .back { background: #334155; }
+    #status { color: #86efac; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <button class="back" onclick="history.back()">← Back</button>
+    <h1>📝 VEXO Notes</h1>
+    <p>Your personal study notebook</p>
+
+    <input id="search" placeholder="🔍 Search notes..." oninput="renderNotes()">
+
+    <form id="noteForm">
+      <input id="title" placeholder="Note title" required>
+      <select id="category">
+        <option>General</option>
+        <option>Mathematics</option>
+        <option>Science</option>
+        <option>English</option>
+        <option>Computer</option>
+        <option>History</option>
+        <option>Other</option>
+      </select>
+      <textarea id="content" placeholder="Write your note..." required></textarea>
+      <button id="saveBtn" type="submit">＋ Save Note</button>
+      <button type="button" class="back" onclick="resetForm()">Cancel Edit</button>
+    </form>
+
+    <p id="status" role="status"></p>
+    <h2>My Notes</h2>
+    <div id="notesList"></div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "vexo_notes_v1";
+    let notes = [];
+    let editingId = null;
+
+    try {
+      notes = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      if (!Array.isArray(notes)) notes = [];
+    } catch {
+      notes = [];
+    }
+
+    const $ = id => document.getElementById(id);
+
+    function persist() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+        $("status").textContent = "Saved in this browser ✓";
+        return true;
+      } catch {
+        $("status").textContent = "Could not save. Check browser storage.";
+        return false;
+      }
+    }
+
+    function resetForm() {
+      editingId = null;
+      $("noteForm").reset();
+      $("saveBtn").textContent = "＋ Save Note";
+    }
+
+    $("noteForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const title = $("title").value.trim();
+      const content = $("content").value.trim();
+      const category = $("category").value;
+
+      if (!title || !content) return;
+
+      const previous = editingId
+        ? notes.find(note => note.id === editingId)
+        : null;
+
+      const updated = {
+        id: editingId || (crypto.randomUUID
+          ? crypto.randomUUID()
+          : String(Date.now())),
+        title,
+        content,
+        category,
+        createdAt: previous?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const oldNotes = [...notes];
+
+      if (editingId) {
+        notes = notes.map(note =>
+          note.id === editingId ? updated : note
+        );
+      } else {
+        notes.unshift(updated);
+      }
+
+      if (!persist()) {
+        notes = oldNotes;
+        return;
+      }
+
+      resetForm();
+      renderNotes();
+    });
+
+    function editNote(id) {
+      const note = notes.find(item => item.id === id);
+      if (!note) return;
+
+      editingId = id;
+      $("title").value = note.title;
+      $("content").value = note.content;
+      $("category").value = note.category;
+      $("saveBtn").textContent = "Update Note";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function deleteNote(id) {
+      if (!confirm("Delete this note?")) return;
+
+      const oldNotes = [...notes];
+      notes = notes.filter(note => note.id !== id);
+
+      if (!persist()) {
+        notes = oldNotes;
+        return;
+      }
+
+      renderNotes();
+    }
+
+    function renderNotes() {
+      const query = $("search").value.trim().toLowerCase();
+      const filtered = notes.filter(note =>
+        [note.title, note.content, note.category]
+          .some(value => value.toLowerCase().includes(query))
+      );
+
+      const list = $("notesList");
+      list.replaceChildren();
+
+      if (!filtered.length) {
+        const empty = document.createElement("p");
+        empty.textContent = query
+          ? "No matching notes found."
+          : "No notes yet. Create your first note!";
+        list.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(note => {
+        const card = document.createElement("article");
+        card.className = "note";
+
+        const heading = document.createElement("h3");
+        heading.textContent = note.title;
+
+        const category = document.createElement("p");
+        category.className = "category";
+        category.textContent = note.category;
+
+        const content = document.createElement("p");
+        content.style.whiteSpace = "pre-wrap";
+        content.textContent = note.content;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const edit = document.createElement("button");
+        edit.textContent = "✏️ Edit";
+        edit.addEventListener("click", () => editNote(note.id));
+
+        const del = document.createElement("button");
+        del.textContent = "🗑️ Delete";
+        del.className = "delete";
+        del.addEventListener("click", () => deleteNote(note.id));
+
+        actions.append(edit, del);
+        card.append(heading, category, content, actions);
+        list.appendChild(card);
+      });
+    }
+
+    renderNotes();
+  </script>
+</body>
+</html>
