@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VEXO — Learn Beyond Limits</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #4f46e5;
+      --primary2: #7c3aed;
+      --border: #e5e7eb;
+    }
+
+    body.dark {
+      --bg: #0b1020;
+      --card: #151b2e;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #273149;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: .25s;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin: 5px 12px 35px;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 15px;
+      transition: .2s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #eef2ff;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    body.dark .nav button:hover,
+    body.dark .nav button.active {
+      background: #202844;
+    }
+
+    /* Main */
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      padding: 25px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .welcome h1 {
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 18px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      border-radius: 22px;
+      padding: 30px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero h2 {
+      font-size: 27px;
+      margin-bottom: 9px;
+    }
+
+    .hero p {
+      opacity: .9;
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
+    .hero button {
+      margin-top: 20px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: white;
+      color: #4f46e5;
+      font-weight: 700;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .stat {
+      padding: 20px;
+    }
+
+    .stat .emoji {
+      font-size: 25px;
+      margin-bottom: 12px;
+    }
+
+    .stat h3 {
+      font-size: 25px;
+      margin-bottom: 4px;
+    }
+
+    .stat p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 25px 0 14px;
+    }
+
+    .section-title h2 {
+      font-size: 20px;
+    }
+
+    .section-title span {
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+    }
+
+    .card-icon {
+      font-size: 30px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .progress {
+      height: 7px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary2));
+      border-radius: inherit;
+    }
+
+    .card small {
+      color: var(--muted);
+    }
+
+    .quick {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .quick button {
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .quick button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .search {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      margin-bottom: 18px;
+      outline: none;
+    }
+
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .app {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .welcome h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">VEXO</div>
+
+    <nav class="nav">
+      <button class="active" onclick="showPage('dashboard', this)">🏠 Dashboard</button>
+      <button onclick="showPage('notes', this)">📚 Notes</button>
+      <button onclick="showPage('courses', this)">🎓 Courses</button>
+      <button onclick="showPage('quiz', this)">📝 Quiz & Tests</button>
+      <button onclick="showPage('flashcards', this)">🧠 Flashcards</button>
+      <button onclick="showPage('planner', this)">📅 Study Planner</button>
+      <button onclick="showPage('progress', this)">📊 Progress</button>
+      <button onclick="showPage('ai', this)">🤖 AI Hub</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+      <div class="welcome">
+        <h1 id="pageTitle">Good morning 👋</h1>
+        <p>Keep learning. Keep growing. Go beyond your limits.</p>
+      </div>
+
+      <div class="actions">
+        <button class="icon-btn" onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="page active">
+
+      <div class="hero">
+        <h2>Welcome to VEXO 🚀</h2>
+        <p>
+          Your all-in-one learning workspace for notes, courses,
+          quizzes, flashcards, planning and progress tracking.
+        </p>
+        <button onclick="showPage('courses')">Explore Learning →</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="emoji">📚</div>
+          <h3>128</h3>
+          <p>Notes studied</p>
+        </div>
+
+        <div class="stat">
+          <div class="emoji">🎯</div>
+          <h3>74%</h3>
+          <p>Average progress</p>
+        </div>
+
+        <div class="stat">
+          <div class="emoji">🔥</div>
+          <h3>12</h3>
+          <p>Day streak</p>
+        </div>
+
+        <div class="stat">
+          <div class="emoji">🏆</div>
+          <h3>2,450</h3>
+          <p>Learning points</p>
+        </div>
+      </div>
+
+      <div class="section-title">
+        <h2>Continue Learning</h2>
+        <span>View all</span>
+      </div>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-icon">⚛️</div>
+          <h3>Physics</h3>
+          <p>Mechanics and fundamental concepts.</p>
+          <div class="progress"><div style="width:78%"></div></div>
+          <small>78% complete</small>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🧬</div>
+          <h3>Biology</h3>
+          <p>Cells, genetics and human biology.</p>
+          <div class="progress"><div style="width:61%"></div></div>
+          <small>61% complete</small>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h3>Mathematics</h3>
+          <p>Algebra, geometry and problem solving.</p>
+          <div class="progress"><div style="width:69%"></div></div>
+          <small>69% complete</small>
+        </div>
+
+      </div>
+
+      <div class="section-title">
+        <h2>Quick Actions</h2>
+      </div>
+
+      <div class="quick">
+        <button onclick="showPage('notes')">📖 Read Notes</button>
+        <button onclick="showPage('quiz')">✍️ Take Quiz</button>
+        <button onclick="showPage('flashcards')">🧠 Review Cards</button>
+        <button onclick="showPage('planner')">📅 Plan Study</button>
+      </div>
+
+    </section>
+
+    <!-- Notes -->
+    <section id="notes" class="page">
+      <div class="section-title">
+        <h2>📚 Notes Library</h2>
+      </div>
+
+      <input
+        class="search"
+        placeholder="Search notes..."
+        oninput="searchCards(this.value)"
+      />
+
+      <div class="cards searchable">
+        <div class="card">
+          <div class="card-icon">⚛️</div>
+          <h3>Newton's Laws</h3>
+          <p>Understand force, mass and acceleration.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🧬</div>
+          <h3>Cell Biology</h3>
+          <p>Learn the structure and function of cells.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">📐</div>
+          <h3>Quadratic Equations</h3>
+          <p>Important formulas and problem-solving methods.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses -->
+    <section id="courses" class="page">
+      <div class="section-title">
+        <h2>🎓 Courses</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🔬</div>
+          <h3>Science Mastery</h3>
+          <p>Build strong fundamentals across science.</p>
+          <div class="progress"><div style="width:42%"></div></div>
+          <small>42% complete</small>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">➗</div>
+          <h3>Mathematics Pro</h3>
+          <p>From fundamentals to advanced problem solving.</p>
+          <div class="progress"><div style="width:55%"></div></div>
+          <small>55% complete</small>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">💻</div>
+          <h3>Computer Science</h3>
+          <p>Programming, algorithms and technology.</p>
+          <div class="progress"><div style="width:28%"></div></div>
+          <small>28% complete</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="page">
+      <div class="section-title">
+        <h2>📝 Quiz & Mock Tests</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">⏱️</div>
+          <h3>Quick Science Quiz</h3>
+          <p>10 questions • 10 minutes</p>
+          <button class="hero" style="padding:10px 15px" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🏆</div>
+          <h3>Full Mock Test</h3>
+          <p>50 questions • 60 minutes</p>
+          <button class="hero" style="padding:10px 15px" onclick="startQuiz()">Start Test</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flashcards -->
+    <section id="flashcards" class="page">
+      <div class="section-title">
+        <h2>🧠 Flashcards</h2>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">💡</div>
+        <h3>What is photosynthesis?</h3>
+        <p id="flashAnswer">Tap the button to reveal the answer.</p>
+        <button class="hero" style="padding:10px 15px" onclick="revealFlashcard()">
+          Reveal Answer
+        </button>
+      </div>
+    </section>
+
+    <!-- Planner -->
+    <section id="planner" class="page">
+      <div class="section-title">
+        <h2>📅 Study Planner</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Today's Plan</h3>
+          <p>09:00 — Mathematics</p>
+          <p>11:00 — Physics</p>
+          <p>16:00 — Biology</p>
+          <p>20:00 — Quiz practice</p>
+        </div>
+
+        <div class="card">
+          <h3>Study Goal</h3>
+          <p>Target: 4 hours today</p>
+          <div class="progress"><div style="width:72%"></div></div>
+          <small>2h 53m completed</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section id="progress" class="page">
+      <div class="section-title">
+        <h2>📊 Your Progress</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Weekly Progress</h3>
+          <div class="progress"><div style="width:82%"></div></div>
+          <p>82% of your weekly goal completed.</p>
+        </div>
+
+        <div class="card">
+          <h3>Study Streak</h3>
+          <div class="card-icon">🔥</div>
+          <h3>12 Days</h3>
+          <p>Keep going and beat your record.</p>
+        </div>
+
+        <div class="card">
+          <h3>Learning Points</h3>
+          <div class="card-icon">🏆</div>
+          <h3>2,450 XP</h3>
+          <p>Earn more points by completing activities.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI -->
+    <section id="ai" class="page">
+      <div class="section-title">
+        <h2>🤖 AI Learning Hub</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">💬</div>
+          <h3>ChatGPT</h3>
+          <p>Use AI to explain concepts and help with study.</p>
+          <a href="https://chatgpt.com/" target="_blank">
+            Open ChatGPT →
+          </a>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">✨</div>
+          <h3>Google Gemini</h3>
+          <p>Explore another AI learning assistant.</p>
+          <a href="https://gemini.google.com/" target="_blank">
+            Open Gemini →
+          </a>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🔎</div>
+          <h3>Perplexity</h3>
+          <p>Research topics and explore sources.</p>
+          <a href="https://www.perplexity.ai/" target="_blank">
+            Open Perplexity →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  function showPage(id, button) {
+    document.querySelectorAll(".page").forEach(page => {
+      page.classList.remove("active");
+    });
+
+    const target = document.getElementById(id);
+    if (target) target.classList.add("active");
+
+    document.querySelectorAll(".nav button").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    if (button) button.classList.add("active");
+
+    const titles = {
+      dashboard: "Good morning 👋",
+      notes: "Notes Library 📚",
+      courses: "Your Courses 🎓",
+      quiz: "Quiz & Mock Tests 📝",
+      flashcards: "Flashcards 🧠",
+      planner: "Study Planner 📅",
+      progress: "Your Progress 📊",
+      ai: "AI Learning Hub 🤖"
+    };
+
+    document.getElementById("pageTitle").textContent = titles[id] || "VEXO";
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+  }
+
+  function revealFlashcard() {
+    document.getElementById("flashAnswer").textContent =
+      "Photosynthesis is the process by which green plants use light energy to convert carbon dioxide and water into glucose and oxygen.";
+  }
+
+  function startQuiz() {
+    alert("Quiz started! The full quiz engine will be added in the next version.");
+  }
+
+  function searchCards(value) {
+    const cards = document.querySelectorAll(".searchable .card");
+    const term = value.toLowerCase();
+
+    cards.forEach(card => {
+      card.style.display =
+        card.innerText.toLowerCase().includes(term) ? "block" : "none";
+    });
+  }
+</script>
+
+</body>
+</html>
