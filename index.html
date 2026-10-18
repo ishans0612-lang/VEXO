@@ -990,5 +990,252 @@ renderQuiz();
 };
 </script>
 
+<!-- VEXO Study Notes Library -->
+<style>
+#vexoStudyLibrary {
+  padding: 20px;
+  border-radius: 16px;
+  font-family: inherit;
+}
+#vexoStudyLibrary * { box-sizing: border-box; }
+#vexoStudyLibrary .vsl-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+#vexoStudyLibrary input,
+#vexoStudyLibrary select,
+#vexoStudyLibrary button {
+  padding: 11px;
+  border: 1px solid #8886;
+  border-radius: 10px;
+  font: inherit;
+  max-width: 100%;
+}
+#vexoStudyLibrary input,
+#vexoStudyLibrary select {
+  width: 100%;
+  color: inherit;
+  background: var(--card, transparent);
+}
+#vexoStudyLibrary .vsl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 14px;
+}
+#vexoStudyLibrary .vsl-card,
+#vexoStudyLibrary .vsl-reader {
+  padding: 16px;
+  border: 1px solid #8885;
+  border-radius: 14px;
+  overflow-wrap: anywhere;
+}
+#vexoStudyLibrary .vsl-meta {
+  font-size: .88rem;
+  opacity: .75;
+}
+#vexoStudyLibrary .vsl-primary {
+  background: var(--accent,#635bff);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#vexoStudyLibrary .vsl-secondary {
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+}
+#vexoStudyLibrary [hidden] { display: none !important; }
+#vexoStudyLibrary .vsl-ad-slot {
+  margin: 22px 0;
+  padding: 14px;
+  border: 1px dashed #8888;
+  border-radius: 12px;
+  text-align: center;
+  opacity: .75;
+}
+</style>
+
+<section id="vexoStudyLibrary">
+  <h2>📚 VEXO Study Notes</h2>
+  <p>Class 1 থেকে Competitive Exams পর্যন্ত প্রস্তুত নোট</p>
+
+  <div class="vsl-controls">
+    <input id="vslSearch" type="search"
+      placeholder="নোট বা অধ্যায় খুঁজুন...">
+
+    <select id="vslLevel">
+      <option value="">সব শিক্ষার স্তর</option>
+      <option>Class 1–5</option>
+      <option>Class 6–8</option>
+      <option>Class 9–10</option>
+      <option>Class 11–12</option>
+      <option>Competitive Exams</option>
+    </select>
+
+    <select id="vslCourse">
+      <option value="">সব বিষয়</option>
+    </select>
+  </div>
+
+  <p id="vslCount" aria-live="polite"></p>
+  <div id="vslList" class="vsl-grid"></div>
+
+  <article id="vslReader" class="vsl-reader" hidden>
+    <button id="vslBack" class="vsl-secondary" type="button">
+      ← সব নোট
+    </button>
+    <h2 id="vslTitle"></h2>
+    <p id="vslMeta" class="vsl-meta"></p>
+    <h3>সহজ ব্যাখ্যা</h3>
+    <p id="vslContent"></p>
+    <h3>দ্রুত রিভিশন</h3>
+    <ul id="vslRevision"></ul>
+  </article>
+
+  <!-- Future AdSense placement.
+       এখানে এখনই কোনো বিজ্ঞাপন চালু নেই। -->
+  <div class="vsl-ad-slot">
+    Advertisement space
+  </div>
+</section>
+
+<script>
+(() => {
+  const notes = [
+    {
+      id: 1,
+      level: "Class 1–5",
+      course: "Mathematics",
+      chapter: "যোগ",
+      title: "যোগের প্রাথমিক ধারণা",
+      summary: "সংখ্যা একসঙ্গে করলে যোগ হয়।",
+      content: "যোগ হলো দুই বা তার বেশি সংখ্যা একত্র করার গাণিতিক প্রক্রিয়া। উদাহরণ: ২ + ৩ = ৫।",
+      revision: ["যোগের চিহ্ন +", "২ + ৩ = ৫"]
+    },
+    {
+      id: 2,
+      level: "Class 6–8",
+      course: "Science",
+      chapter: "উদ্ভিদ",
+      title: "সালোকসংশ্লেষণ",
+      summary: "উদ্ভিদ কীভাবে খাদ্য তৈরি করে।",
+      content: "সবুজ উদ্ভিদ সূর্যের আলো, জল ও কার্বন ডাই-অক্সাইড ব্যবহার করে খাদ্য তৈরি করে। এই প্রক্রিয়াকে সালোকসংশ্লেষণ বলে। এতে অক্সিজেন নির্গত হয়।",
+      revision: ["আলো প্রয়োজন", "জল ও কার্বন ডাই-অক্সাইড ব্যবহৃত হয়", "অক্সিজেন নির্গত হয়"]
+    },
+    {
+      id: 3,
+      level: "Class 9–10",
+      course: "Physics",
+      chapter: "গতি",
+      title: "গড় দ্রুতি",
+      summary: "দূরত্ব ও সময়ের সম্পর্ক।",
+      content: "গড় দ্রুতি = মোট অতিক্রান্ত দূরত্ব ÷ মোট সময়। SI একক হলো মিটার প্রতি সেকেন্ড (m/s)।",
+      revision: ["গড় দ্রুতি = দূরত্ব ÷ সময়", "SI একক m/s"]
+    },
+    {
+      id: 4,
+      level: "Class 11–12",
+      course: "Biology",
+      chapter: "কোষ",
+      title: "কোষের পরিচয়",
+      summary: "জীবদেহের গঠনগত ও কার্যগত মৌলিক একক।",
+      content: "কোষ হলো জীবদেহের গঠনগত ও কার্যগত মৌলিক একক। ইউক্যারিওটিক কোষে কোষঝিল্লি, সাইটোপ্লাজম ও নিউক্লিয়াস থাকে।",
+      revision: ["কোষ জীবনের মৌলিক একক", "নিউক্লিয়াসে জিনগত উপাদান থাকে"]
+    },
+    {
+      id: 5,
+      level: "Competitive Exams",
+      course: "Reasoning",
+      chapter: "সংখ্যার ধারা",
+      title: "সংখ্যার ধারা",
+      summary: "সংখ্যার নিয়ম খুঁজে পরের সংখ্যা বের করা।",
+      content: "ধারা: ২, ৪, ৬, ৮, ? প্রতিবার ২ যোগ হচ্ছে। তাই পরের সংখ্যা ১০।",
+      revision: ["পার্থক্য পরীক্ষা করো", "উত্তর: ১০"]
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const search = $("vslSearch");
+  const level = $("vslLevel");
+  const course = $("vslCourse");
+  const list = $("vslList");
+  const reader = $("vslReader");
+
+  function element(tag, value, className) {
+    const el = document.createElement(tag);
+    el.textContent = value ?? "";
+    if (className) el.className = className;
+    return el;
+  }
+
+  [...new Set(notes.map(n => n.course))].sort().forEach(name => {
+    const option = element("option", name);
+    option.value = name;
+    course.appendChild(option);
+  });
+
+  function render() {
+    list.replaceChildren();
+    list.hidden = false;
+    reader.hidden = true;
+
+    const q = search.value.trim().toLowerCase();
+    const filtered = notes.filter(n =>
+      (!level.value || n.level === level.value) &&
+      (!course.value || n.course === course.value) &&
+      [n.title,n.chapter,n.course,n.level,n.summary,n.content]
+        .join(" ").toLowerCase().includes(q)
+    );
+
+    $("vslCount").textContent =
+      `${filtered.length}টি নোট পাওয়া গেছে • ${notes.length}টি নমুনা নোট লোড হয়েছে`;
+
+    if (!filtered.length) {
+      list.appendChild(element("p","কোনো নোট পাওয়া যায়নি।"));
+      return;
+    }
+
+    filtered.forEach(n => {
+      const card = element("article",null,"vsl-card");
+      card.appendChild(element("h3",n.title));
+      card.appendChild(element("p",`${n.level} • ${n.course}`,"vsl-meta"));
+      card.appendChild(element("p",n.chapter));
+      card.appendChild(element("p",n.summary));
+
+      const button = element("button","নোট পড়ুন →","vsl-primary");
+      button.type = "button";
+      button.addEventListener("click",() => openNote(n));
+
+      card.appendChild(button);
+      list.appendChild(card);
+    });
+  }
+
+  function openNote(n) {
+    list.hidden = true;
+    reader.hidden = false;
+
+    $("vslTitle").textContent = n.title;
+    $("vslMeta").textContent = `${n.level} • ${n.course} • ${n.chapter}`;
+    $("vslContent").textContent = n.content;
+
+    const ul = $("vslRevision");
+    ul.replaceChildren();
+    n.revision.forEach(point => ul.appendChild(element("li",point)));
+
+    reader.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  search.addEventListener("input",render);
+  level.addEventListener("change",render);
+  course.addEventListener("change",render);
+  $("vslBack").addEventListener("click",render);
+
+  render();
+})();
+</script>
+  
 </body>
 </html>
