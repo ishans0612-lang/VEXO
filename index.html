@@ -1,723 +1,2228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VEXO — Learn Beyond Limits</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#635bff">
+<title>VEXO — Learn Beyond Limits</title>
 
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #111827;
-      --muted: #6b7280;
-      --primary: #4f46e5;
-      --primary2: #7c3aed;
-      --border: #e5e7eb;
-    }
+<style>
+:root {
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --text: #172033;
+  --muted: #697386;
+  --line: #e5e9f2;
+  --primary: #635bff;
+  --accent: #16b8a6;
+  --danger: #e24b65;
+  --font: 16px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--font)/1.5 system-ui, sans-serif;
+}
+button, input, textarea, select { font: inherit; }
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--primary);
+  color: white;
+  font-weight: 650;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+}
+textarea { min-height: 100px; }
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: 650;
+}
+.app {
+  display: grid;
+  grid-template-columns: 245px 1fr;
+  min-height: 100vh;
+}
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  padding: 20px 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  padding: 0 10px 22px;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#766dff,#16b8a6);
+  color: white;
+}
+.nav-label {
+  padding: 12px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+.nav {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 3px 0;
+  background: transparent;
+  color: var(--muted);
+}
+.nav.active, .nav:hover {
+  background: #efefff;
+  color: var(--primary);
+}
+.main { min-width: 0; }
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 22px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.topbar h2 { font-size: 1.05rem; }
+.search { flex: 1; }
+.content {
+  padding: 24px;
+  max-width: 1450px;
+  margin: auto;
+}
+.page { display: none; }
+.page.active { display: block; }
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.page-head h1 { margin: 0; }
+.muted { color: var(--muted); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 15px;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 18px;
+}
+.card {
+  min-width: 0;
+  padding: 18px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  margin-bottom: 14px;
+}
+.card h3 { margin-top: 0; }
+.stat { display: flex; gap: 12px; align-items: center; }
+.stat strong { display: block; font-size: 1.6rem; }
+.icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: #efefff;
+  border-radius: 13px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.between { justify-content: space-between; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.full { grid-column: 1/-1; }
+.item {
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+.item h4 { margin: 0 0 6px; }
+.item p { white-space: pre-wrap; }
+.item-actions { display: flex; gap: 7px; }
+.item-actions button { padding: 7px 10px; }
+.secondary { background: #eeefff; color: var(--primary); }
+.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.danger { background: var(--danger); }
+.pill {
+  display: inline-block;
+  background: #e8faf5;
+  color: #087e70;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: .8rem;
+}
+.progress {
+  height: 9px;
+  background: var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg,var(--primary),var(--accent));
+}
+.empty { padding: 20px; text-align: center; color: var(--muted); }
+.notice {
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff7df;
+  color: #76520b;
+  margin-bottom: 15px;
+}
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 8px 0;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.quiz-option.selected { border-color: var(--primary); }
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: #11182788;
+  place-items: center;
+  padding: 15px;
+}
+.modal-backdrop.open { display: grid; }
+.modal {
+  width: min(600px,100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: var(--panel);
+  color: var(--text);
+  padding: 22px;
+  border-radius: 18px;
+}
+.toast {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: #172033;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  z-index: 50;
+}
+.mobile-menu { display: none; }
 
-    body.dark {
-      --bg: #0b1020;
-      --card: #151b2e;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #273149;
-    }
+body.dark {
+  --bg: #101421;
+  --panel: #191f30;
+  --text: #eef2ff;
+  --muted: #a2abc0;
+  --line: #2b3449;
+}
+body.dark .nav.active,
+body.dark .nav:hover,
+body.dark .secondary {
+  background: #302d61;
+  color: #ddd9ff;
+}
+body.dark .icon { background: #302d61; }
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      transition: .25s;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-    }
-
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background: var(--card);
-      border-right: 1px solid var(--border);
-      padding: 24px 16px;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      font-size: 30px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      margin: 5px 12px 35px;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .nav {
-      display: grid;
-      gap: 7px;
-    }
-
-    .nav button {
-      width: 100%;
-      text-align: left;
-      padding: 13px 14px;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 15px;
-      transition: .2s;
-    }
-
-    .nav button:hover,
-    .nav button.active {
-      background: #eef2ff;
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    body.dark .nav button:hover,
-    body.dark .nav button.active {
-      background: #202844;
-    }
-
-    /* Main */
-    .main {
-      margin-left: 250px;
-      width: calc(100% - 250px);
-      padding: 25px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
-    .welcome h1 {
-      font-size: 30px;
-      margin-bottom: 5px;
-    }
-
-    .welcome p {
-      color: var(--muted);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 18px;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white;
-      border-radius: 22px;
-      padding: 30px;
-      margin-bottom: 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero h2 {
-      font-size: 27px;
-      margin-bottom: 9px;
-    }
-
-    .hero p {
-      opacity: .9;
-      max-width: 650px;
-      line-height: 1.6;
-    }
-
-    .hero button {
-      margin-top: 20px;
-      padding: 12px 18px;
-      border-radius: 10px;
-      background: white;
-      color: #4f46e5;
-      font-weight: 700;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .stat,
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-    }
-
-    .stat {
-      padding: 20px;
-    }
-
-    .stat .emoji {
-      font-size: 25px;
-      margin-bottom: 12px;
-    }
-
-    .stat h3 {
-      font-size: 25px;
-      margin-bottom: 4px;
-    }
-
-    .stat p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 25px 0 14px;
-    }
-
-    .section-title h2 {
-      font-size: 20px;
-    }
-
-    .section-title span {
-      color: var(--primary);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .card {
-      padding: 20px;
-    }
-
-    .card-icon {
-      font-size: 30px;
-      margin-bottom: 14px;
-    }
-
-    .card h3 {
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 15px;
-    }
-
-    .progress {
-      height: 7px;
-      background: var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-
-    .progress div {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--primary2));
-      border-radius: inherit;
-    }
-
-    .card small {
-      color: var(--muted);
-    }
-
-    .quick {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .quick button {
-      padding: 16px;
-      border-radius: 14px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .quick button:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    .search {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      margin-bottom: 18px;
-      outline: none;
-    }
-
-    @media (max-width: 1000px) {
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .quick {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        border-right: 0;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .app {
-        display: block;
-      }
-
-      .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 16px;
-      }
-
-      .nav {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .stats,
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        align-items: flex-start;
-      }
-
-      .welcome h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+@media(max-width:1000px) {
+  .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .two-col { grid-template-columns: 1fr; }
+}
+@media(max-width:700px) {
+  .app { display: block; }
+  .sidebar {
+    position: fixed;
+    left: -270px;
+    width: 250px;
+    z-index: 15;
+    transition: left .2s;
+  }
+  .sidebar.open { left: 0; }
+  .mobile-menu { display: inline-block; }
+  .content { padding: 14px; }
+  .topbar { padding: 12px; gap: 7px; }
+  .topbar h2 { display: none; }
+  .form-grid { grid-template-columns: 1fr; }
+  .full { grid-column: auto; }
+  .card { padding: 14px; }
+}
+@media print {
+  .sidebar,.topbar,.no-print { display: none!important; }
+  .app { display: block; }
+}
+</style>
 </head>
 
 <body>
-
 <div class="app">
 
-  <aside class="sidebar">
-    <div class="logo">VEXO</div>
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">V</div>
+    <div>VEXO<small style="display:block;font-size:10px">LEARN BEYOND LIMITS</small></div>
+  </div>
 
-    <nav class="nav">
-      <button class="active" onclick="showPage('dashboard', this)">🏠 Dashboard</button>
-      <button onclick="showPage('notes', this)">📚 Notes</button>
-      <button onclick="showPage('courses', this)">🎓 Courses</button>
-      <button onclick="showPage('quiz', this)">📝 Quiz & Tests</button>
-      <button onclick="showPage('flashcards', this)">🧠 Flashcards</button>
-      <button onclick="showPage('planner', this)">📅 Study Planner</button>
-      <button onclick="showPage('progress', this)">📊 Progress</button>
-      <button onclick="showPage('ai', this)">🤖 AI Hub</button>
-    </nav>
-  </aside>
+  <div class="nav-label">WORKSPACE</div>
+  <button class="nav active" data-page="dashboard">⌂ Dashboard</button>
+  <button class="nav" data-page="notes">▤ My Notes</button>
+  <button class="nav" data-page="courses">▣ Courses</button>
+  <button class="nav" data-page="quiz">✎ Quiz & Tests</button>
+  <button class="nav" data-page="flashcards">▧ Flashcards</button>
+  <button class="nav" data-page="planner">◷ Study Planner</button>
+  <button class="nav" data-page="progress">▥ Progress</button>
 
-  <main class="main">
+  <div class="nav-label">LEARN & SHARE</div>
+  <button class="nav" data-page="doubts">❔ Doubt Room</button>
+  <button class="nav" data-page="ai">✦ AI Study Hub</button>
+  <button class="nav" data-page="certificates">🏅 Certificates</button>
 
-    <div class="topbar">
-      <div class="welcome">
-        <h1 id="pageTitle">Good morning 👋</h1>
-        <p>Keep learning. Keep growing. Go beyond your limits.</p>
-      </div>
+  <div class="nav-label">SYSTEM</div>
+  <button class="nav" data-page="notifications">♧ Notifications</button>
+  <button class="nav" data-page="settings">⚙ Settings</button>
 
-      <div class="actions">
-        <button class="icon-btn" onclick="toggleTheme()">🌙</button>
+  <p class="muted" style="font-size:12px;padding:10px">
+    VEXO · Saved in this browser
+  </p>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <button class="ghost mobile-menu" id="menuBtn">☰</button>
+  <h2>VEXO</h2>
+  <input class="search" id="globalSearch"
+    placeholder="Search notes, courses and questions...">
+  <button class="secondary" id="quickAdd">＋ Add</button>
+  <button class="ghost" id="themeToggle">☾</button>
+</header>
+
+<div class="content">
+
+<section class="page active" id="page-dashboard">
+  <div class="page-head">
+    <div>
+      <h1>Welcome back, learner!</h1>
+      <p class="muted">Your learning space, all in one place.</p>
+    </div>
+    <button data-goto="courses">Start studying</button>
+  </div>
+
+  <div class="grid">
+    <div class="card stat"><div class="icon">▤</div><div>Saved notes<strong id="statNotes">0</strong></div></div>
+    <div class="card stat"><div class="icon">▣</div><div>My courses<strong id="statCourses">0</strong></div></div>
+    <div class="card stat"><div class="icon">✓</div><div>Quiz attempts<strong id="statAttempts">0</strong></div></div>
+    <div class="card stat"><div class="icon">◷</div><div>Study tasks<strong id="statTasks">0</strong></div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="row between"><h3>Recent notes</h3><button class="secondary" data-goto="notes">View all</button></div>
+      <div id="recentNotes"></div>
+    </div>
+    <div class="card">
+      <div class="row between"><h3>Upcoming tasks</h3><button class="secondary" data-goto="planner">View all</button></div>
+      <div id="upcomingTasks"></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card"><h3>Learning progress</h3><div id="dashboardProgress"></div></div>
+    <div class="card">
+      <h3>Quick actions</h3>
+      <div class="row">
+        <button class="secondary" data-goto="notes">Create note</button>
+        <button class="secondary" data-goto="quiz">Take quiz</button>
+        <button class="secondary" data-goto="planner">Plan study</button>
+        <button class="secondary" data-goto="doubts">Ask doubt</button>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Dashboard -->
-    <section id="dashboard" class="page active">
+<section class="page" id="page-notes">
+  <div class="page-head"><h1>My Notes</h1><button id="newNoteBtn">＋ New note</button></div>
+  <div class="card">
+    <div class="form-grid">
+      <div><label>Title</label><input id="noteTitle" placeholder="e.g. Photosynthesis"></div>
+      <div><label>Subject</label><input id="noteSubject" placeholder="e.g. Biology"></div>
+      <div class="full"><label>Content</label><textarea id="noteContent" placeholder="Write your notes..."></textarea></div>
+      <div class="full row"><button id="saveNoteBtn">Save note</button><button class="ghost" id="cancelNoteBtn">Clear</button></div>
+    </div>
+  </div>
+  <div class="row between"><h3>All notes</h3><input id="noteFilter" style="max-width:250px" placeholder="Filter notes"></div>
+  <div id="notesList"></div>
+</section>
 
-      <div class="hero">
-        <h2>Welcome to VEXO 🚀</h2>
-        <p>
-          Your all-in-one learning workspace for notes, courses,
-          quizzes, flashcards, planning and progress tracking.
-        </p>
-        <button onclick="showPage('courses')">Explore Learning →</button>
-      </div>
+<section class="page" id="page-courses">
+  <div class="page-head"><h1>Courses</h1></div>
+  <div class="card">
+    <div class="form-grid">
+      <div><label>Course name</label><input id="courseName"></div>
+      <div><label>Subject</label><input id="courseSubject"></div>
+      <div><label>Goal / description</label><input id="courseGoal"></div>
+      <div><label>Progress (%)</label><input id="courseProgress" type="number" min="0" max="100" value="0"></div>
+      <div class="full"><button id="saveCourseBtn">Save course</button></div>
+    </div>
+  </div>
+  <div id="coursesList"></div>
+</section>
 
-      <div class="stats">
-        <div class="stat">
-          <div class="emoji">📚</div>
-          <h3>128</h3>
-          <p>Notes studied</p>
-        </div>
+<section class="page" id="page-quiz">
+  <div class="page-head"><h1>Quiz & Tests</h1></div>
+  <div class="notice">Practice mode: the timer and random order are for practice only. This browser-only quiz is not secure against cheating.</div>
+  <div class="two-col">
+    <div class="card">
+      <h3>Science & General Knowledge</h3>
+      <p class="muted">5 questions · random order · 5-minute timer</p>
+      <button id="startQuizBtn">Start quiz</button>
+      <div id="quizArea"></div>
+    </div>
+    <div class="card"><h3>Past results</h3><div id="quizHistory"></div></div>
+  </div>
+</section>
 
-        <div class="stat">
-          <div class="emoji">🎯</div>
-          <h3>74%</h3>
-          <p>Average progress</p>
-        </div>
+<section class="page" id="page-flashcards">
+  <div class="page-head"><h1>Flashcards</h1></div>
+  <div class="card">
+    <label>Front / question</label><input id="flashFront">
+    <label>Back / answer</label><input id="flashBack">
+    <button id="saveFlashBtn" style="margin-top:12px">Add flashcard</button>
+  </div>
+  <div class="two-col">
+    <div class="card"><h3>Review cards</h3><div id="flashReview"></div><button class="secondary" id="revealFlashBtn">Reveal answer</button><button id="nextFlashBtn">Next card</button></div>
+    <div class="card"><h3>Your cards</h3><div id="flashList"></div></div>
+  </div>
+</section>
 
-        <div class="stat">
-          <div class="emoji">🔥</div>
-          <h3>12</h3>
-          <p>Day streak</p>
-        </div>
+<section class="page" id="page-planner">
+  <div class="page-head"><h1>Study Planner</h1></div>
+  <div class="card">
+    <label>Task</label><input id="taskTitle">
+    <label>Due date</label><input id="taskDate" type="date">
+    <label>Subject</label><input id="taskSubject">
+    <label>Study time (minutes)</label><input id="taskDuration" type="number" value="30" min="5">
+    <button id="saveTaskBtn" style="margin-top:12px">Add task</button>
+  </div>
+  <div id="tasksList"></div>
+</section>
 
-        <div class="stat">
-          <div class="emoji">🏆</div>
-          <h3>2,450</h3>
-          <p>Learning points</p>
-        </div>
-      </div>
+<section class="page" id="page-progress">
+  <div class="page-head"><h1>Progress Analytics</h1><button id="shareProgressBtn">Share report</button></div>
+  <div class="grid">
+    <div class="card">Average score<strong id="averageScore">—</strong></div>
+    <div class="card">Completed courses<strong id="completedCourses">0</strong></div>
+    <div class="card">Tasks completed<strong id="tasksCompleted">0</strong></div>
+    <div class="card">Total attempts<strong id="totalAttempts">0</strong></div>
+  </div>
+  <div class="two-col">
+    <div class="card"><h3>Subject analysis</h3><div id="subjectAnalytics"></div></div>
+    <div class="card"><h3>What to improve next</h3><div id="improvementTips"></div></div>
+  </div>
+</section>
 
-      <div class="section-title">
-        <h2>Continue Learning</h2>
-        <span>View all</span>
-      </div>
+<section class="page" id="page-doubts">
+  <div class="page-head"><h1>Doubt Room</h1></div>
+  <div class="notice">Demo only: doubts stay in this browser. They are not sent to other students or teachers.</div>
+  <div class="card">
+    <label>Your question</label><textarea id="doubtQuestion"></textarea>
+    <label>Subject</label><input id="doubtSubject">
+    <label>Your explanation (optional)</label><textarea id="doubtAnswer"></textarea>
+    <button id="saveDoubtBtn" style="margin-top:12px">Save doubt</button>
+  </div>
+  <div id="doubtsList"></div>
+</section>
 
-      <div class="cards">
+<section class="page" id="page-ai">
+  <div class="page-head"><h1>AI Study Hub</h1></div>
+  <div class="notice">These are built-in study templates, not a live AI model. No paid API is used.</div>
+  <div class="two-col">
+    <div class="card">
+      <h3>Study guide</h3>
+      <label>Topic</label><input id="aiTopic">
+      <label>Learning level</label>
+      <select id="aiLevel"><option>Simple</option><option>School level</option><option>Advanced</option></select>
+      <button id="explainBtn" style="margin-top:12px">Create study guide</button>
+      <div id="aiOutput"></div>
+    </div>
+    <div class="card">
+      <h3>Study tools</h3>
+      <button id="makeQuestionsBtn">Revision prompts from notes</button>
+      <button id="makePlanBtn" style="margin-top:10px">Create 3-day study plan</button>
+      <div id="aiToolsOutput"></div>
+    </div>
+  </div>
+</section>
 
-        <div class="card">
-          <div class="card-icon">⚛️</div>
-          <h3>Physics</h3>
-          <p>Mechanics and fundamental concepts.</p>
-          <div class="progress"><div style="width:78%"></div></div>
-          <small>78% complete</small>
-        </div>
+<section class="page" id="page-certificates">
+  <div class="page-head"><h1>Certificates</h1></div>
+  <div class="notice">Personal practice certificate only; not an accredited or independently verified qualification.</div>
+  <div class="card">
+    <label>Learner name</label><input id="certName">
+    <label>Achievement</label><input id="certAchievement" placeholder="e.g. Algebra Basics">
+    <button id="generateCertBtn" style="margin-top:12px">Generate certificate</button>
+  </div>
+  <div id="certView"></div>
+</section>
 
-        <div class="card">
-          <div class="card-icon">🧬</div>
-          <h3>Biology</h3>
-          <p>Cells, genetics and human biology.</p>
-          <div class="progress"><div style="width:61%"></div></div>
-          <small>61% complete</small>
-        </div>
+<section class="page" id="page-notifications">
+  <div class="page-head"><h1>Notifications</h1><button class="ghost" id="clearNotifications">Clear</button></div>
+  <div id="notificationsList"></div>
+</section>
 
-        <div class="card">
-          <div class="card-icon">📐</div>
-          <h3>Mathematics</h3>
-          <p>Algebra, geometry and problem solving.</p>
-          <div class="progress"><div style="width:69%"></div></div>
-          <small>69% complete</small>
-        </div>
+<section class="page" id="page-settings">
+  <div class="page-head"><h1>Settings</h1></div>
+  <div class="card">
+    <h3>Language</h3><label>Interface language</label><select id="languageSelect"></select>
+    <p class="muted">English, Bengali and Hindi have built-in translations for selected interface text. Other languages are listed, but translations must be added to the code. User notes are not automatically translated.</p>
+    <hr>
+    <h3>Appearance</h3>
+    <label>Theme</label><select id="themeSelect"><option value="light">Light</option><option value="dark">Dark</option></select>
+    <label>Accent color</label><input id="accentColor" type="color" value="#635bff">
+    <label>Font size</label><select id="fontSizeSelect"><option value="14px">Small</option><option value="16px">Medium</option><option value="18px">Large</option><option value="20px">Extra large</option></select>
+    <hr>
+    <h3>Backup & Restore</h3>
+    <button id="exportBtn">Export data</button>
+    <button class="secondary" id="importBtn">Restore backup</button>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+    <hr>
+    <h3>Data & Privacy</h3>
+    <p class="muted">Data is stored in this browser. It is not a cloud database. Clearing browser data may erase it.</p>
+    <button class="danger" id="resetBtn">Delete all local data</button>
+  </div>
+  <p class="muted">VEXO is a website. No offline/PWA mode is included.</p>
+</section>
 
-      </div>
-
-      <div class="section-title">
-        <h2>Quick Actions</h2>
-      </div>
-
-      <div class="quick">
-        <button onclick="showPage('notes')">📖 Read Notes</button>
-        <button onclick="showPage('quiz')">✍️ Take Quiz</button>
-        <button onclick="showPage('flashcards')">🧠 Review Cards</button>
-        <button onclick="showPage('planner')">📅 Plan Study</button>
-      </div>
-
-    </section>
-
-    <!-- Notes -->
-    <section id="notes" class="page">
-      <div class="section-title">
-        <h2>📚 Notes Library</h2>
-      </div>
-
-      <input
-        class="search"
-        placeholder="Search notes..."
-        oninput="searchCards(this.value)"
-      />
-
-      <div class="cards searchable">
-        <div class="card">
-          <div class="card-icon">⚛️</div>
-          <h3>Newton's Laws</h3>
-          <p>Understand force, mass and acceleration.</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">🧬</div>
-          <h3>Cell Biology</h3>
-          <p>Learn the structure and function of cells.</p>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">📐</div>
-          <h3>Quadratic Equations</h3>
-          <p>Important formulas and problem-solving methods.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Courses -->
-    <section id="courses" class="page">
-      <div class="section-title">
-        <h2>🎓 Courses</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon">🔬</div>
-          <h3>Science Mastery</h3>
-          <p>Build strong fundamentals across science.</p>
-          <div class="progress"><div style="width:42%"></div></div>
-          <small>42% complete</small>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">➗</div>
-          <h3>Mathematics Pro</h3>
-          <p>From fundamentals to advanced problem solving.</p>
-          <div class="progress"><div style="width:55%"></div></div>
-          <small>55% complete</small>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">💻</div>
-          <h3>Computer Science</h3>
-          <p>Programming, algorithms and technology.</p>
-          <div class="progress"><div style="width:28%"></div></div>
-          <small>28% complete</small>
-        </div>
-      </div>
-    </section>
-
-    <!-- Quiz -->
-    <section id="quiz" class="page">
-      <div class="section-title">
-        <h2>📝 Quiz & Mock Tests</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon">⏱️</div>
-          <h3>Quick Science Quiz</h3>
-          <p>10 questions • 10 minutes</p>
-          <button class="hero" style="padding:10px 15px" onclick="startQuiz()">Start Quiz</button>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">🏆</div>
-          <h3>Full Mock Test</h3>
-          <p>50 questions • 60 minutes</p>
-          <button class="hero" style="padding:10px 15px" onclick="startQuiz()">Start Test</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Flashcards -->
-    <section id="flashcards" class="page">
-      <div class="section-title">
-        <h2>🧠 Flashcards</h2>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">💡</div>
-        <h3>What is photosynthesis?</h3>
-        <p id="flashAnswer">Tap the button to reveal the answer.</p>
-        <button class="hero" style="padding:10px 15px" onclick="revealFlashcard()">
-          Reveal Answer
-        </button>
-      </div>
-    </section>
-
-    <!-- Planner -->
-    <section id="planner" class="page">
-      <div class="section-title">
-        <h2>📅 Study Planner</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <h3>Today's Plan</h3>
-          <p>09:00 — Mathematics</p>
-          <p>11:00 — Physics</p>
-          <p>16:00 — Biology</p>
-          <p>20:00 — Quiz practice</p>
-        </div>
-
-        <div class="card">
-          <h3>Study Goal</h3>
-          <p>Target: 4 hours today</p>
-          <div class="progress"><div style="width:72%"></div></div>
-          <small>2h 53m completed</small>
-        </div>
-      </div>
-    </section>
-
-    <!-- Progress -->
-    <section id="progress" class="page">
-      <div class="section-title">
-        <h2>📊 Your Progress</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <h3>Weekly Progress</h3>
-          <div class="progress"><div style="width:82%"></div></div>
-          <p>82% of your weekly goal completed.</p>
-        </div>
-
-        <div class="card">
-          <h3>Study Streak</h3>
-          <div class="card-icon">🔥</div>
-          <h3>12 Days</h3>
-          <p>Keep going and beat your record.</p>
-        </div>
-
-        <div class="card">
-          <h3>Learning Points</h3>
-          <div class="card-icon">🏆</div>
-          <h3>2,450 XP</h3>
-          <p>Earn more points by completing activities.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- AI -->
-    <section id="ai" class="page">
-      <div class="section-title">
-        <h2>🤖 AI Learning Hub</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon">💬</div>
-          <h3>ChatGPT</h3>
-          <p>Use AI to explain concepts and help with study.</p>
-          <a href="https://chatgpt.com/" target="_blank">
-            Open ChatGPT →
-          </a>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">✨</div>
-          <h3>Google Gemini</h3>
-          <p>Explore another AI learning assistant.</p>
-          <a href="https://gemini.google.com/" target="_blank">
-            Open Gemini →
-          </a>
-        </div>
-
-        <div class="card">
-          <div class="card-icon">🔎</div>
-          <h3>Perplexity</h3>
-          <p>Research topics and explore sources.</p>
-          <a href="https://www.perplexity.ai/" target="_blank">
-            Open Perplexity →
-          </a>
-        </div>
-      </div>
-    </section>
-
-  </main>
+</div>
+</main>
 </div>
 
-<script>
-  function showPage(id, button) {
-    document.querySelectorAll(".page").forEach(page => {
-      page.classList.remove("active");
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="row between"><h2 id="modalTitle">VEXO</h2><button class="ghost" id="closeModal">✕</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div id="toast" class="toast" hidden></div>
+  <script>
+"use strict";
+
+/* VEXO — PART 2/3
+   Notes, courses, flashcards, planner, quiz,
+   progress, doubts, AI study tools and persistence.
+*/
+
+const $ = (id) => document.getElementById(id);
+
+const STORE_KEY = "vexo_study_data_v1";
+
+const defaultData = {
+  notes: [],
+  courses: [],
+  flashcards: [],
+  tasks: [],
+  quizHistory: [],
+  doubts: [],
+  notifications: [],
+  settings: {
+    language: "en",
+    theme: "light",
+    accent: "#6c63ff",
+    fontSize: "16"
+  }
+};
+
+let data = loadData();
+let editingNoteId = null;
+let activeQuiz = null;
+let flashIndex = 0;
+let flashRevealed = false;
+
+function uid() {
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 8);
+}
+
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (!saved || typeof saved !== "object") {
+      return structuredClone(defaultData);
+    }
+
+    return {
+      ...structuredClone(defaultData),
+      ...saved,
+      settings: {
+        ...defaultData.settings,
+        ...(saved.settings || {})
+      }
+    };
+  } catch (error) {
+    return structuredClone(defaultData);
+  }
+}
+
+function saveData() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  } catch (error) {
+    toast("Could not save. Browser storage may be full.");
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function formatDate(value) {
+  if (!value) return "No date";
+  const date = new Date(value + "T00:00:00");
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleDateString();
+}
+
+function toast(message) {
+  const element = $("toast");
+  if (!element) return;
+
+  element.textContent = message;
+  element.classList.add("show");
+
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => {
+    element.classList.remove("show");
+  }, 2600);
+}
+
+function openModal(title, content) {
+  $("modalTitle").textContent = title;
+  $("modalBody").innerHTML = content;
+  $("modalBackdrop").classList.add("show");
+}
+
+function closeModal() {
+  $("modalBackdrop").classList.remove("show");
+}
+
+function navigate(page) {
+  const target = document.getElementById("page-" + page);
+  if (!target) return;
+
+  document.querySelectorAll(".page").forEach((section) => {
+    section.classList.remove("active");
+  });
+
+  target.classList.add("active");
+
+  document.querySelectorAll("[data-page]").forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.page === page
+    );
+  });
+
+  const titles = {
+    dashboard: "Dashboard",
+    notes: "My Notes",
+    courses: "My Courses",
+    quiz: "Quiz & Tests",
+    flashcards: "Flashcards",
+    planner: "Study Planner",
+    progress: "My Progress",
+    doubts: "Doubt Room",
+    ai: "AI Study Hub",
+    certificates: "Certificates",
+    notifications: "Notifications",
+    settings: "Settings"
+  };
+
+  const heading = $("pageTitle");
+  if (heading) heading.textContent = titles[page] || page;
+
+  $("sidebar")?.classList.remove("open");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.addEventListener("click", (event) => {
+  const pageButton = event.target.closest("[data-page]");
+  if (pageButton) {
+    navigate(pageButton.dataset.page);
+    return;
+  }
+
+  const gotoButton = event.target.closest("[data-goto]");
+  if (gotoButton) {
+    navigate(gotoButton.dataset.goto);
+    return;
+  }
+});
+
+$("menuBtn")?.addEventListener("click", () => {
+  $("sidebar")?.classList.toggle("open");
+});
+
+$("closeModal")?.addEventListener("click", closeModal);
+
+$("modalBackdrop")?.addEventListener("click", (event) => {
+  if (event.target === $("modalBackdrop")) closeModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeModal();
+});
+
+/* ---------------- NOTES ---------------- */
+
+function renderNotes() {
+  const list = $("notesList");
+  if (!list) return;
+
+  const query = ($("noteFilter")?.value || "").toLowerCase();
+
+  const notes = [...data.notes]
+    .filter((note) => {
+      const text = [
+        note.title,
+        note.subject,
+        note.content
+      ].join(" ").toLowerCase();
+
+      return text.includes(query);
+    })
+    .sort((a, b) => b.updatedAt - a.updatedAt);
+
+  if (!notes.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <h3>No notes found</h3>
+        <p>Create your first note to get started.</p>
+      </div>`;
+  } else {
+    list.innerHTML = notes.map((note) => `
+      <article class="item-card">
+        <div class="item-top">
+          <div>
+            <h3>${escapeHTML(note.title)}</h3>
+            <small>${escapeHTML(note.subject || "General")} ·
+              ${new Date(note.updatedAt).toLocaleDateString()}</small>
+          </div>
+        </div>
+        <p>${escapeHTML(note.content).slice(0, 260)}
+          ${note.content.length > 260 ? "…" : ""}</p>
+        <div class="item-actions">
+          <button class="btn btn-secondary"
+            data-edit-note="${note.id}">Edit</button>
+          <button class="btn btn-danger"
+            data-delete-note="${note.id}">Delete</button>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  const recent = $("recentNotes");
+  if (recent) {
+    recent.innerHTML = [...data.notes]
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .slice(0, 4)
+      .map((note) => `
+        <div class="mini-item">
+          <strong>${escapeHTML(note.title)}</strong>
+          <small>${escapeHTML(note.subject || "General")}</small>
+        </div>
+      `).join("") || "<p>No notes yet.</p>";
+  }
+}
+
+function clearNoteForm() {
+  editingNoteId = null;
+  $("noteTitle").value = "";
+  $("noteSubject").value = "";
+  $("noteContent").value = "";
+  $("saveNoteBtn").textContent = "Save Note";
+}
+
+$("saveNoteBtn")?.addEventListener("click", () => {
+  const title = $("noteTitle").value.trim();
+  const subject = $("noteSubject").value.trim();
+  const content = $("noteContent").value.trim();
+
+  if (!title || !content) {
+    toast("Enter a note title and content.");
+    return;
+  }
+
+  if (editingNoteId) {
+    const note = data.notes.find((item) => item.id === editingNoteId);
+
+    if (note) {
+      note.title = title;
+      note.subject = subject;
+      note.content = content;
+      note.updatedAt = Date.now();
+    }
+  } else {
+    data.notes.push({
+      id: uid(),
+      title,
+      subject,
+      content,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
     });
+  }
 
-    const target = document.getElementById(id);
-    if (target) target.classList.add("active");
+  saveData();
+  clearNoteForm();
+  renderAll();
+  toast("Note saved!");
+});
 
-    document.querySelectorAll(".nav button").forEach(btn => {
-      btn.classList.remove("active");
-    });
+$("cancelNoteBtn")?.addEventListener("click", clearNoteForm);
+$("newNoteBtn")?.addEventListener("click", () => {
+  clearNoteForm();
+  $("noteTitle")?.focus();
+});
+$("noteFilter")?.addEventListener("input", renderNotes);
 
-    if (button) button.classList.add("active");
+$("notesList")?.addEventListener("click", (event) => {
+  const edit = event.target.closest("[data-edit-note]");
+  const remove = event.target.closest("[data-delete-note]");
 
-    const titles = {
-      dashboard: "Good morning 👋",
-      notes: "Notes Library 📚",
-      courses: "Your Courses 🎓",
-      quiz: "Quiz & Mock Tests 📝",
-      flashcards: "Flashcards 🧠",
-      planner: "Study Planner 📅",
-      progress: "Your Progress 📊",
-      ai: "AI Learning Hub 🤖"
+  if (edit) {
+    const note = data.notes.find(
+      (item) => item.id === edit.dataset.editNote
+    );
+    if (!note) return;
+
+    editingNoteId = note.id;
+    $("noteTitle").value = note.title;
+    $("noteSubject").value = note.subject || "";
+    $("noteContent").value = note.content;
+    $("saveNoteBtn").textContent = "Update Note";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (remove) {
+    const id = remove.dataset.deleteNote;
+
+    openModal(
+      "Delete note?",
+      `<p>This action cannot be undone.</p>
+       <div class="item-actions">
+         <button class="btn btn-danger" id="confirmDeleteNote">
+           Delete
+         </button>
+         <button class="btn btn-secondary" id="cancelDeleteNote">
+           Cancel
+         </button>
+       </div>`
+    );
+
+    $("confirmDeleteNote").onclick = () => {
+      data.notes = data.notes.filter((item) => item.id !== id);
+      saveData();
+      closeModal();
+      renderAll();
+      toast("Note deleted.");
     };
 
-    document.getElementById("pageTitle").textContent = titles[id] || "VEXO";
+    $("cancelDeleteNote").onclick = closeModal;
+  }
+});
+
+/* ---------------- COURSES ---------------- */
+
+function renderCourses() {
+  const list = $("coursesList");
+  if (!list) return;
+
+  if (!data.courses.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <h3>No courses yet</h3>
+        <p>Add a subject or course to track your progress.</p>
+      </div>`;
+    return;
   }
 
-  function toggleTheme() {
-    document.body.classList.toggle("dark");
+  list.innerHTML = data.courses.map((course) => `
+    <article class="item-card">
+      <div class="item-top">
+        <div>
+          <h3>${escapeHTML(course.name)}</h3>
+          <small>${escapeHTML(course.subject || "General")}</small>
+        </div>
+        <strong>${course.progress}%</strong>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${course.progress}%"></div>
+      </div>
+      <p>${escapeHTML(course.goal || "Keep learning!")}</p>
+      <div class="item-actions">
+        <button class="btn btn-secondary"
+          data-progress-course="${course.id}">Update progress</button>
+        <button class="btn btn-danger"
+          data-delete-course="${course.id}">Delete</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+$("saveCourseBtn")?.addEventListener("click", () => {
+  const name = $("courseName").value.trim();
+  const subject = $("courseSubject").value.trim();
+  const goal = $("courseGoal").value.trim();
+  const progress = Math.max(
+    0,
+    Math.min(100, Number($("courseProgress").value) || 0)
+  );
+
+  if (!name) {
+    toast("Enter a course name.");
+    return;
   }
 
-  function revealFlashcard() {
-    document.getElementById("flashAnswer").textContent =
-      "Photosynthesis is the process by which green plants use light energy to convert carbon dioxide and water into glucose and oxygen.";
+  data.courses.push({
+    id: uid(),
+    name,
+    subject,
+    goal,
+    progress,
+    createdAt: Date.now()
+  });
+
+  $("courseName").value = "";
+  $("courseSubject").value = "";
+  $("courseGoal").value = "";
+  $("courseProgress").value = "0";
+
+  saveData();
+  renderAll();
+  toast("Course added!");
+});
+
+$("coursesList")?.addEventListener("click", (event) => {
+  const update = event.target.closest("[data-progress-course]");
+  const remove = event.target.closest("[data-delete-course]");
+
+  if (update) {
+    const course = data.courses.find(
+      (item) => item.id === update.dataset.progressCourse
+    );
+    if (!course) return;
+
+    openModal("Update progress", `
+      <p>${escapeHTML(course.name)}</p>
+      <label for="newCourseProgress">Progress: 0–100%</label>
+      <input id="newCourseProgress" type="number"
+        min="0" max="100" value="${course.progress}">
+      <div class="item-actions">
+        <button class="btn btn-primary" id="applyCourseProgress">
+          Save
+        </button>
+      </div>
+    `);
+
+    $("applyCourseProgress").onclick = () => {
+      const value = Number($("newCourseProgress").value);
+      if (!Number.isFinite(value) || value < 0 || value > 100) {
+        toast("Enter a value between 0 and 100.");
+        return;
+      }
+
+      course.progress = value;
+      saveData();
+      closeModal();
+      renderAll();
+      toast("Progress updated.");
+    };
   }
 
-  function startQuiz() {
-    alert("Quiz started! The full quiz engine will be added in the next version.");
+  if (remove) {
+    const id = remove.dataset.deleteCourse;
+    data.courses = data.courses.filter((item) => item.id !== id);
+    saveData();
+    renderAll();
+    toast("Course deleted.");
+  }
+});
+
+/* ---------------- FLASHCARDS ---------------- */
+
+function renderFlashcards() {
+  const list = $("flashList");
+  const review = $("flashReview");
+
+  if (list) {
+    list.innerHTML = data.flashcards.map((card, index) => `
+      <article class="item-card">
+        <strong>${escapeHTML(card.front)}</strong>
+        <p>${escapeHTML(card.back).slice(0, 120)}</p>
+        <button class="btn btn-danger"
+          data-delete-flash="${card.id}">Delete</button>
+      </article>
+    `).join("") || "<p>No flashcards yet.</p>";
   }
 
-  function searchCards(value) {
-    const cards = document.querySelectorAll(".searchable .card");
-    const term = value.toLowerCase();
+  if (review) {
+    if (!data.flashcards.length) {
+      review.innerHTML = "<p>Add a flashcard to begin reviewing.</p>";
+    } else {
+      flashIndex = flashIndex % data.flashcards.length;
+      const card = data.flashcards[flashIndex];
 
-    cards.forEach(card => {
-      card.style.display =
-        card.innerText.toLowerCase().includes(term) ? "block" : "none";
+      review.innerHTML = `
+        <div class="flashcard">
+          <small>Card ${flashIndex + 1} of ${data.flashcards.length}</small>
+          <h3>${escapeHTML(card.front)}</h3>
+          <div id="flashAnswer" ${flashRevealed ? "" : 'hidden'}>
+            <hr>
+            <p>${escapeHTML(card.back)}</p>
+          </div>
+        </div>`;
+    }
+  }
+}
+
+$("saveFlashBtn")?.addEventListener("click", () => {
+  const front = $("flashFront").value.trim();
+  const back = $("flashBack").value.trim();
+
+  if (!front || !back) {
+    toast("Enter both the question and answer.");
+    return;
+  }
+
+  data.flashcards.push({ id: uid(), front, back });
+  $("flashFront").value = "";
+  $("flashBack").value = "";
+  flashIndex = data.flashcards.length - 1;
+  flashRevealed = false;
+
+  saveData();
+  renderAll();
+  toast("Flashcard saved!");
+});
+
+$("revealFlashBtn")?.addEventListener("click", () => {
+  flashRevealed = !flashRevealed;
+  renderFlashcards();
+});
+
+$("nextFlashBtn")?.addEventListener("click", () => {
+  if (!data.flashcards.length) return;
+  flashIndex = (flashIndex + 1) % data.flashcards.length;
+  flashRevealed = false;
+  renderFlashcards();
+});
+
+$("flashList")?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-delete-flash]");
+  if (!button) return;
+
+  data.flashcards = data.flashcards.filter(
+    (card) => card.id !== button.dataset.deleteFlash
+  );
+
+  flashIndex = 0;
+  flashRevealed = false;
+  saveData();
+  renderAll();
+  toast("Flashcard deleted.");
+});
+
+/* ---------------- STUDY PLANNER ---------------- */
+
+function renderTasks() {
+  const list = $("tasksList");
+  const upcoming = $("upcomingTasks");
+
+  const tasks = [...data.tasks].sort((a, b) =>
+    (a.date || "9999").localeCompare(b.date || "9999")
+  );
+
+  if (list) {
+    list.innerHTML = tasks.map((task) => `
+      <article class="item-card ${task.done ? "completed" : ""}">
+        <div class="item-top">
+          <div>
+            <h3>${escapeHTML(task.title)}</h3>
+            <small>${escapeHTML(task.subject || "General")} ·
+              ${formatDate(task.date)}</small>
+          </div>
+          <strong>${task.duration} min</strong>
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-secondary"
+            data-toggle-task="${task.id}">
+            ${task.done ? "Mark incomplete" : "Mark complete"}
+          </button>
+          <button class="btn btn-danger"
+            data-delete-task="${task.id}">Delete</button>
+        </div>
+      </article>
+    `).join("") || "<p>No study tasks planned.</p>";
+  }
+
+  if (upcoming) {
+    upcoming.innerHTML = tasks
+      .filter((task) => !task.done)
+      .slice(0, 4)
+      .map((task) => `
+        <div class="mini-item">
+          <strong>${escapeHTML(task.title)}</strong>
+          <small>${formatDate(task.date)} · ${task.duration} min</small>
+        </div>
+      `).join("") || "<p>No upcoming tasks.</p>";
+  }
+}
+
+$("saveTaskBtn")?.addEventListener("click", () => {
+  const title = $("taskTitle").value.trim();
+  const date = $("taskDate").value;
+  const subject = $("taskSubject").value.trim();
+  const duration = Math.max(
+    5,
+    Math.min(1440, Number($("taskDuration").value) || 30)
+  );
+
+  if (!title) {
+    toast("Enter a task name.");
+    return;
+  }
+
+  data.tasks.push({
+    id: uid(),
+    title,
+    date,
+    subject,
+    duration,
+    done: false,
+    createdAt: Date.now()
+  });
+
+  $("taskTitle").value = "";
+  $("taskDate").value = "";
+  $("taskSubject").value = "";
+  $("taskDuration").value = "30";
+
+  saveData();
+  renderAll();
+  toast("Study task added!");
+});
+
+$("tasksList")?.addEventListener("click", (event) => {
+  const toggle = event.target.closest("[data-toggle-task]");
+  const remove = event.target.closest("[data-delete-task]");
+
+  if (toggle) {
+    const task = data.tasks.find(
+      (item) => item.id === toggle.dataset.toggleTask
+    );
+    if (task) task.done = !task.done;
+  }
+
+  if (remove) {
+    data.tasks = data.tasks.filter(
+      (item) => item.id !== remove.dataset.deleteTask
+    );
+  }
+
+  saveData();
+  renderAll();
+});
+
+/* ---------------- QUIZ ENGINE ---------------- */
+
+/* These are sample questions. Add your own questions in Part 3. */
+const quizQuestions = [
+  {
+    subject: "Science",
+    question: "Which planet is known as the Red Planet?",
+    options: ["Earth", "Mars", "Venus", "Jupiter"],
+    answer: 1,
+    explanation: "Mars appears reddish because of iron oxide on its surface."
+  },
+  {
+    subject: "Science",
+    question: "What is the chemical formula of water?",
+    options: ["CO2", "O2", "H2O", "NaCl"],
+    answer: 2,
+    explanation: "A water molecule contains two hydrogen atoms and one oxygen atom."
+  },
+  {
+    subject: "Mathematics",
+    question: "What is 12 × 8?",
+    options: ["84", "92", "96", "108"],
+    answer: 2,
+    explanation: "12 multiplied by 8 equals 96."
+  },
+  {
+    subject: "Mathematics",
+    question: "What is the square of 9?",
+    options: ["18", "72", "81", "99"],
+    answer: 2,
+    explanation: "9 × 9 = 81."
+  },
+  {
+    subject: "General Knowledge",
+    question: "What is the capital of India?",
+    options: ["Mumbai", "New Delhi", "Kolkata", "Chennai"],
+    answer: 1,
+    explanation: "New Delhi is the capital of India."
+  }
+];
+
+function shuffle(items) {
+  const result = [...items];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function startQuiz() {
+  activeQuiz = {
+    questions: shuffle(quizQuestions),
+    index: 0,
+    score: 0,
+    answers: [],
+    startedAt: Date.now()
+  };
+
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const area = $("quizArea");
+  if (!area || !activeQuiz) return;
+
+  if (activeQuiz.index >= activeQuiz.questions.length) {
+    finishQuiz();
+    return;
+  }
+
+  const question = activeQuiz.questions[activeQuiz.index];
+
+  area.innerHTML = `
+    <div class="quiz-question">
+      <small>Question ${activeQuiz.index + 1}
+        of ${activeQuiz.questions.length}</small>
+      <h3>${escapeHTML(question.question)}</h3>
+      <div class="quiz-options">
+        ${question.options.map((option, index) => `
+          <button class="quiz-option"
+            data-answer="${index}">
+            ${escapeHTML(option)}
+          </button>
+        `).join("")}
+      </div>
+      <p id="quizFeedback"></p>
+      <button class="btn btn-primary" id="nextQuizQuestion" disabled>
+        ${activeQuiz.index === activeQuiz.questions.length - 1
+          ? "Finish quiz" : "Next question"}
+      </button>
+    </div>`;
+}
+
+function finishQuiz() {
+  if (!activeQuiz) return;
+
+  const total = activeQuiz.questions.length;
+  const percentage = Math.round((activeQuiz.score / total) * 100);
+
+  const result = {
+    id: uid(),
+    score: activeQuiz.score,
+    total,
+    percentage,
+    date: new Date().toISOString(),
+    durationSeconds: Math.round(
+      (Date.now() - activeQuiz.startedAt) / 1000
+    )
+  };
+
+  data.quizHistory.push(result);
+  saveData();
+
+  $("quizArea").innerHTML = `
+    <div class="result-card">
+      <h2>Quiz complete!</h2>
+      <p>Your score</p>
+      <h1>${result.score} / ${result.total}</h1>
+      <h3>${percentage}%</h3>
+      <p>${percentage >= 80
+        ? "Great work! Keep practising."
+        : "Good effort. Review the answers and try again."}</p>
+      <button class="btn btn-primary" id="restartQuiz">
+        Try again
+      </button>
+    </div>`;
+
+  activeQuiz = null;
+  renderAll();
+}
+
+$("startQuizBtn")?.addEventListener("click", startQuiz);
+
+$("quizArea")?.addEventListener("click", (event) => {
+  if (event.target.closest("#restartQuiz")) {
+    startQuiz();
+    return;
+  }
+
+  if (!activeQuiz) return;
+
+  const answerButton = event.target.closest("[data-answer]");
+  if (answerButton) {
+    const question = activeQuiz.questions[activeQuiz.index];
+
+    if (activeQuiz.answers[activeQuiz.index] !== undefined) return;
+
+    const selected = Number(answerButton.dataset.answer);
+    const correct = selected === question.answer;
+
+    activeQuiz.answers[activeQuiz.index] = selected;
+
+    if (correct) activeQuiz.score++;
+
+    $("quizArea").querySelectorAll("[data-answer]").forEach((button) => {
+      button.disabled = true;
+
+      if (Number(button.dataset.answer) === question.answer) {
+        button.classList.add("correct");
+      } else if (button === answerButton && !correct) {
+        button.classList.add("incorrect");
+      }
     });
-  }
-</script>
 
+    $("quizFeedback").textContent =
+      (correct ? "Correct! " : "Not quite. ") + question.explanation;
+
+    $("nextQuizQuestion").disabled = false;
+  }
+
+  if (event.target.closest("#nextQuizQuestion")) {
+    activeQuiz.index++;
+    renderQuizQuestion();
+  }
+});
+
+function renderQuizHistory() {
+  const list = $("quizHistory");
+  if (!list) return;
+
+  list.innerHTML = [...data.quizHistory]
+    .reverse()
+    .slice(0, 10)
+    .map((item) => `
+      <div class="mini-item">
+        <strong>${item.percentage}% — ${item.score}/${item.total}</strong>
+        <small>${new Date(item.date).toLocaleString()}</small>
+      </div>
+    `).join("") || "<p>No quiz attempts yet.</p>";
+}
+
+/* ---------------- PROGRESS ---------------- */
+
+function renderProgress() {
+  const averageScore = data.quizHistory.length
+    ? Math.round(
+        data.quizHistory.reduce((sum, item) => sum + item.percentage, 0) /
+        data.quizHistory.length
+      )
+    : 0;
+
+  const completedCourses = data.courses.filter(
+    (course) => course.progress >= 100
+  ).length;
+
+  const completedTasks = data.tasks.filter((task) => task.done).length;
+
+  if ($("averageScore")) $("averageScore").textContent = averageScore + "%";
+  if ($("completedCourses")) {
+    $("completedCourses").textContent = completedCourses;
+  }
+  if ($("tasksCompleted")) {
+    $("tasksCompleted").textContent = completedTasks;
+  }
+  if ($("totalAttempts")) {
+    $("totalAttempts").textContent = data.quizHistory.length;
+  }
+
+  if ($("dashboardProgress")) {
+    const total = data.courses.length;
+    const average = total
+      ? Math.round(
+          data.courses.reduce((sum, course) => sum + course.progress, 0) /
+          total
+        )
+      : 0;
+
+    $("dashboardProgress").textContent = average + "%";
+  }
+
+  if ($("subjectAnalytics")) {
+    $("subjectAnalytics").innerHTML = data.courses.map((course) => `
+      <div class="analytics-row">
+        <div class="item-top">
+          <span>${escapeHTML(course.name)}</span>
+          <strong>${course.progress}%</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${course.progress}%"></div>
+        </div>
+      </div>
+    `).join("") || "<p>Add courses to see your analytics.</p>";
+  }
+
+  if ($("improvementTips")) {
+    const tips = [];
+
+    if (!data.notes.length) tips.push("Create notes after each study session.");
+    if (!data.courses.length) tips.push("Add a course and set a learning goal.");
+    if (!data.quizHistory.length) tips.push("Take a quiz to measure your knowledge.");
+    if (data.tasks.some((task) => !task.done)) {
+      tips.push("Review your planner and complete a pending task.");
+    }
+    if (averageScore < 70 && data.quizHistory.length) {
+      tips.push("Review mistakes and retake a quiz.");
+    }
+    if (!tips.length) tips.push("Keep your learning streak going!");
+
+    $("improvementTips").innerHTML = tips.map((tip) => `
+      <div class="mini-item">${escapeHTML(tip)}</div>
+    `).join("");
+  }
+
+  if ($("shareProgressBtn")) {
+    $("shareProgressBtn").onclick = () => {
+      const text = [
+        "My VEXO Study Progress",
+        "Average quiz score: " + averageScore + "%",
+        "Completed courses: " + completedCourses,
+        "Completed tasks: " + completedTasks,
+        "Quiz attempts: " + data.quizHistory.length
+      ].join("\n");
+
+      if (navigator.share) {
+        navigator.share({ title: "VEXO Study Progress", text })
+          .catch(() => {});
+      } else if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => toast("Progress copied!"))
+          .catch(() => openModal("My progress", `<pre>${escapeHTML(text)}</pre>`));
+      } else {
+        openModal("My progress", `<pre>${escapeHTML(text)}</pre>`);
+      }
+    };
+  }
+}
+
+/* ---------------- DOUBT ROOM ---------------- */
+
+function renderDoubts() {
+  const list = $("doubtsList");
+  if (!list) return;
+
+  list.innerHTML = [...data.doubts].reverse().map((doubt) => `
+    <article class="item-card">
+      <small>${escapeHTML(doubt.subject || "General")} ·
+        ${new Date(doubt.createdAt).toLocaleDateString()}</small>
+      <h3>${escapeHTML(doubt.question)}</h3>
+      ${doubt.answer
+        ? `<p><strong>My notes:</strong> ${escapeHTML(doubt.answer)}</p>`
+        : "<p>No answer or notes added yet.</p>"}
+      <div class="item-actions">
+        <button class="btn btn-secondary"
+          data-answer-doubt="${doubt.id}">Add / edit notes</button>
+        <button class="btn btn-danger"
+          data-delete-doubt="${doubt.id}">Delete</button>
+      </div>
+    </article>
+  `).join("") || "<p>No doubts saved yet.</p>";
+}
+
+$("saveDoubtBtn")?.addEventListener("click", () => {
+  const question = $("doubtQuestion").value.trim();
+  const subject = $("doubtSubject").value.trim();
+  const answer = $("doubtAnswer").value.trim();
+
+  if (!question) {
+    toast("Write your question first.");
+    return;
+  }
+
+  data.doubts.push({
+    id: uid(),
+    question,
+    subject,
+    answer,
+    createdAt: Date.now()
+  });
+
+  $("doubtQuestion").value = "";
+  $("doubtSubject").value = "";
+  $("doubtAnswer").value = "";
+
+  saveData();
+  renderAll();
+  toast("Doubt saved on this device.");
+});
+
+$("doubtsList")?.addEventListener("click", (event) => {
+  const answerButton = event.target.closest("[data-answer-doubt]");
+  const deleteButton = event.target.closest("[data-delete-doubt]");
+
+  if (answerButton) {
+    const doubt = data.doubts.find(
+      (item) => item.id === answerButton.dataset.answerDoubt
+    );
+    if (!doubt) return;
+
+    openModal("Add your study notes", `
+      <p>${escapeHTML(doubt.question)}</p>
+      <textarea id="doubtNotesEditor" rows="5"
+        placeholder="Write the explanation or notes here...">${escapeHTML(doubt.answer)}</textarea>
+      <button class="btn btn-primary" id="saveDoubtNotes">Save notes</button>
+    `);
+
+    $("saveDoubtNotes").onclick = () => {
+      doubt.answer = $("doubtNotesEditor").value.trim();
+      saveData();
+      closeModal();
+      renderDoubts();
+      toast("Notes saved.");
+    };
+  }
+
+  if (deleteButton) {
+    data.doubts = data.doubts.filter(
+      (item) => item.id !== deleteButton.dataset.deleteDoubt
+    );
+    saveData();
+    renderDoubts();
+    toast("Doubt deleted.");
+  }
+});
+
+/* ---------------- AI STUDY HUB (LOCAL DEMO) ---------------- */
+
+function localExplanation(topic, level) {
+  const name = topic.trim();
+
+  return `
+    <h3>${escapeHTML(name)}</h3>
+    <p><strong>Level:</strong> ${escapeHTML(level)}</p>
+    <p><strong>Start here:</strong> Write a one-sentence definition of
+      ${escapeHTML(name)}.</p>
+    <p><strong>Learn in steps:</strong></p>
+    <ol>
+      <li>Understand the key terms.</li>
+      <li>Study one simple example.</li>
+      <li>Explain the idea in your own words.</li>
+      <li>Practise questions and check your mistakes.</li>
+    </ol>
+    <p><strong>Important:</strong> This is a study template, not an
+      AI-generated factual explanation. Verify subject facts with
+      your textbook or teacher.</p>`;
+}
+
+$("explainBtn")?.addEventListener("click", () => {
+  const topic = $("aiTopic").value.trim();
+  const level = $("aiLevel").value;
+
+  if (!topic) {
+    toast("Enter a topic first.");
+    return;
+  }
+
+  $("aiOutput").innerHTML = localExplanation(topic, level);
+});
+
+$("makeQuestionsBtn")?.addEventListener("click", () => {
+  const topic = $("aiTopic").value.trim();
+
+  if (!topic) {
+    toast("Enter a topic first.");
+    return;
+  }
+
+  $("aiToolsOutput").innerHTML = `
+    <h3>Practice questions: ${escapeHTML(topic)}</h3>
+    <ol>
+      <li>Define ${escapeHTML(topic)} in your own words.</li>
+      <li>List three important facts about ${escapeHTML(topic)}.</li>
+      <li>Give one real-world example of ${escapeHTML(topic)}.</li>
+      <li>What is one common misunderstanding about it?</li>
+      <li>Summarize the topic in five sentences.</li>
+    </ol>
+    <p>These are generated from a local template, not from a live AI model.</p>`;
+});
+
+$("makePlanBtn")?.addEventListener("click", () => {
+  const topic = $("aiTopic").value.trim();
+
+  if (!topic) {
+    toast("Enter a topic first.");
+    return;
+  }
+
+  const plan = [
+    ["10 minutes", "Read the overview of " + topic],
+    ["15 minutes", "Study definitions and examples"],
+    ["10 minutes", "Write short notes"],
+    ["10 minutes", "Answer practice questions"],
+    ["5 minutes", "Review what you learned"]
+  ];
+
+  $("aiToolsOutput").innerHTML = `
+    <h3>Study plan: ${escapeHTML(topic)}</h3>
+    <p>Total time: 50 minutes</p>
+    ${plan.map(([time, task]) => `
+      <div class="mini-item">
+        <strong>${escapeHTML(time)}</strong>
+        <p>${escapeHTML(task)}</p>
+      </div>
+    `).join("")}`;
+});
+
+/* PART 3/3 CONTINUES HERE */
+
+/* ---------------- CERTIFICATES ---------------- */
+
+$("generateCertBtn")?.addEventListener("click", () => {
+  const name = $("certName").value.trim();
+  const achievement = $("certAchievement").value.trim();
+
+  if (!name || !achievement) {
+    toast("Enter your name and achievement.");
+    return;
+  }
+
+  const certificateId = "VEXO-" +
+    Date.now().toString(36).toUpperCase();
+
+  $("certView").innerHTML = `
+    <div class="certificate" id="printCertificate">
+      <div class="certificate-inner">
+        <p class="certificate-brand">VEXO</p>
+        <h1>Certificate of Achievement</h1>
+        <p>This personal learning certificate is presented to</p>
+        <h2>${escapeHTML(name)}</h2>
+        <p>For completing the learning achievement</p>
+        <h3>${escapeHTML(achievement)}</h3>
+        <p>Date: ${new Date().toLocaleDateString()}</p>
+        <small>Reference: ${certificateId}</small>
+        <p class="certificate-note">
+          Personal certificate generated by VEXO.
+          This is not an externally accredited qualification.
+        </p>
+        <button class="btn btn-primary no-print"
+          onclick="window.print()">Print / Save PDF</button>
+      </div>
+    </div>`;
+
+  toast("Personal certificate created!");
+});
+
+/* ---------------- NOTIFICATIONS ---------------- */
+
+function buildNotifications() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const generated = [];
+
+  data.tasks
+    .filter((task) => !task.done && task.date)
+    .forEach((task) => {
+      const taskDate = new Date(task.date + "T00:00:00");
+      const difference = Math.round(
+        (taskDate.getTime() - today.getTime()) / 86400000
+      );
+
+      if (difference < 0) {
+        generated.push({
+          id: "task-" + task.id,
+          title: "Overdue study task",
+          message: task.title + " was scheduled for " +
+            formatDate(task.date) + ".",
+          type: "warning",
+          date: task.date
+        });
+      } else if (difference === 0) {
+        generated.push({
+          id: "task-" + task.id,
+          title: "Study task due today",
+          message: task.title + " is scheduled for today.",
+          type: "info",
+          date: task.date
+        });
+      } else if (difference === 1) {
+        generated.push({
+          id: "task-" + task.id,
+          title: "Study task coming up",
+          message: task.title + " is scheduled for tomorrow.",
+          type: "info",
+          date: task.date
+        });
+      }
+    });
+
+  data.notifications = generated;
+}
+
+function renderNotifications() {
+  const list = $("notificationsList");
+  if (!list) return;
+
+  buildNotifications();
+
+  list.innerHTML = data.notifications.map((notification) => `
+    <article class="item-card">
+      <h3>${escapeHTML(notification.title)}</h3>
+      <p>${escapeHTML(notification.message)}</p>
+      <small>${formatDate(notification.date)}</small>
+    </article>
+  `).join("") || `
+    <div class="empty-state">
+      <h3>You're all caught up!</h3>
+      <p>No study reminders right now.</p>
+    </div>`;
+}
+
+$("clearNotifications")?.addEventListener("click", () => {
+  toast("Notifications show your current pending tasks.");
+  renderNotifications();
+});
+
+/* ---------------- LANGUAGE SETTINGS ---------------- */
+
+/*
+  The selector includes English and all 22 Indian
+  Eighth Schedule languages. A selectable language does
+  not mean the whole interface is translated yet.
+*/
+
+const languageNames = {
+  en: "English",
+  as: "Assamese",
+  bn: "বাংলা (Bengali)",
+  brx: "Bodo",
+  doi: "Dogri",
+  gu: "Gujarati",
+  hi: "हिन्दी (Hindi)",
+  kn: "Kannada",
+  ks: "Kashmiri",
+  kok: "Konkani",
+  mai: "Maithili",
+  ml: "Malayalam",
+  mni: "Manipuri / Meitei",
+  mr: "Marathi",
+  ne: "Nepali",
+  or: "Odia",
+  pa: "Punjabi",
+  sa: "Sanskrit",
+  sat: "Santali",
+  sd: "Sindhi",
+  ta: "Tamil",
+  te: "Telugu",
+  ur: "Urdu"
+};
+
+const interfaceTranslations = {
+  en: {
+    dashboard: "Dashboard",
+    notes: "My Notes",
+    courses: "My Courses",
+    quiz: "Quiz & Tests",
+    flashcards: "Flashcards",
+    planner: "Study Planner",
+    progress: "My Progress",
+    doubts: "Doubt Room",
+    ai: "AI Study Hub",
+    certificates: "Certificates",
+    notifications: "Notifications",
+    settings: "Settings"
+  },
+  bn: {
+    dashboard: "ড্যাশবোর্ড",
+    notes: "আমার নোট",
+    courses: "আমার কোর্স",
+    quiz: "কুইজ ও পরীক্ষা",
+    flashcards: "ফ্ল্যাশকার্ড",
+    planner: "পড়াশোনার পরিকল্পনা",
+    progress: "আমার অগ্রগতি",
+    doubts: "প্রশ্ন ও নোট",
+    ai: "AI স্টাডি হাব",
+    certificates: "সার্টিফিকেট",
+    notifications: "নোটিফিকেশন",
+    settings: "সেটিংস"
+  },
+  hi: {
+    dashboard: "डैशबोर्ड",
+    notes: "मेरे नोट्स",
+    courses: "मेरे कोर्स",
+    quiz: "क्विज़ और टेस्ट",
+    flashcards: "फ्लैशकार्ड",
+    planner: "पढ़ाई की योजना",
+    progress: "मेरी प्रगति",
+    doubts: "प्रश्न और नोट्स",
+    ai: "AI स्टडी हब",
+    certificates: "प्रमाणपत्र",
+    notifications: "सूचनाएँ",
+    settings: "सेटिंग्स"
+  }
+};
+
+function populateLanguages() {
+  const select = $("languageSelect");
+  if (!select) return;
+
+  select.innerHTML = Object.entries(languageNames)
+    .map(([code, name]) => `
+      <option value="${code}">${escapeHTML(name)}</option>
+    `).join("");
+
+  select.value = data.settings.language || "en";
+}
+
+function applyLanguage() {
+  const lang = data.settings.language || "en";
+  const dictionary = interfaceTranslations[lang] ||
+    interfaceTranslations.en;
+
+  document.querySelectorAll("[data-page]").forEach((button) => {
+    const key = button.dataset.page;
+    const label = button.querySelector(".nav-label");
+
+    if (label && dictionary[key]) {
+      label.textContent = dictionary[key];
+    }
+  });
+
+  const activePage = document.querySelector(".page.active");
+  if (activePage) {
+    const key = activePage.id.replace("page-", "");
+    const heading = $("pageTitle");
+    if (heading) {
+      heading.textContent = dictionary[key] ||
+        interfaceTranslations.en[key] ||
+        key;
+    }
+  }
+
+  document.documentElement.lang =
+    lang === "bn" ? "bn" : lang === "hi" ? "hi" : "en";
+}
+
+$("languageSelect")?.addEventListener("change", (event) => {
+  data.settings.language = event.target.value;
+  saveData();
+  applyLanguage();
+
+  if (!interfaceTranslations[event.target.value]) {
+    toast("Language selected. Full translation is not available yet.");
+  } else {
+    toast("Language preference updated.");
+  }
+});
+
+/* ---------------- THEME AND APPEARANCE ---------------- */
+
+function applySettings() {
+  const settings = data.settings;
+
+  document.documentElement.style.setProperty(
+    "--accent",
+    settings.accent || "#6c63ff"
+  );
+
+  document.documentElement.style.fontSize =
+    (settings.fontSize || "16") + "px";
+
+  const dark = settings.theme === "dark";
+
+  document.body.classList.toggle("dark-mode", dark);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+
+  if ($("themeSelect")) {
+    $("themeSelect").value = settings.theme || "light";
+  }
+
+  if ($("accentColor")) {
+    $("accentColor").value = settings.accent || "#6c63ff";
+  }
+
+  if ($("fontSizeSelect")) {
+    $("fontSizeSelect").value = settings.fontSize || "16";
+  }
+
+  if ($("themeToggle")) {
+    $("themeToggle").setAttribute(
+      "aria-label",
+      dark ? "Switch to light mode" : "Switch to dark mode"
+    );
+  }
+
+  applyLanguage();
+}
+
+$("themeToggle")?.addEventListener("click", () => {
+  data.settings.theme =
+    data.settings.theme === "dark" ? "light" : "dark";
+
+  saveData();
+  applySettings();
+});
+
+$("themeSelect")?.addEventListener("change", (event) => {
+  data.settings.theme = event.target.value;
+  saveData();
+  applySettings();
+});
+
+$("accentColor")?.addEventListener("input", (event) => {
+  data.settings.accent = event.target.value;
+  document.documentElement.style.setProperty(
+    "--accent",
+    data.settings.accent
+  );
+  saveData();
+});
+
+$("fontSizeSelect")?.addEventListener("change", (event) => {
+  data.settings.fontSize = event.target.value;
+  saveData();
+  applySettings();
+});
+
+/* ---------------- GLOBAL SEARCH ---------------- */
+
+$("globalSearch")?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+
+  const query = event.target.value.trim().toLowerCase();
+  if (!query) return;
+
+  const note = data.notes.find((item) =>
+    [item.title, item.subject, item.content]
+      .join(" ")
+      .toLowerCase()
+      .includes(query)
+  );
+
+  if (note) {
+    navigate("notes");
+    $("noteFilter").value = query;
+    renderNotes();
+    return;
+  }
+
+  const course = data.courses.find((item) =>
+    [item.name, item.subject, item.goal]
+      .join(" ")
+      .toLowerCase()
+      .includes(query)
+  );
+
+  if (course) {
+    navigate("courses");
+    return;
+  }
+
+  toast("No matching note or course found.");
+});
+
+/* ---------------- QUICK ADD ---------------- */
+
+$("quickAdd")?.addEventListener("click", () => {
+  openModal("Quick Add", `
+    <p>What would you like to create?</p>
+    <div class="item-actions">
+      <button class="btn btn-primary" id="quickNote">New note</button>
+      <button class="btn btn-secondary" id="quickTask">New task</button>
+      <button class="btn btn-secondary" id="quickCourse">New course</button>
+      <button class="btn btn-secondary" id="quickFlash">New flashcard</button>
+    </div>
+  `);
+
+  $("quickNote").onclick = () => {
+    closeModal();
+    navigate("notes");
+    $("noteTitle")?.focus();
+  };
+
+  $("quickTask").onclick = () => {
+    closeModal();
+    navigate("planner");
+    $("taskTitle")?.focus();
+  };
+
+  $("quickCourse").onclick = () => {
+    closeModal();
+    navigate("courses");
+    $("courseName")?.focus();
+  };
+
+  $("quickFlash").onclick = () => {
+    closeModal();
+    navigate("flashcards");
+    $("flashFront")?.focus();
+  };
+});
+
+/* ---------------- EXPORT / IMPORT ---------------- */
+
+$("exportBtn")?.addEventListener("click", () => {
+  const backup = {
+    app: "VEXO",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    data
+  };
+
+  const blob = new Blob(
+    [JSON.stringify(backup, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = "vexo-backup-" +
+    new Date().toISOString().slice(0, 10) + ".json";
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+
+  toast("Backup exported!");
+});
+
+$("importBtn")?.addEventListener("click", () => {
+  $("importFile")?.click();
+});
+
+$("importFile")?.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const text = await file.text();
+    const backup = JSON.parse(text);
+    const incoming = backup.data || backup;
+
+    const validArrayKeys = [
+      "notes",
+      "courses",
+      "flashcards",
+      "tasks",
+      "quizHistory",
+      "doubts",
+      "notifications"
+    ];
+
+    if (!incoming || typeof incoming !== "object") {
+      throw new Error("Invalid backup.");
+    }
+
+    for (const key of validArrayKeys) {
+      if (
+        incoming[key] !== undefined &&
+        !Array.isArray(incoming[key])
+      ) {
+        throw new Error("Invalid data in " + key);
+      }
+    }
+
+    openModal("Restore backup?", `
+      <p>Importing will replace your current VEXO data on this device.
+      Export a backup first if you need to keep it.</p>
+      <div class="item-actions">
+        <button class="btn btn-danger" id="confirmImport">
+          Replace data
+        </button>
+        <button class="btn btn-secondary" id="cancelImport">
+          Cancel
+        </button>
+      </div>
+    `);
+
+    $("confirmImport").onclick = () => {
+      const next = structuredClone(defaultData);
+
+      for (const key of validArrayKeys) {
+        if (Array.isArray(incoming[key])) {
+          next[key] = incoming[key];
+        }
+      }
+
+      next.settings = {
+        ...defaultData.settings,
+        ...(incoming.settings || {})
+      };
+
+      data = next;
+      saveData();
+      closeModal();
+      initializeApp();
+      toast("Backup restored.");
+    };
+
+    $("cancelImport").onclick = closeModal;
+  } catch (error) {
+    toast("Could not import this backup file.");
+  } finally {
+    event.target.value = "";
+  }
+});
+
+/* ---------------- RESET DATA ---------------- */
+
+$("resetBtn")?.addEventListener("click", () => {
+  openModal("Reset VEXO data?", `
+    <p>This deletes your saved notes, courses, tasks, flashcards,
+    doubts and quiz history from this browser.</p>
+    <p><strong>Export a backup first if you want to keep them.</strong></p>
+    <div class="item-actions">
+      <button class="btn btn-danger" id="confirmReset">
+        Delete all data
+      </button>
+      <button class="btn btn-secondary" id="cancelReset">
+        Cancel
+      </button>
+    </div>
+  `);
+
+  $("confirmReset").onclick = () => {
+    data = structuredClone(defaultData);
+    saveData();
+    closeModal();
+    initializeApp();
+    toast("VEXO data reset.");
+  };
+
+  $("cancelReset").onclick = closeModal;
+});
+
+/* ---------------- DASHBOARD STATS ---------------- */
+
+function renderDashboardStats() {
+  if ($("statNotes")) {
+    $("statNotes").textContent = data.notes.length;
+  }
+
+  if ($("statCourses")) {
+    $("statCourses").textContent = data.courses.length;
+  }
+
+  if ($("statAttempts")) {
+    $("statAttempts").textContent = data.quizHistory.length;
+  }
+
+  if ($("statTasks")) {
+    $("statTasks").textContent =
+      data.tasks.filter((task) => !task.done).length;
+  }
+}
+
+/* ---------------- RENDER ALL ---------------- */
+
+function renderAll() {
+  renderNotes();
+  renderCourses();
+  renderFlashcards();
+  renderTasks();
+  renderQuizHistory();
+  renderProgress();
+  renderDoubts();
+  renderNotifications();
+  renderDashboardStats();
+}
+
+function initializeApp() {
+  populateLanguages();
+
+  if ($("languageSelect")) {
+    $("languageSelect").value = data.settings.language || "en";
+  }
+
+  applySettings();
+  renderAll();
+
+  const dateInput = $("taskDate");
+  if (dateInput && !dateInput.value) {
+    dateInput.min = new Date().toISOString().slice(0, 10);
+  }
+}
+
+/* ---------------- START VEXO ---------------- */
+
+document.addEventListener("DOMContentLoaded", initializeApp);
+
+if (document.readyState !== "loading") {
+  initializeApp();
+}
+
+</script>
 </body>
 </html>
