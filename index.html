@@ -972,6 +972,23 @@ function renderAll(){
 applyTheme();
 renderAll();
 renderQuiz();
+  document.getElementById("themeBtn").onclick = function () {
+  document.body.classList.toggle("dark");
+
+  const darkOn = document.body.classList.contains("dark");
+  this.textContent = darkOn ? "☀" : "☾";
+
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("vexo_workspace_v1") || "{}"
+    );
+    saved.dark = darkOn;
+    localStorage.setItem("vexo_workspace_v1", JSON.stringify(saved));
+  } catch (e) {
+    console.log("Theme preference could not be saved.");
+  }
+};
 </script>
+
 </body>
 </html>
