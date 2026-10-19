@@ -1288,6 +1288,399 @@ renderQuiz();
     নোট: এই বাটনগুলো বাইরের AI ওয়েবসাইট খোলে। এগুলো VEXO-র সঙ্গে সরাসরি AI API সংযোগ করে না।
   </p>
 </section>
-<!-- End VEXO AI Study Hub -->  
+<!-- End VEXO AI Study Hub -->
+  <!-- ================= VEXO AI HUB ================= -->
+<section id="vexoAIHub" style="
+  padding:24px;
+  margin:20px 0;
+  border-radius:24px;
+  background:linear-gradient(135deg,#17152f,#241d4d,#102f38);
+  color:#fff;
+  box-shadow:0 12px 35px rgba(0,0,0,.25);
+  font-family:Arial,sans-serif;
+">
+
+  <div style="text-align:center;margin-bottom:24px;">
+    <div style="
+      display:inline-block;
+      padding:7px 14px;
+      border-radius:50px;
+      background:rgba(255,255,255,.10);
+      font-size:13px;
+      margin-bottom:10px;
+    ">🤖 VEXO AI CENTER</div>
+
+    <h2 style="font-size:30px;margin:5px 0;">
+      AI Study Hub
+    </h2>
+
+    <p style="color:#c9c5df;margin:0;">
+      Choose your AI and start learning
+    </p>
+  </div>
+
+
+  <!-- Search -->
+  <div style="max-width:650px;margin:auto;">
+    <input
+      id="vexoAISearch"
+      type="text"
+      placeholder="🔎 Search AI..."
+      oninput="vexoSearchAI()"
+      style="
+        width:100%;
+        box-sizing:border-box;
+        padding:15px 18px;
+        border:none;
+        outline:none;
+        border-radius:14px;
+        background:rgba(255,255,255,.10);
+        color:white;
+        font-size:15px;
+      "
+    >
+  </div>
+
+
+  <!-- Categories -->
+  <div style="
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin:18px 0 24px;
+  ">
+
+    <button onclick="vexoFilterAI('all')" class="vexoAIFilter">All</button>
+    <button onclick="vexoFilterAI('study')" class="vexoAIFilter">📚 Study</button>
+    <button onclick="vexoFilterAI('search')" class="vexoAIFilter">🔎 Search</button>
+    <button onclick="vexoFilterAI('coding')" class="vexoAIFilter">💻 Coding</button>
+    <button onclick="vexoFilterAI('creative')" class="vexoAIFilter">🎨 Creative</button>
+
+  </div>
+
+
+  <!-- AI Cards -->
+  <div id="vexoAIGrid" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+  "></div>
+
+
+  <!-- Selected AI -->
+  <div id="vexoSelectedAI" style="
+    display:none;
+    margin-top:25px;
+    padding:20px;
+    border-radius:18px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+  ">
+
+    <h3 id="vexoSelectedTitle" style="margin-top:0;"></h3>
+
+    <p style="color:#c9c5df;">
+      This AI opens separately because many AI websites do not allow
+      their chat page to be embedded inside another website.
+    </p>
+
+    <a
+      id="vexoSelectedLink"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="
+        display:inline-block;
+        padding:12px 18px;
+        border-radius:12px;
+        background:#ffffff;
+        color:#17152f;
+        text-decoration:none;
+        font-weight:bold;
+      "
+    >
+      🚀 Open AI
+    </a>
+
+  </div>
+
+</section>
+
+
+<style>
+.vexoAIFilter{
+  border:none;
+  padding:9px 14px;
+  border-radius:30px;
+  background:rgba(255,255,255,.10);
+  color:white;
+  cursor:pointer;
+}
+
+.vexoAIFilter:hover{
+  background:rgba(255,255,255,.20);
+}
+
+.vexoAICard{
+  padding:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  transition:.2s;
+}
+
+.vexoAICard:hover{
+  transform:translateY(-4px);
+  background:rgba(255,255,255,.13);
+}
+
+.vexoAIButton{
+  width:100%;
+  border:none;
+  padding:11px;
+  border-radius:11px;
+  background:white;
+  color:#17152f;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+
+
+<script>
+
+const vexoAIList = [
+
+  {
+    name:"Google Gemini",
+    icon:"✨",
+    description:"AI for study, questions, writing and research.",
+    category:"study",
+    url:"https://gemini.google.com/"
+  },
+
+  {
+    name:"ChatGPT",
+    icon:"🤖",
+    description:"AI assistant for learning, writing, coding and ideas.",
+    category:"study",
+    url:"https://chatgpt.com/"
+  },
+
+  {
+    name:"Microsoft Copilot",
+    icon:"🟦",
+    description:"AI assistant for questions, research and productivity.",
+    category:"study",
+    url:"https://copilot.microsoft.com/"
+  },
+
+  {
+    name:"Claude",
+    icon:"🟠",
+    description:"AI assistant for writing, reasoning and learning.",
+    category:"study",
+    url:"https://claude.ai/"
+  },
+
+  {
+    name:"Perplexity",
+    icon:"🔎",
+    description:"AI-powered search and research assistant.",
+    category:"search",
+    url:"https://www.perplexity.ai/"
+  },
+
+  {
+    name:"Grok",
+    icon:"⚡",
+    description:"AI assistant for questions, ideas and information.",
+    category:"creative",
+    url:"https://grok.com/"
+  },
+
+  {
+    name:"DeepSeek",
+    icon:"🔵",
+    description:"AI assistant for reasoning, learning and coding.",
+    category:"coding",
+    url:"https://chat.deepseek.com/"
+  },
+
+  {
+    name:"Qwen",
+    icon:"🟣",
+    description:"AI assistant for questions, coding and learning.",
+    category:"coding",
+    url:"https://chat.qwen.ai/"
+  },
+
+  {
+    name:"Mistral Le Chat",
+    icon:"🟡",
+    description:"AI assistant for writing, research and problem solving.",
+    category:"study",
+    url:"https://chat.mistral.ai/"
+  },
+
+  {
+    name:"Poe",
+    icon:"💬",
+    description:"Platform for accessing multiple AI models.",
+    category:"creative",
+    url:"https://poe.com/"
+  },
+
+  {
+    name:"Phind",
+    icon:"💻",
+    description:"AI assistant focused on developers and coding.",
+    category:"coding",
+    url:"https://www.phind.com/"
+  },
+
+  {
+    name:"You.com",
+    icon:"🌐",
+    description:"AI search and productivity assistant.",
+    category:"search",
+    url:"https://you.com/"
+  }
+
+];
+
+
+let vexoCurrentCategory = "all";
+
+
+function vexoRenderAI(){
+
+  const grid = document.getElementById("vexoAIGrid");
+  const search = document
+    .getElementById("vexoAISearch")
+    .value
+    .toLowerCase();
+
+  grid.innerHTML = "";
+
+  const filtered = vexoAIList.filter(ai => {
+
+    const matchesCategory =
+      vexoCurrentCategory === "all" ||
+      ai.category === vexoCurrentCategory;
+
+    const matchesSearch =
+      ai.name.toLowerCase().includes(search) ||
+      ai.description.toLowerCase().includes(search);
+
+    return matchesCategory && matchesSearch;
+
+  });
+
+
+  if(filtered.length === 0){
+
+    grid.innerHTML = `
+      <div style="
+        grid-column:1/-1;
+        text-align:center;
+        padding:30px;
+        color:#c9c5df;
+      ">
+        😕 No AI found
+      </div>
+    `;
+
+    return;
+  }
+
+
+  filtered.forEach(ai => {
+
+    const card = document.createElement("div");
+
+    card.className = "vexoAICard";
+
+    card.innerHTML = `
+
+      <div style="
+        font-size:35px;
+        margin-bottom:10px;
+      ">
+        ${ai.icon}
+      </div>
+
+      <h3 style="margin:0 0 8px;">
+        ${ai.name}
+      </h3>
+
+      <p style="
+        color:#c9c5df;
+        min-height:45px;
+        font-size:14px;
+      ">
+        ${ai.description}
+      </p>
+
+      <button class="vexoAIButton">
+        Open ${ai.name}
+      </button>
+    `;
+
+
+    card
+      .querySelector("button")
+      .onclick = () => vexoSelectAI(ai);
+
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+
+function vexoSelectAI(ai){
+
+  document.getElementById("vexoSelectedAI").style.display = "block";
+
+  document.getElementById("vexoSelectedTitle").textContent =
+    ai.icon + " " + ai.name;
+
+  const link = document.getElementById("vexoSelectedLink");
+
+  link.href = ai.url;
+  link.textContent = "🚀 Open " + ai.name;
+
+  document.getElementById("vexoSelectedAI")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+}
+
+
+function vexoFilterAI(category){
+
+  vexoCurrentCategory = category;
+
+  vexoRenderAI();
+
+}
+
+
+function vexoSearchAI(){
+
+  vexoRenderAI();
+
+}
+
+
+vexoRenderAI();
+
+</script>
+<!-- ============== END VEXO AI
 </body>
 </html>
