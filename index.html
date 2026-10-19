@@ -1681,6 +1681,246 @@ function vexoSearchAI(){
 vexoRenderAI();
 
 </script>
+
 <!-- ============== END VEXO AI
+  
+<!-- VEXO LEARNING MODULE START -->
+<style>
+#vexo-learning{font-family:Arial,sans-serif;color:var(--text-color,#eee);margin:24px 0;padding:18px;border-radius:18px;background:linear-gradient(135deg,#17152d,#102c38);border:1px solid #514b83}
+#vexo-learning *{box-sizing:border-box}
+#vexo-learning h2,#vexo-learning h3{margin-top:8px}
+#vexo-learning .vx-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+#vexo-learning button,#vexo-learning input,#vexo-learning textarea{font:inherit;border-radius:9px;padding:10px;border:1px solid #625c8c}
+#vexo-learning button{background:#7255df;color:white;cursor:pointer}
+#vexo-learning input,#vexo-learning textarea{background:#202039;color:white;width:100%;margin:6px 0}
+#vexo-learning .vx-card{background:#24223f;padding:14px;border-radius:12px;margin:10px 0}
+#vexo-learning .vx-muted{opacity:.8;font-size:14px}
+#vexo-learning .vx-answer{display:block;width:100%;text-align:left;margin:7px 0}
+#vexo-learning .vx-good{color:#7ff0b0}
+#vexo-learning .vx-bad{color:#ffaaa8}
+</style>
+
+<section id="vexo-learning">
+  <h2>🚀 VEXO Learning Centre</h2>
+  <p class="vx-muted">Learn • Practise • Track your progress</p>
+
+  <div class="vx-tabs">
+    <button onclick="vxShow('notes')">My Notes</button>
+    <button onclick="vxShow('courses')">Courses</button>
+    <button onclick="vxShow('quiz')">Quiz</button>
+    <button onclick="vxShow('cards')">Flashcards</button>
+    <button onclick="vxShow('planner')">Study Planner</button>
+  </div>
+
+  <div id="vx-content"></div>
+</section>
+
+<script>
+(function(){
+  const root = document.getElementById('vexo-learning');
+  if (!root || root.dataset.ready) return;
+  root.dataset.ready = '1';
+
+  const $ = id => document.getElementById(id);
+  const read = (key, fallback) => {
+    try {
+      const v = JSON.parse(localStorage.getItem('vexo_'+key));
+      return v ?? fallback;
+    } catch { return fallback; }
+  };
+  const save = (key, value) =>
+    localStorage.setItem('vexo_'+key, JSON.stringify(value));
+
+  const notes = [
+    {title:'Real Numbers',subject:'Mathematics',level:'Class 10',
+     body:'Real numbers include rational and irrational numbers. Rational numbers can be written as p/q, where p and q are integers and q is not zero. Examples: 1/2, 3, 0.75. Examples of irrational numbers include √2 and π.'},
+    {title:'Life Processes',subject:'Science',level:'Class 10',
+     body:'Life processes include nutrition, respiration, transportation and excretion. These processes help living organisms obtain energy, move materials and remove waste. Green plants make food through photosynthesis.'},
+    {title:'Parts of Speech',subject:'English',level:'Class 6',
+     body:'A noun names a person, place, thing or idea. A verb expresses an action or state. An adjective describes a noun. An adverb often describes a verb, adjective or another adverb.'},
+    {title:'The Solar System',subject:'Science',level:'Class 5',
+     body:'The Solar System includes the Sun and the objects that orbit it. The eight planets are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune.'},
+    {title:'Fractions',subject:'Mathematics',level:'Class 6',
+     body:'A fraction represents part of a whole. In 3/4, 3 is the numerator and 4 is the denominator. To add fractions with the same denominator, add their numerators and keep the denominator.'}
+  ];
+
+  const courses = [
+    {name:'Class 10 Mathematics',desc:'Real numbers, algebra, geometry and more.',lessons:['Real Numbers','Polynomials','Pair of Linear Equations']},
+    {name:'Class 10 Science',desc:'Biology, chemistry and physics foundations.',lessons:['Life Processes','Chemical Reactions','Light']},
+    {name:'English Foundations',desc:'Grammar, vocabulary and reading practice.',lessons:['Parts of Speech','Tenses','Reading Comprehension']},
+    {name:'Class 6 Mathematics',desc:'Build strong maths foundations.',lessons:['Fractions','Decimals','Integers']}
+  ];
+
+  const questions = [
+    {id:'math-001',topic:'Mathematics',q:'Which of these is an irrational number?',a:['1/2','√2','4','0.25'],correct:1,why:'√2 cannot be expressed as a ratio of two integers.'},
+    {id:'sci-001',topic:'Science',q:'Which process releases energy from food in cells?',a:['Respiration','Photosynthesis','Transpiration','Pollination'],correct:0,why:'Cellular respiration releases usable energy from food.'},
+    {id:'eng-001',topic:'English',q:'Which word is a noun?',a:['Quickly','Beautiful','Garden','Run'],correct:2,why:'Garden names a place or thing, so it is a noun.'},
+    {id:'math-002',topic:'Mathematics',q:'What is 3/4 + 1/4?',a:['1/2','1','2','3/8'],correct:1,why:'The denominators match, so (3 + 1)/4 = 1.'},
+    {id:'sci-002',topic:'Science',q:'Which gas do plants absorb during photosynthesis?',a:['Oxygen','Nitrogen','Carbon dioxide','Hydrogen'],correct:2,why:'Plants use carbon dioxide and water to make food using light energy.'}
+  ];
+
+  let activeQuestion = null;
+  let activeOptions = [];
+  let answered = false;
+
+  window.vxShow = function(page){
+    const el = $('vx-content');
+    if(page === 'notes'){
+      el.innerHTML = `<h3>📚 Searchable Notes</h3>
+        <input id="vx-search" placeholder="Search notes or subjects...">
+        <div id="vx-note-list"></div>
+        <div class="vx-card"><h3>Add your own note</h3>
+        <input id="vx-note-title" placeholder="Note title">
+        <input id="vx-note-subject" placeholder="Subject">
+        <textarea id="vx-note-body" rows="4" placeholder="Write your notes here"></textarea>
+        <button id="vx-add-note">Save Note</button></div>`;
+      const renderNotes = () => {
+        const q = $('vx-search').value.toLowerCase();
+        const extra = read('custom_notes',[]);
+        const all = [...notes,...extra];
+        $('vx-note-list').innerHTML = all.filter(n =>
+          (n.title+' '+n.subject+' '+n.body).toLowerCase().includes(q)
+        ).map(n=>`<article class="vx-card"><b>${escapeHtml(n.title)}</b>
+          <p class="vx-muted">${escapeHtml(n.level || n.subject || '')}</p>
+          <p>${escapeHtml(n.body)}</p></article>`).join('')
+          || '<p>No matching notes found.</p>';
+      };
+      $('vx-search').addEventListener('input',renderNotes);
+      $('vx-add-note').onclick = () => {
+        const title=$('vx-note-title').value.trim();
+        const subject=$('vx-note-subject').value.trim();
+        const body=$('vx-note-body').value.trim();
+        if(!title || !body){alert('Please enter a title and note content.');return;}
+        const extra=read('custom_notes',[]);
+        extra.push({title,subject,body});
+        save('custom_notes',extra);
+        $('vx-note-title').value='';$('vx-note-subject').value='';
+        $('vx-note-body').value='';
+        renderNotes();
+      };
+      renderNotes();
+    }
+
+    if(page === 'courses'){
+      el.innerHTML='<h3>🎓 Courses</h3>'+courses.map((c,i)=>
+        `<article class="vx-card"><h3>${escapeHtml(c.name)}</h3>
+        <p>${escapeHtml(c.desc)}</p><p><b>Lesson list</b></p>
+        ${c.lessons.map((l,j)=>`<p>📖 ${escapeHtml(l)}</p>`).join('')}
+        <button onclick="vxComplete(${i})">Mark course started</button>
+        </article>`).join('');
+    }
+
+    if(page === 'quiz'){
+      activeQuestion=null; answered=false;
+      el.innerHTML=`<h3>🧠 Quick Quiz</h3>
+        <p class="vx-muted">Choose a topic, then answer a question.</p>
+        <select id="vx-topic" style="width:100%;padding:10px;border-radius:8px">
+          <option>All</option><option>Mathematics</option>
+          <option>Science</option><option>English</option>
+        </select>
+        <button id="vx-start">Start / Next Question</button>
+        <div id="vx-question" class="vx-card">Press Start to begin.</div>
+        <p id="vx-feedback"></p>
+        <p id="vx-score"></p>`;
+      $('vx-start').onclick = startQuestion;
+      showScore();
+    }
+
+    if(page === 'cards'){
+      const cards=read('flashcards',[
+        {front:'What is a noun?',back:'A word that names a person, place, thing or idea.'},
+        {front:'What is photosynthesis?',back:'The process by which green plants use light to make food.'}
+      ]);
+      let i=0, flipped=false;
+      const draw=()=>{const c=cards[i];
+        el.innerHTML=`<h3>🗂️ Flashcards</h3>
+        <div class="vx-card"><p class="vx-muted">Card ${i+1} of ${cards.length}</p>
+        <h3>${escapeHtml(flipped?c.back:c.front)}</h3>
+        <button id="vx-flip">Flip Card</button>
+        <button id="vx-next">Next</button></div>
+        <div class="vx-card"><h3>Add a flashcard</h3>
+        <input id="vx-front" placeholder="Question / front">
+        <textarea id="vx-back" placeholder="Answer / back"></textarea>
+        <button id="vx-add-card">Save Flashcard</button></div>`;
+        $('vx-flip').onclick=()=>{flipped=!flipped;draw();};
+        $('vx-next').onclick=()=>{i=(i+1)%cards.length;flipped=false;draw();};
+        $('vx-add-card').onclick=()=>{
+          const front=$('vx-front').value.trim(),back=$('vx-back').value.trim();
+          if(!front||!back){alert('Enter both sides.');return;}
+          cards.push({front,back});save('flashcards',cards);i=cards.length-1;draw();
+        };
+      }; draw();
+    }
+
+    if(page === 'planner'){
+      const tasks=read('planner',[]);
+      el.innerHTML=`<h3>🗓️ Study Planner</h3>
+        <input id="vx-task" placeholder="What will you study?">
+        <input id="vx-date" type="date">
+        <button id="vx-save-task">Add task</button><div id="vx-task-list"></div>`;
+      const draw=()=>{$('vx-task-list').innerHTML=tasks.map((t,i)=>
+        `<div class="vx-card"><label><input type="checkbox" data-i="${i}" ${t.done?'checked':''} style="width:auto">
+        ${escapeHtml(t.title)} — ${escapeHtml(t.date||'No date')}</label></div>`).join('')||'<p>No tasks yet.</p>';
+        $('vx-task-list').querySelectorAll('input[type=checkbox]').forEach(box=>box.onchange=()=>{
+          tasks[+box.dataset.i].done=box.checked;save('planner',tasks);draw();
+        });
+      };
+      $('vx-save-task').onclick=()=>{
+        const title=$('vx-task').value.trim();if(!title)return;
+        tasks.push({title,date:$('vx-date').value,done:false});
+        save('planner',tasks);$('vx-task').value='';draw();
+      };draw();
+    }
+  };
+
+  function startQuestion(){
+    const topic=$('vx-topic').value;
+    const pool=questions.filter(q=>topic==='All'||q.topic===topic);
+    const seen=read('seen_questions',[]);
+    let fresh=pool.filter(q=>!seen.includes(q.id));
+    if(!fresh.length){alert('You have completed the available questions in this topic. Reset this topic history to practise again.');return;}
+    activeQuestion=fresh[Math.floor(Math.random()*fresh.length)];
+    activeOptions=activeQuestion.a.map((text,index)=>({text,index}));
+    for(let i=activeOptions.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [activeOptions[i],activeOptions[j]]=[activeOptions[j],activeOptions[i]];
+    }
+    answered=false;
+    $('vx-feedback').textContent='';
+    $('vx-question').innerHTML=`<p>${escapeHtml(activeQuestion.q)}</p>`+
+      activeOptions.map((o,i)=>`<button class="vx-answer" data-i="${i}">${escapeHtml(o.text)}</button>`).join('');
+    $('vx-question').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{
+      if(answered)return;answered=true;
+      const chosen=activeOptions[+btn.dataset.i].index;
+      const correct=chosen===activeQuestion.correct;
+      const stats=read('quiz_stats',{score:0,attempts:0});
+      stats.attempts++;if(correct)stats.score++;
+      save('quiz_stats',stats);
+      save('seen_questions',[...read('seen_questions',[]),activeQuestion.id]);
+      $('vx-feedback').innerHTML=`<span class="${correct?'vx-good':'vx-bad'}">${correct?'Correct!':'Not quite.'}</span> ${escapeHtml(activeQuestion.why)}`;
+      showScore();
+    });
+  }
+
+  function showScore(){
+    const s=read('quiz_stats',{score:0,attempts:0});
+    const el=$('vx-score');if(el)el.textContent=`Score: ${s.score} correct out of ${s.attempts} attempts`;
+  }
+  window.vxComplete = function(i){
+    const done=read('started_courses',[]);
+    if(!done.includes(i))done.push(i);
+    save('started_courses',done);
+    alert('Course marked as started on this browser.');
+  };
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g,c=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  vxShow('notes');
+})();
+</script>
+<!-- VEXO LEARNING MODULE END -->
+
 </body>
 </html>
