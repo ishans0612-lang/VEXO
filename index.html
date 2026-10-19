@@ -1921,6 +1921,173 @@ vexoRenderAI();
 })();
 </script>
 <!-- VEXO LEARNING MODULE END -->
+  
+<!-- VEXO EXTRA SECTIONS -->
+<style>
+#vexo-extra{font-family:Arial,sans-serif;background:#17152b;color:#f7f5ff;padding:18px;border-radius:18px;margin:20px 0}
+#vexo-extra *{box-sizing:border-box}
+#vexo-extra button,#vexo-extra select,#vexo-extra input{padding:10px;border-radius:9px;border:1px solid #62558c;margin:4px}
+#vexo-extra button{background:#7455e8;color:white;cursor:pointer}
+#vexo-extra input,#vexo-extra select{background:#24213d;color:white;max-width:100%}
+#vexo-extra .ve-nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+#vexo-extra .ve-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+#vexo-extra .ve-card{background:#272441;border:1px solid #484268;border-radius:13px;padding:14px}
+#vexo-extra .ve-muted{opacity:.8;font-size:14px}
+#vexo-extra h2{margin-top:6px}
+#vexo-extra .ve-gamearea{background:#211e39;padding:15px;border-radius:12px;margin-top:12px}
+</style>
+
+<section id="vexo-extra">
+  <h2>🎓 VEXO — Learn, Play & Customize</h2>
+  <p>Free educational games, online learning courses and study tools for students.</p>
+
+  <nav class="ve-nav" aria-label="VEXO sections">
+    <button onclick="vePage('courses')">📚 Courses</button>
+    <button onclick="vePage('games')">🎮 100+ Games</button>
+    <button onclick="vePage('custom')">🎨 Customization</button>
+  </nav>
+
+  <div id="ve-content"></div>
+</section>
+
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const host=$('vexo-extra');
+ if(!host||host.dataset.ready)return;
+ host.dataset.ready='1';
+
+ const read=(k,d)=>{try{return JSON.parse(localStorage.getItem('vexo_extra_'+k))??d}catch{return d}};
+ const save=(k,v)=>localStorage.setItem('vexo_extra_'+k,JSON.stringify(v));
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+ const courses=[
+ ['Class 1–5 Learning','Maths, English, science and general knowledge.'],
+ ['Class 6 Mathematics','Fractions, integers, algebra and geometry.'],
+ ['Class 6 Science','Living things, materials and the environment.'],
+ ['Class 7 Mathematics','Rational numbers, equations and shapes.'],
+ ['Class 7 Science','Nutrition, heat, motion and ecosystems.'],
+ ['Class 8 Mathematics','Linear equations, squares and data handling.'],
+ ['Class 8 Science','Force, sound, cells and chemical effects.'],
+ ['Class 9 Mathematics','Number systems, polynomials and geometry.'],
+ ['Class 9 Science','Matter, atoms, motion and biology.'],
+ ['Class 10 Mathematics','Real numbers, algebra, trigonometry and statistics.'],
+ ['Class 10 Science','Life processes, light, electricity and chemistry.'],
+ ['English Grammar','Parts of speech, tenses and vocabulary.'],
+ ['Computer Basics','Hardware, software, internet and digital safety.'],
+ ['Coding for Beginners','Algorithms, HTML, CSS and JavaScript.'],
+ ['General Knowledge','Geography, history, science and civics.'],
+ ['Reasoning Practice','Patterns, logic, sequences and puzzles.']
+ ];
+
+ const groups={
+ 'Maths':['Number Ninja','Fraction Quest','Times Table Challenge','Decimal Dash','Algebra Arena','Geometry Explorer','Shape Sorter','Math Memory','Equation Escape','Prime Number Hunt'],
+ 'Science':['Space Explorer','Solar System Quiz','Human Body Challenge','Animal Kingdom','Plant Power','Science Lab Quiz','Energy Quest','Weather Detective','Eco Hero','Periodic Table Challenge'],
+ 'English':['Word Wizard','Spelling Sprint','Grammar Galaxy','Synonym Search','Antonym Attack','Sentence Builder','Vocabulary Voyage','Punctuation Patrol','Reading Detective','Parts of Speech Quest'],
+ 'Geography':['World Capitals','Country Finder','Flag Challenge','Map Explorer','River Race','Mountain Master','Ocean Explorer','Continent Quest','Indian States Quiz','Landmark Hunt'],
+ 'History & Civics':['History Timeline','Ancient Civilizations','Freedom Fighters Quiz','Indian History Quest','Constitution Challenge','World History Quiz','Monument Mystery','Leaders and Legends','Democracy Challenge','Culture Explorer'],
+ 'Logic':['Pattern Detective','Number Sequence','Logic Master','Odd One Out','Riddle Room','Code Breaker','Visual Patterns','Brain Teasers','Strategy Challenge','Critical Thinking'],
+ 'Memory':['Picture Memory','Number Memory','Word Recall','Sequence Recall','Color Memory','Match the Pairs','Memory Grid','Symbol Recall','Quick Recall','Concentration Challenge'],
+ 'Computers':['Keyboard Master','Computer Parts Quiz','Internet Safety Quest','Coding Logic','HTML Challenge','CSS Selector Quiz','JavaScript Basics','Cyber Safety','Digital Skills','Algorithm Adventure'],
+ 'General Knowledge':['Daily GK Challenge','Inventions Quiz','Amazing Facts Quiz','World Records Quiz','Famous Scientists','Sports Knowledge','Book and Author Quiz','National Symbols','Discover India','Mixed GK Challenge'],
+ 'Environment':['Recycle Right','Wildlife Protector','Climate Challenge','Save Water Quest','Forest Explorer','Clean Earth Game','Renewable Energy Quiz','Food Chain Challenge','Pollution Detective','Biodiversity Quest'],
+ 'Exam Practice':['Speed Maths','Reasoning Sprint','Science Revision','English Revision','GK Sprint','Mixed Practice','Exam Time Challenge','Accuracy Challenge','Quick Recall Test','Final Revision']
+ };
+
+ const games=[];
+ Object.entries(groups).forEach(([category,names])=>
+   names.forEach(name=>games.push({name,category}))
+ );
+ // Add another 10 categories x 10 titles = 100 more game cards.
+ const extraGroups={
+ 'Maths Plus':['Addition Race','Subtraction Sprint','Multiplication Master','Division Dash','Percentage Puzzle','Ratio Rumble','Measurement Quest','Fraction Match','Coordinate Quest','Mental Maths'],
+ 'Science Plus':['Force and Motion','Magnets Mystery','Light and Shadow','Sound Detective','States of Matter','Chemical Change','Cell Explorer','Food Web Builder','Human Organ Quiz','Earth Science'],
+ 'English Plus':['Crossword Vocabulary','Word Scramble','Missing Letter','Plural Power','Tense Trainer','Pronoun Practice','Verb Challenge','Adjective Hunt','Preposition Puzzle','Comprehension Quest'],
+ 'Geography Plus':['Climate Zones','Time Zones Quiz','Natural Resources','Indian Rivers','World Wonders','Border and Country','Map Symbols','Desert Challenge','Forest Regions','Earth Layers'],
+ 'History Plus':['Indus Valley Quiz','Medieval India','Modern India','Historical Dates','World Leaders','Ancient Inventions','Art and Culture','Historical Places','Civics Basics','Rights and Duties'],
+ 'Logic Plus':['Sudoku Starter','Shape Sequence','Logical Deduction','Direction Sense','Analogy Challenge','Coding-Decoding','Calendar Puzzles','Clock Challenge','Missing Number','Brain Workout'],
+ 'Memory Plus':['Emoji Recall','Letter Sequence','Number Pairs','Pattern Memory','Quick Image Recall','Order the Objects','Remember the Words','Sequence Builder','Spot the Change','Recall Race'],
+ 'Computers Plus':['Binary Basics','Input Output Quiz','File Types Quiz','Web Basics','HTML Tags Game','CSS Colors Game','Programming Terms','Data Safety','Keyboard Shortcuts','Tech Vocabulary'],
+ 'GK Plus':['Space Facts','Animals and Habitats','Famous Places','Science Discoveries','Indian Geography GK','World Organisations','Languages of India','Food Around the World','Famous Personalities','Mixed Knowledge'],
+ 'Environment Plus':['Water Cycle','Plant Identification','Animal Habitats','Waste Sorting','Energy Saver','Ocean Protection','Air Quality Quiz','Nature Detective','Sustainable Living','Green Choices']
+ };
+ Object.entries(extraGroups).forEach(([category,names])=>
+   names.forEach(name=>games.push({name,category}))
+ );
+
+ const questionBank=[
+ {cat:'Maths',q:'What is 8 × 7?',a:['54','56','64','48'],c:1,why:'8 multiplied by 7 equals 56.'},
+ {cat:'Science',q:'Which planet is known as the Red Planet?',a:['Venus','Mars','Jupiter','Mercury'],c:1,why:'Iron-rich dust gives Mars its reddish appearance.'},
+ {cat:'English',q:'Which word is a noun?',a:['Quickly','Garden','Beautiful','Run'],c:1,why:'Garden names a place.'},
+ {cat:'Geography',q:'Which is the largest ocean?',a:['Atlantic','Indian','Pacific','Arctic'],c:2,why:'The Pacific Ocean is the largest.'},
+ {cat:'History & Civics',q:'How many houses does the Indian Parliament have?',a:['One','Two','Three','Four'],c:1,why:'India has the Lok Sabha and Rajya Sabha.'},
+ {cat:'Logic',q:'What comes next: 2, 4, 6, 8, ...?',a:['9','10','11','12'],c:1,why:'The sequence increases by 2.'},
+ {cat:'Memory',q:'Which pair contains the same number?',a:['3 and 8','5 and 5','2 and 7','1 and 9'],c:1,why:'Both numbers in the pair are 5.'},
+ {cat:'Computers',q:'What does CPU commonly stand for?',a:['Central Processing Unit','Computer Personal Utility','Control Power User','Central Program Upload'],c:0,why:'CPU stands for Central Processing Unit.'},
+ {cat:'General Knowledge',q:'How many days are in a leap year?',a:['364','365','366','367'],c:2,why:'A leap year has 366 days.'},
+ {cat:'Environment',q:'Which energy source is renewable?',a:['Coal','Sunlight','Petrol','Diesel'],c:1,why:'Sunlight is naturally replenished.'}
+ ];
+
+ window.vePage=function(page){
+ const out=$('ve-content');
+ if(page==='courses'){
+  out.innerHTML='<h2>📚 Courses</h2><p>Choose a subject to start learning.</p><div class="ve-grid">'+courses.map((c,i)=>
+  `<article class="ve-card"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><button onclick="veCourse(${i})">Explore course</button></article>`).join('')+'</div><div id="ve-course-detail"></div>';
+ }
+ if(page==='games'){
+  out.innerHTML=`<h2>🎮 Educational Games</h2>
+  <p>Explore more than 100 learning game ideas and quiz activities.</p>
+  <input id="ve-search" placeholder="Search free educational games..." style="width:100%">
+  <select id="ve-category" style="width:100%"><option value="">All categories</option>${Object.keys({...groups,...extraGroups}).map(c=>`<option>${esc(c)}</option>`).join('')}</select>
+  <p id="ve-count"></p><div id="ve-game-list" class="ve-grid"></div><div id="ve-play-area"></div>`;
+  const draw=()=>{
+   const q=$('ve-search').value.toLowerCase(),cat=$('ve-category').value;
+   const list=games.filter(g=>g.name.toLowerCase().includes(q)&&(!cat||g.category===cat));
+   $('ve-count').textContent=`${list.length} games found`;
+   $('ve-game-list').innerHTML=list.map(g=>`<article class="ve-card"><h3>🎯 ${esc(g.name)}</h3><p class="ve-muted">${esc(g.category)}</p><button onclick="vePlay('${esc(g.name).replace(/'/g,'&#39;')}','${esc(g.category)}')">Play quiz</button></article>`).join('');
+  };
+  $('ve-search').oninput=draw;$('ve-category').onchange=draw;draw();
+ }
+ if(page==='custom'){
+  const cfg=read('theme',{bg:'#17152b',accent:'#7455e8',size:'16'});
+  out.innerHTML=`<h2>🎨 App Customization</h2><p>Personalize this VEXO section.</p>
+  <div class="ve-card"><label>Background colour</label><input id="ve-bg" type="color" value="${cfg.bg}">
+  <label>Accent colour</label><input id="ve-accent" type="color" value="${cfg.accent}">
+  <label>Font size</label><select id="ve-size"><option value="14">Small</option><option value="16">Normal</option><option value="19">Large</option><option value="22">Extra large</option></select>
+  <button id="ve-save-theme">Save customization</button> <button id="ve-reset-theme">Reset</button>
+  <p class="ve-muted">Settings are saved in this browser. They do not yet change the entire existing VEXO sidebar or every page.</p></div>`;
+  $('ve-size').value=cfg.size;
+  $('ve-save-theme').onclick=()=>{
+   const v={bg:$('ve-bg').value,accent:$('ve-accent').value,size:$('ve-size').value};
+   save('theme',v);applyTheme(v);alert('Customization saved on this device.');
+  };
+  $('ve-reset-theme').onclick=()=>{localStorage.removeItem('vexo_extra_theme');vePage('custom');applyTheme({bg:'#17152b',accent:'#7455e8',size:'16'});};
+ }
+ };
+ window.veCourse=function(i){
+ const c=courses[i];
+ $('ve-course-detail').innerHTML=`<article class="ve-card"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><p>Course outline</p><ul><li>Lesson 1: Introduction and key concepts</li><li>Lesson 2: Examples and guided practice</li><li>Lesson 3: Revision and practice questions</li></ul><p class="ve-muted">This is a course outline starter. Full lesson content needs to be added for each course.</p></article>`;
+ };
+ window.vePlay=function(name,category){
+ const match=questionBank.filter(q=>q.cat===category);
+ const q=(match.length?match:questionBank)[Math.floor(Math.random()*(match.length||questionBank.length))];
+ const opts=q.a.map((a,i)=>({a,i})).sort(()=>Math.random()-.5);
+ const area=$('ve-play-area');
+ area.innerHTML=`<div class="ve-gamearea"><h3>${esc(name)}</h3><p>${esc(q.q)}</p>${opts.map(o=>`<button onclick="veAnswer(this,${o.i===q.c},'${esc(q.why)}')">${esc(o.a)}</button>`).join('')}<p id="ve-feedback"></p><p class="ve-muted">Demo quiz engine: each game card currently uses shared sample questions, not a unique game-specific question bank.</p></div>`;
+ };
+ window.veAnswer=function(btn,correct,why){
+ const area=$('ve-feedback');if(area.dataset.done)return;area.dataset.done='1';
+ area.textContent=(correct?'Correct! ':'Try again. ')+why;
+ };
+ function applyTheme(c){
+ host.style.background=c.bg;host.style.fontSize=c.size+'px';
+ host.querySelectorAll('button').forEach(b=>b.style.background=c.accent);
+ }
+ applyTheme(read('theme',{bg:'#17152b',accent:'#7455e8',size:'16'}));
+ vePage('courses');
+})();
+</script>
+<!-- VEXO EXTRA SECTIONS END -->
 
 </body>
 </html>
