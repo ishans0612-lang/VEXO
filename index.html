@@ -183,12 +183,28 @@ const SUBJECTS=[
 ["Coding","⌨️"],["Astronomy","🪐"],["Financial Literacy","💰"],["Health Education","❤️"],
 ["Communication","💬"]
 ];
-const COURSES=Array.from({length:60},(_,i)=>{
- const s=SUBJECTS[i%SUBJECTS.length];
- const level=["Beginner","Intermediate","Foundation"][i%3];
- return {id:"c"+(i+1),title:s[0]+" "+(["Foundations","Essentials","Practice","Masterclass","Skills","Explorer"][Math.floor(i/SUBJECTS.length)%6]),
- subject:s[0],icon:s[1],level,lessons:2+((i%3===0)?1:0),description:"Build your "+s[0].toLowerCase()+" knowledge with guided lessons and practice."};
-});
+
+const BOARDS = ["WBBSE", "CBSE", "ICSE"];
+const CLASSES = [6, 7, 8, 9, 10];
+
+const COURSES = CLASSES.flatMap(classNo =>
+  BOARDS.flatMap(board =>
+    SUBJECTS.map((subject, index) => ({
+      id: `c-${board}-${classNo}-${index + 1}`,
+      title: `${subject[0]} — Class ${classNo}`,
+      subject: subject[0],
+      icon: subject[1],
+      level: classNo <= 7 ? "Beginner" :
+             classNo <= 9 ? "Intermediate" : "Foundation",
+      board,
+      classNo,
+      lessons: 3,
+      description:
+        `${board} Class ${classNo}: ${subject[0]} study course with lessons and practice.`
+    }))
+  )
+);
+
 const GAMES=Array.from({length:120},(_,i)=>{
  const s=SUBJECTS[i%SUBJECTS.length];
  const formats=["Quick Quiz","Memory Challenge","Word Match","Brain Trainer","Speed Round","Knowledge Quest"];
