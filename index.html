@@ -307,12 +307,60 @@ function dashboard(){
  <div class="card"><div class="row"><div><h3>${data.dailyGoal} minutes a day</h3><p>Consistency matters more than one long session.</p></div><button class="btn" data-go="settings">Change goal</button></div>
  <div class="progress"><span style="width:${Math.min(100,Math.round(mins/Math.max(1,data.dailyGoal)*100))}%"></span></div><p class="small muted">${mins} of ${data.dailyGoal} minutes tracked in this browser.</p></div>`;
 }
+
 function coursesPage(){
- const list=COURSES.filter(c=>(c.title+" "+c.subject+" "+c.level).toLowerCase().includes(courseQuery.toLowerCase()));
- return `<div class="notice">60 course cards are available. Each course has guided lesson pages; lesson text is introductory learning material, not an official textbook.</div>
- <div class="searchbar"><input id="courseSearch" class="field" placeholder="Search courses or subjects..." value="${esc(courseQuery)}"><select class="field" id="courseLevel" style="max-width:180px"><option value="">All levels</option><option>Beginner</option><option>Intermediate</option><option>Foundation</option></select></div>
- <p class="muted small">${list.length} courses found</p><div class="grid three" id="courseGrid">${list.map(c=>`<article class="card"><div class="row"><span class="icon">${c.icon}</span><span class="tag">${c.level}</span></div><h3>${esc(c.title)}</h3><p>${esc(c.description)}</p><p class="small">${c.lessons} lessons • ${esc(c.subject)}</p><div class="progress"><span style="width:${Math.round(c.lessonsDone||0)/c.lessons*100}%"></span></div><button class="btn primary" data-course="${c.id}">Open course →</button></article>`).join("")}</div>`;
+ const list = COURSES.filter(c =>
+   (c.title + " " + c.subject + " " + c.level + " " + c.board + " " + c.classNo)
+     .toLowerCase().includes(courseQuery.toLowerCase()) &&
+   (!courseBoardFilter || c.board === courseBoardFilter) &&
+   (!courseClassFilter || c.classNo === Number(courseClassFilter)) &&
+   (!courseLevelFilter || c.level === courseLevelFilter)
+ );
+
+ return `<div class="notice">
+ Choose your board and class to find courses. Lesson content is introductory and is not an official textbook.
+ </div>
+
+ <div class="searchbar">
+   <input id="courseSearch" class="field"
+     placeholder="Search courses or subjects..."
+     value="${esc(courseQuery)}">
+
+   <select class="field" id="courseBoard" style="max-width:150px">
+     <option value="">All boards</option>
+     ${BOARDS.map(b=>`<option value="${b}" ${courseBoardFilter===b?"selected":""}>${b}</option>`).join("")}
+   </select>
+
+   <select class="field" id="courseClass" style="max-width:130px">
+     <option value="">All classes</option>
+     ${CLASSES.map(n=>`<option value="${n}" ${Number(courseClassFilter)===n?"selected":""}>Class ${n}</option>`).join("")}
+   </select>
+
+   <select class="field" id="courseLevel" style="max-width:150px">
+     <option value="">All levels</option>
+     ${["Beginner","Intermediate","Foundation"].map(l=>`<option value="${l}" ${courseLevelFilter===l?"selected":""}>${l}</option>`).join("")}
+   </select>
+ </div>
+
+ <p class="muted small">${list.length} courses found</p>
+
+ <div class="grid three" id="courseGrid">
+ ${list.map(c=>`<article class="card">
+   <div class="row">
+     <span class="icon">${c.icon}</span>
+     <span class="tag">${c.board} • Class ${c.classNo}</span>
+   </div>
+   <h3>${esc(c.title)}</h3>
+   <p>${esc(c.description)}</p>
+   <p class="small">${c.lessons} lessons • ${esc(c.subject)} • ${c.level}</p>
+   <div class="progress">
+     <span style="width:${Math.round((c.lessonsDone||0)/c.lessons*100)}%"></span>
+   </div>
+   <button class="btn primary" data-course="${c.id}">Open course →</button>
+ </article>`).join("")}
+ </div>`;
 }
+ 
 function lessonsPage(){
  if(!data.lesson)return `<div class="notice">Choose a course to open its lessons.</div><button class="btn primary" data-go="courses">Browse courses</button>`;
  const c=COURSES.find(x=>x.id===data.lesson.course)||COURSES[0],n=data.lesson.n||1;
