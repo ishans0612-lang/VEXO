@@ -4,1885 +4,538 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#635bff">
-<meta name="description" content="VEXO — Your personal learning workspace">
+<meta name="theme-color" content="#11152b">
+<meta name="description" content="VEXO — Learn Beyond Limits. Explore free educational games, online study tools, courses, quizzes, flashcards and study planning.">
+<meta name="keywords" content="free educational games, learning app, online study games, free online courses, study notes, quizzes, flashcards, VEXO">
+<meta name="author" content="VEXO">
 <title>VEXO — Learn Beyond Limits</title>
-
 <style>
 :root{
-  --bg:#f5f6fc;
-  --surface:#fff;
-  --text:#20233a;
-  --muted:#747991;
-  --border:#e8e9f2;
-  --primary:#635bff;
-  --primary-light:#eeedff;
-  --green:#159c78;
-  --red:#e05260;
-  --shadow:0 8px 30px rgba(36,38,80,.055);
+ --bg:#0b1020;--panel:#141b30;--panel2:#1b2540;--text:#f3f5ff;
+ --muted:#a4aec9;--accent:#9b87ff;--accent2:#36d9c4;--border:#2b3653;
+ --radius:18px;--font:Inter,system-ui,-apple-system,sans-serif;--scale:1;
+ --sidebar:260px;--space:16px
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Inter,system-ui,-apple-system,sans-serif;
-  transition:background .2s,color .2s;
-}
-body.dark{
-  --bg:#111321;--surface:#1b1e30;--text:#f2f3ff;
-  --muted:#a0a4bd;--border:#30334a;
-  --primary:#918aff;--primary-light:#302d50;
-  --shadow:0 8px 30px rgba(0,0,0,.15);
-}
-button,input,textarea,select{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+font-size:calc(15px * var(--scale));line-height:1.55;transition:.2s}
+button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
-  outline:2px solid var(--primary);outline-offset:2px
-}
-.app{min-height:100vh}
-.sidebar{
-  width:245px;position:fixed;inset:0 auto 0 0;
-  background:var(--surface);border-right:1px solid var(--border);
-  padding:24px 15px;display:flex;flex-direction:column;z-index:10;
-  overflow-y:auto;
-}
-.brand{display:flex;align-items:center;gap:11px;padding:0 9px 28px}
-.brand-logo{
-  width:43px;height:43px;border-radius:14px;
-  background:linear-gradient(135deg,#827aff,#5045e8);
-  display:grid;place-items:center;color:white;font-size:23px;font-weight:900
-}
-.brand-name{font-size:23px;font-weight:900;letter-spacing:1px}
-.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px}
-.nav-label{
-  font-size:10px;font-weight:800;color:var(--muted);
-  letter-spacing:1.5px;padding:10px 12px
-}
-.nav{
-  display:flex;align-items:center;gap:12px;width:100%;
-  padding:12px;border:0;border-radius:11px;background:transparent;
-  color:var(--muted);text-align:left;margin:2px 0;font-size:14px
-}
-.nav:hover,.nav.active{background:var(--primary-light);color:var(--primary)}
-.nav .ico{width:21px;text-align:center;font-size:17px}
-.sidebar-bottom{margin-top:auto;padding-top:20px}
-.main{margin-left:245px;padding:26px 32px;min-height:100vh}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:28px}
-.topbar h1{font-size:25px;margin:0 0 5px}
-.muted{color:var(--muted)}
-.small{font-size:12px}
-.actions{display:flex;gap:9px;align-items:center}
-.btn{
-  border:1px solid var(--border);background:var(--surface);color:var(--text);
-  padding:10px 14px;border-radius:10px;font-weight:650;font-size:13px
-}
-.btn:hover{filter:brightness(.97)}
-.btn.primary{background:var(--primary);color:white;border-color:var(--primary)}
-.btn.danger{color:var(--red)}
-.icon-btn{width:42px;height:42px;padding:0;font-size:18px}
-.menu-btn{display:none}
-.page{display:none}
-.page.active{display:block}
-.hero{
-  background:linear-gradient(115deg,#625bff,#8976ff);
-  color:white;border-radius:20px;padding:30px;position:relative;overflow:hidden;
-  margin-bottom:23px
-}
-.hero:after{
-  content:"✦";position:absolute;right:32px;top:15px;
-  font-size:100px;opacity:.14
-}
-.hero h2{font-size:26px;margin:0 0 10px}
-.hero p{max-width:520px;line-height:1.7;color:#f0efff}
-.hero .btn{background:white;color:#554ae8;border:0}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
+a{color:var(--accent2)}
+.layout{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+.sidebar{background:var(--panel);border-right:1px solid var(--border);padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:5px 8px 22px;font-size:24px;font-weight:900;letter-spacing:1px}
+.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#101528;font-weight:1000}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px}
+.nav-label{color:var(--muted);font-size:10px;letter-spacing:2px;margin:15px 10px 7px}
+.nav{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:11px 12px;border-radius:12px;margin:2px 0}
+.nav:hover,.nav.active{background:var(--panel2);color:var(--text)}
+.nav.active{box-shadow:inset 3px 0 var(--accent2)}
+.side-bottom{border-top:1px solid var(--border);margin-top:18px;padding-top:15px}
+.main{min-width:0;padding:24px clamp(14px,3vw,38px) 50px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.topbar h1{font-size:clamp(22px,3vw,32px);margin:0}
+.topbar p{color:var(--muted);margin:4px 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:9px 14px;border-radius:11px}
+.btn:hover{filter:brightness(1.15)}
+.btn.primary{background:var(--accent);color:#101326;border-color:transparent;font-weight:750}
+.btn.good{background:var(--accent2);color:#081a20;border-color:transparent;font-weight:750}
+.btn.danger{color:#ff9eae}
+.hero{padding:clamp(22px,4vw,38px);border-radius:24px;background:linear-gradient(120deg,#342a68,#173b51);border:1px solid var(--border);margin-bottom:22px}
+.hero h2{font-size:clamp(25px,4vw,40px);line-height:1.15;margin:8px 0 12px;max-width:650px}
+.hero p{color:#d8dcf5;max-width:650px}
+.eyebrow{color:var(--accent2);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space);margin:18px 0 26px}
 .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:16px;padding:20px;box-shadow:var(--shadow);min-width:0
-}
-.stat-icon{
-  width:42px;height:42px;border-radius:13px;display:grid;
-  place-items:center;font-size:20px;background:var(--primary-light);margin-bottom:17px
-}
-.stat-number{font-size:29px;font-weight:850;margin:4px 0}
-.card h3{font-size:16px;margin:0 0 14px}
-.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
-.card-head h3{margin:0}
-.section-title{font-size:19px;margin:28px 0 15px}
-.progress-track{height:7px;background:var(--border);border-radius:20px;overflow:hidden}
-.progress-fill{height:100%;background:var(--primary);border-radius:20px;transition:width .2s}
-.quick{display:flex;gap:10px;flex-wrap:wrap}
-.quick .btn{flex:1;min-width:115px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}
-.field input,.field textarea,.field select,.search{
-  width:100%;background:var(--bg);color:var(--text);
-  border:1px solid var(--border);border-radius:10px;padding:12px
-}
-.field textarea{min-height:115px;resize:vertical}
-.search{max-width:300px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.note-list,.task-list,.item-list{display:grid;gap:12px}
-.note-card{border:1px solid var(--border);border-radius:13px;padding:16px;background:var(--surface)}
-.note-card h4{margin:0 0 7px;overflow-wrap:anywhere}
-.note-card p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
-.note-meta{font-size:11px;color:var(--muted);margin-bottom:8px}
-.note-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.note-actions .btn{padding:7px 10px;font-size:12px}
-.empty{text-align:center;color:var(--muted);padding:32px 10px}
-.task-row{display:flex;align-items:center;gap:11px;padding:13px;border-bottom:1px solid var(--border)}
-.task-row:last-child{border-bottom:0}
-.task-row input{accent-color:var(--primary);width:17px;height:17px}
-.task-row.done .task-text{text-decoration:line-through;color:var(--muted)}
-.task-text{flex:1;overflow-wrap:anywhere}
-.badge{font-size:10px;border-radius:20px;background:var(--primary-light);color:var(--primary);padding:5px 8px}
-.quiz-option{
-  display:block;width:100%;text-align:left;margin:9px 0;
-  padding:13px;border:1px solid var(--border);border-radius:11px;
-  background:var(--surface);color:var(--text)
-}
-.quiz-option:hover{border-color:var(--primary)}
-.quiz-option.correct{border-color:var(--green);background:#159c7815}
-.quiz-option.wrong{border-color:var(--red);background:#e0526015}
-.flashcard{
-  min-height:220px;display:grid;place-items:center;text-align:center;
-  border:1px solid var(--border);border-radius:17px;padding:26px;
-  background:var(--surface);font-size:22px;line-height:1.6;cursor:pointer
-}
-.chat-box{
-  height:320px;overflow-y:auto;padding:14px;border-radius:12px;
-  background:var(--bg);border:1px solid var(--border);margin-bottom:14px
-}
-.chat-msg{padding:11px 13px;border-radius:12px;margin:8px 0;max-width:90%;white-space:pre-wrap;overflow-wrap:anywhere}
-.chat-msg.user{background:var(--primary);color:white;margin-left:auto}
-.chat-msg.bot{background:var(--surface);border:1px solid var(--border)}
-.footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
-.toast{
-  position:fixed;bottom:22px;right:22px;z-index:30;
-  background:var(--text);color:var(--surface);padding:13px 18px;
-  border-radius:12px;box-shadow:var(--shadow);display:none;max-width:90vw
-}
-.toast.show{display:block}
-hr{border:0;border-top:1px solid var(--border);margin:18px 0}
-@media(max-width:1050px){
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .main{padding:22px}
-}
-@media(max-width:700px){
-  .sidebar{transform:translateX(-100%);transition:transform .2s;width:260px}
-  .sidebar.open{transform:translateX(0);box-shadow:var(--shadow)}
-  .main{margin-left:0;padding:17px}
-  .menu-btn{display:inline-block}
-  .topbar h1{font-size:21px}
-  .grid,.grid.two,.grid.three{grid-template-columns:1fr}
-  .hero{padding:23px}
-  .hero h2{font-size:23px}
-  .toolbar{align-items:stretch}
-  .search{max-width:none}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;min-width:0}
+.card h3{font-size:16px;margin:8px 0}
+.card p{color:var(--muted);margin:6px 0}
+.metric{font-size:29px;font-weight:850;letter-spacing:-1px;margin-top:8px}
+.icon{font-size:24px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:28px 0 12px}
+.section-head h2{font-size:21px;margin:0}
+.searchbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
+.field{width:100%;min-width:0;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 12px;border-radius:10px}
+.searchbar .field{flex:1;min-width:180px}
+textarea.field{min-height:100px;resize:vertical}
+select.field{cursor:pointer}
+.progress{height:7px;background:var(--bg);border-radius:99px;overflow:hidden;margin:12px 0}
+.progress span{height:100%;display:block;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .3s}
+.tag{display:inline-block;background:var(--panel2);border:1px solid var(--border);border-radius:100px;padding:3px 9px;font-size:11px;color:var(--muted);margin:2px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stack{display:grid;gap:12px}
+.list-item{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
+.list-item:last-child{border-bottom:0}
+.list-item>div:first-child{flex:1;min-width:0}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+.lesson-content{white-space:pre-wrap;line-height:1.85}
+.notice{border:1px solid var(--border);padding:13px;border-radius:12px;background:var(--panel2);margin:12px 0}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+label{display:block;margin:8px 0;color:var(--muted);font-size:13px}
+input[type=checkbox]{accent-color:var(--accent)}
+input[type=color]{height:42px;width:100%;background:var(--panel);border:1px solid var(--border);border-radius:8px}
+.footer{text-align:center;color:var(--muted);font-size:12px;padding:28px}
+.mobile-menu{display:none}
+.hidden{display:none!important}
+button:disabled{opacity:.45;cursor:not-allowed}
+body.light{--bg:#f3f5fc;--panel:#fff;--panel2:#edf0fa;--text:#1a2035;--muted:#606b84;--border:#dce1ef}
+body.compact{--space:9px}
+body.rounded{--radius:28px}
+body.sharp{--radius:5px}
+body.large-text{--scale:1.12}
+body.serif{--font:Georgia,"Times New Roman",serif}
+body.mono{--font:ui-monospace,SFMono-Regular,monospace}
+body.no-motion *{transition:none!important;animation:none!important}
+body.no-border .card,body.no-border .sidebar{border-color:transparent}
+body.wide .layout{grid-template-columns:210px minmax(0,1fr)}
+body.centered .main{max-width:1250px;margin:auto;width:100%}
+body.high-contrast{--muted:#e3e7ff;--border:#65708d}
+body.gradient .hero{background:linear-gradient(120deg,#512f82,#087e82)}
+body.warm{--accent:#ffb36c;--accent2:#f5d17b}
+body.ocean{--accent:#65b9ff;--accent2:#53e5d0}
+body.rose{--accent:#ff8eb7;--accent2:#d8a4ff}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:fixed;left:-290px;z-index:20;width:270px;transition:left .2s;box-shadow:0 0 40px #0008}
+ .sidebar.open{left:0}
+ .mobile-menu{display:inline-block}
+ .main{padding:16px 13px 35px}
+ .grid,.grid.two,.grid.three{grid-template-columns:1fr}
+ .hero{padding:23px}
+ .metric{font-size:25px}
 }
 </style>
 </head>
-
 <body>
-<div class="app">
+<div class="layout">
 <aside class="sidebar" id="sidebar">
-  <div class="brand">
-    <div class="brand-logo">V</div>
-    <div><div class="brand-name">VEXO</div><div class="brand-sub">LEARN BEYOND LIMITS</div></div>
-  </div>
-
+  <div class="brand"><div class="logo">V</div><div>VEXO<small>LEARN BEYOND LIMITS</small></div></div>
   <div class="nav-label">WORKSPACE</div>
-  <button class="nav active" data-page="dashboard"><span class="ico">⌂</span>Dashboard</button>
-  <button class="nav" data-page="notes"><span class="ico">▤</span>My Notes</button>
-  <button class="nav" data-page="tasks"><span class="ico">✓</span>My Tasks</button>
-  <button class="nav" data-page="planner"><span class="ico">▦</span>Study Planner</button>
-
-  <div class="nav-label">LEARNING TOOLS</div>
-  <button class="nav" data-page="quiz"><span class="ico">✎</span>Quick Quiz</button>
-  <button class="nav" data-page="flashcards"><span class="ico">▣</span>Flashcards</button>
-  <button class="nav" data-page="ai"><span class="ico">✧</span>AI Study Hub</button>
-
-  <div class="sidebar-bottom">
-    <button class="nav" data-page="settings"><span class="ico">⚙</span>Settings & Backup</button>
-    <div class="card" style="padding:14px;margin-top:12px">
-      <div style="font-weight:800;font-size:13px">Keep learning ✨</div>
-      <p class="muted small">Small steps. Big progress.</p>
-    </div>
-  </div>
+  <nav id="navigation">
+    <button class="nav active" data-page="dashboard">⌂ <span data-i18n="Dashboard">Dashboard</span></button>
+    <button class="nav" data-page="notes">▤ <span data-i18n="My Notes">My Notes</span></button>
+    <button class="nav" data-page="courses">▣ <span data-i18n="Courses">Courses</span></button>
+    <button class="nav" data-page="lessons">▹ Lessons</button>
+    <button class="nav" data-page="quiz">✎ Quiz &amp; Tests</button>
+    <button class="nav" data-page="flashcards">▤ Flashcards</button>
+    <button class="nav" data-page="games">♟ Educational Games</button>
+    <button class="nav" data-page="planner">▦ Study Planner</button>
+    <button class="nav" data-page="progress">◴ Progress</button>
+    <button class="nav" data-page="doubts">❔ Doubt Room</button>
+    <button class="nav" data-page="ai">✦ AI Study Hub</button>
+    <button class="nav" data-page="certificates">♜ Certificates</button>
+    <button class="nav" data-page="notifications">♧ Notifications</button>
+    <button class="nav" data-page="guardian">⌂ Guardian Dashboard</button>
+  </nav>
+  <div class="nav-label">PERSONAL</div>
+  <button class="nav" data-page="customize">⚙ Customize VEXO</button>
+  <button class="nav" data-page="account">♙ Account / Guest</button>
+  <button class="nav" data-page="settings">☷ Settings</button>
+  <div class="side-bottom small muted">VEXO • Study smarter every day</div>
 </aside>
-
 <main class="main">
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button class="btn icon-btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-      <div>
-        <h1 id="pageTitle">Dashboard</h1>
-        <div class="muted small" id="pageSubtitle">Your personal learning workspace</div>
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn icon-btn" id="themeBtn" aria-label="Toggle theme">☾</button>
-    </div>
-  </header>
-
-  <section class="page active" id="page-dashboard">
-    <div class="hero">
-      <h2>Welcome to VEXO 🚀</h2>
-      <p>Your learning journey starts here. Organize your notes, complete tasks, practice quizzes and keep making progress.</p>
-      <button class="btn" data-go="notes">✚ Create a Note</button>
-    </div>
-
-    <div class="grid">
-      <div class="card"><div class="stat-icon">▤</div><div class="muted small">Total Notes</div><div class="stat-number" id="statNotes">0</div><div class="muted small">Saved in this browser</div></div>
-      <div class="card"><div class="stat-icon">✓</div><div class="muted small">Tasks Completed</div><div class="stat-number" id="statTasks">0</div><div class="muted small" id="taskSummary">0 tasks remaining</div></div>
-      <div class="card"><div class="stat-icon">▣</div><div class="muted small">Flashcards</div><div class="stat-number" id="statCards">0</div><div class="muted small">Your study cards</div></div>
-      <div class="card"><div class="stat-icon">✎</div><div class="muted small">Quiz Attempts</div><div class="stat-number" id="statQuizzes">0</div><div class="muted small">Practice makes progress</div></div>
-    </div>
-
-    <div class="grid two">
-      <div class="card">
-        <div class="card-head"><h3>Task Progress</h3><span class="badge" id="progressLabel">0%</span></div>
-        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-        <p class="muted small" id="progressText">Add a task to get started.</p>
-        <button class="btn" data-go="tasks">View Tasks →</button>
-      </div>
-      <div class="card">
-        <h3>Quick Actions</h3>
-        <div class="quick">
-          <button class="btn" data-go="notes">＋ New Note</button>
-          <button class="btn" data-go="tasks">＋ Add Task</button>
-          <button class="btn" data-go="quiz">Start Quiz</button>
-          <button class="btn" data-go="flashcards">Study Cards</button>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="section-title">Recent Notes</h2>
-    <div class="note-list" id="recentNotes"></div>
-  </section>
-
-  <section class="page" id="page-notes">
-    <div class="grid two">
-      <div class="card">
-        <h3 id="noteFormTitle">Create a Note</h3>
-        <form id="noteForm">
-          <input type="hidden" id="noteId">
-          <div class="field"><label for="noteTitle">Note Title</label><input id="noteTitle" maxlength="120" required placeholder="e.g. Chapter 1 — Biology"></div>
-          <div class="field"><label for="noteSubject">Subject</label><input id="noteSubject" maxlength="60" placeholder="e.g. Science"></div>
-          <div class="field"><label for="noteContent">Your Notes</label><textarea id="noteContent" maxlength="30000" required placeholder="Write your notes here..."></textarea></div>
-          <button class="btn primary" type="submit" id="saveNoteBtn">Save Note</button>
-          <button class="btn" type="button" id="cancelEditBtn" hidden>Cancel Edit</button>
-        </form>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>My Notes</h3><span class="badge" id="noteCount">0 notes</span></div>
-        <input class="search" id="noteSearch" placeholder="Search notes..." aria-label="Search notes">
-        <div class="note-list" id="notesList" style="margin-top:14px"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="page" id="page-tasks">
-    <div class="card">
-      <h3>Add a Task</h3>
-      <form id="taskForm">
-        <div class="grid two" style="margin-bottom:0">
-          <div class="field"><label for="taskTitle">Task</label><input id="taskTitle" maxlength="180" required placeholder="What do you need to do?"></div>
-          <div class="field"><label for="taskDate">Due Date</label><input id="taskDate" type="date"></div>
-        </div>
-        <button class="btn primary" type="submit">＋ Add Task</button>
-      </form>
-    </div>
-    <div class="card" style="margin-top:18px">
-      <div class="card-head"><h3>My Tasks</h3><button class="btn" id="clearCompleted">Clear Completed</button></div>
-      <div class="task-list" id="tasksList"></div>
-    </div>
-  </section>
-
-  <section class="page" id="page-planner">
-    <div class="card">
-      <h3>Study Planner</h3>
-      <p class="muted small">Plan what you want to study today.</p>
-      <form id="planForm">
-        <div class="grid two" style="margin-bottom:0">
-          <div class="field"><label for="planDate">Study Date</label><input id="planDate" type="date" required></div>
-          <div class="field"><label for="planSubject">Subject / Activity</label><input id="planSubject" maxlength="120" required placeholder="e.g. Mathematics revision"></div>
-        </div>
-        <div class="field"><label for="planDuration">Duration (minutes)</label><input id="planDuration" type="number" min="5" max="600" value="30" required></div>
-        <button class="btn primary" type="submit">＋ Add to Plan</button>
-      </form>
-    </div>
-    <div class="card" style="margin-top:18px">
-      <h3>My Study Schedule</h3>
-      <div class="item-list" id="planList"></div>
-    </div>
-  </section>
-
-  <section class="page" id="page-quiz">
-    <div class="card">
-      <div class="card-head"><h3>Quick Knowledge Quiz</h3><span class="badge" id="quizCounter">Question 1</span></div>
-      <div class="progress-track"><div class="progress-fill" id="quizProgress" style="width:0%"></div></div>
-      <div id="quizArea" style="margin-top:22px"></div>
-      <div id="quizFeedback" class="muted small" aria-live="polite"></div>
-      <div class="actions" style="margin-top:18px">
-        <button class="btn primary" id="quizNext" disabled>Next Question →</button>
-        <button class="btn" id="quizRestart">Restart Quiz</button>
-      </div>
-    </div>
-    <p class="muted small" style="margin-top:12px">Practice questions are built into this app. They do not require an AI API.</p>
-  </section>
-
-  <section class="page" id="page-flashcards">
-    <div class="grid two">
-      <div class="card">
-        <h3>Create a Flashcard</h3>
-        <form id="flashForm">
-          <div class="field"><label for="flashFront">Question / Front</label><textarea id="flashFront" maxlength="1500" required placeholder="What do you want to remember?"></textarea></div>
-          <div class="field"><label for="flashBack">Answer / Back</label><textarea id="flashBack" maxlength="3000" required placeholder="Write the answer..."></textarea></div>
-          <button class="btn primary" type="submit">Save Flashcard</button>
-        </form>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Study Flashcards</h3><span class="badge" id="flashCounter">0 cards</span></div>
-        <div class="flashcard" id="flashDisplay" role="button" tabindex="0" aria-label="Flip flashcard">Create a card to begin</div>
-        <p class="muted small" style="text-align:center">Tap the card to flip it.</p>
-        <div class="actions" style="justify-content:center;flex-wrap:wrap">
-          <button class="btn" id="flashPrev">← Previous</button>
-          <button class="btn primary" id="flashFlip">Flip Card</button>
-          <button class="btn" id="flashNext">Next →</button>
-        </div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:18px">
-      <h3>All Flashcards</h3>
-      <div class="item-list" id="flashList"></div>
-    </div>
-  </section>
-
-  <section class="page" id="page-ai">
-    <div class="card">
-      <h3>✧ AI Study Hub</h3>
-      <p class="muted">Ask a question or get help with your studies. This built-in helper works without an API, but it is not a connected AI model.</p>
-      <div class="chat-box" id="chatBox" aria-live="polite">
-        <div class="chat-msg bot">Hello! Ask me a study question. I can provide basic study tips, but complex answers need a real AI service.</div>
-      </div>
-      <form id="chatForm">
-        <div class="field"><label for="chatInput">Your question</label><textarea id="chatInput" maxlength="2000" required placeholder="Ask a question..."></textarea></div>
-        <button class="btn primary" type="submit">Send Question</button>
-      </form>
-      <hr>
-      <p class="muted small">Advanced AI requires a secure backend and an AI provider. Never place a private API key directly in public HTML or JavaScript.</p>
-    </div>
-  </section>
-
-  <section class="page" id="page-settings">
-    <div class="grid two">
-      <div class="card">
-        <h3>Appearance</h3>
-        <p class="muted small">Choose the theme for your workspace.</p>
-        <button class="btn" id="settingsTheme">Toggle Light / Dark Mode</button>
-      </div>
-      <div class="card">
-        <h3>Data Backup</h3>
-        <p class="muted small">Export your notes, tasks, plans and flashcards to a JSON file.</p>
-        <button class="btn primary" id="exportBtn">↓ Export Backup</button>
-        <hr>
-        <div class="field"><label for="importFile">Restore from a VEXO JSON backup</label><input id="importFile" type="file" accept=".json,application/json"></div>
-        <button class="btn" id="importBtn">↑ Restore Backup</button>
-      </div>
-    </div>
-    <div class="card" style="margin-top:18px">
-      <h3>Storage Information</h3>
-      <p class="muted small">Your information is stored in this browser using localStorage. It is not automatically synced to other devices or accounts. Export a backup regularly.</p>
-      <button class="btn danger" id="clearDataBtn">Delete All Local Data</button>
-    </div>
-  </section>
-
-  <footer class="footer">VEXO • LEARN BEYOND LIMITS • Your learning, your journey.</footer>
+<header class="topbar">
+  <div class="row">
+    <button class="btn mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
+    <div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Your learning space, your pace.</p></div>
+  </div>
+  <div class="actions">
+    <select class="field" id="languageSelect" aria-label="Interface language" style="width:auto;max-width:190px"></select>
+    <button class="btn" id="quickGuest">♙ Guest</button>
+  </div>
+</header>
+<div id="app"></div>
+<footer class="footer">VEXO © 2026 • Learn Beyond Limits • Keep learning, keep growing.</footer>
 </main>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script>
 "use strict";
-
-const $ = id => document.getElementById(id);
-const STORE_KEY = "vexo_workspace_v1";
-
-const defaultData = () => ({
-  notes: [],
-  tasks: [],
-  plans: [],
-  flashcards: [],
-  quizAttempts: 0,
-  dark: false
-});
-
-function loadData(){
-  try{
-    const raw = localStorage.getItem(STORE_KEY);
-    if(!raw) return defaultData();
-    const saved = JSON.parse(raw);
-    return {
-      ...defaultData(),
-      ...saved,
-      notes: Array.isArray(saved.notes) ? saved.notes : [],
-      tasks: Array.isArray(saved.tasks) ? saved.tasks : [],
-      plans: Array.isArray(saved.plans) ? saved.plans : [],
-      flashcards: Array.isArray(saved.flashcards) ? saved.flashcards : [],
-      quizAttempts: Number(saved.quizAttempts) || 0
-    };
-  }catch(error){
-    return defaultData();
-  }
-}
-
-let data = loadData();
-let toastTimer;
-let flashIndex = 0;
-let flashFlipped = false;
-let quizIndex = 0;
-let quizScore = 0;
-let quizAnswered = false;
-
-function saveData(){
-  try{
-    localStorage.setItem(STORE_KEY, JSON.stringify(data));
-    return true;
-  }catch(error){
-    notify("Storage full or unavailable. Export your data.");
-    return false;
-  }
-}
-
-function makeId(){
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-}
-
-function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[char]);
-}
-
-function formatDate(value){
-  if(!value) return "";
-  return escapeHTML(value);
-}
-
-function notify(message){
-  const toast = $("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
-}
-
-const pageNames = {
-  dashboard:["Dashboard","Your personal learning workspace"],
-  notes:["My Notes","Capture and organize your knowledge"],
-  tasks:["My Tasks","One step at a time"],
-  planner:["Study Planner","Plan your learning time"],
-  quiz:["Quick Quiz","Practice and test your knowledge"],
-  flashcards:["Flashcards","Remember more with active recall"],
-  ai:["AI Study Hub","A simple built-in study helper"],
-  settings:["Settings & Backup","Manage your preferences and data"]
-};
-
-function navigate(page){
-  if(!pageNames[page]) return;
-  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
-  document.querySelectorAll(".nav").forEach(el => {
-    el.classList.toggle("active", el.dataset.page === page);
-  });
-  $("page-" + page).classList.add("active");
-  $("pageTitle").textContent = pageNames[page][0];
-  $("pageSubtitle").textContent = pageNames[page][1];
-  $("sidebar").classList.remove("open");
-  if(page === "notes") renderNotes();
-  if(page === "tasks") renderTasks();
-  if(page === "planner") renderPlans();
-  if(page === "flashcards") renderFlashcards();
-  if(page === "quiz") renderQuiz();
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-document.querySelectorAll("[data-page]").forEach(button => {
-  button.addEventListener("click", () => navigate(button.dataset.page));
-});
-document.querySelectorAll("[data-go]").forEach(button => {
-  button.addEventListener("click", () => navigate(button.dataset.go));
-});
-
-$("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
-
-function applyTheme(){
-  document.body.classList.toggle("dark", Boolean(data.dark));
-  $("themeBtn").textContent = data.dark ? "☀" : "☾";
-}
-function toggleTheme(){
-  data.dark = !data.dark;
-  applyTheme();
-  saveData();
-}
-$("themeBtn").addEventListener("click", toggleTheme);
-$("settingsTheme").addEventListener("click", toggleTheme);
-
-function renderDashboard(){
-  const completed = data.tasks.filter(task => task.done).length;
-  const total = data.tasks.length;
-  const percent = total ? Math.round(completed / total * 100) : 0;
-
-  $("statNotes").textContent = data.notes.length;
-  $("statTasks").textContent = completed;
-  $("statCards").textContent = data.flashcards.length;
-  $("statQuizzes").textContent = data.quizAttempts;
-  $("taskSummary").textContent = `${total - completed} tasks remaining`;
-  $("progressLabel").textContent = percent + "%";
-  $("progressFill").style.width = percent + "%";
-  $("progressText").textContent = total
-    ? `${completed} of ${total} tasks completed.`
-    : "Add a task to get started.";
-
-  const recent = [...data.notes].sort((a,b) => b.updated - a.updated).slice(0,3);
-  $("recentNotes").innerHTML = recent.length ? recent.map(note => `
-    <article class="note-card">
-      <div class="note-meta">${escapeHTML(note.subject || "General")} • ${new Date(note.updated).toLocaleDateString()}</div>
-      <h4>${escapeHTML(note.title)}</h4>
-      <p>${escapeHTML(note.content.slice(0,180))}${note.content.length > 180 ? "…" : ""}</p>
-      <div class="note-actions"><button class="btn" data-edit-note="${escapeHTML(note.id)}">Edit Note</button></div>
-    </article>
-  `).join("") : '<div class="card empty">No notes yet. Create your first note!</div>';
-}
-
-function resetNoteForm(){
-  $("noteForm").reset();
-  $("noteId").value = "";
-  $("noteFormTitle").textContent = "Create a Note";
-  $("saveNoteBtn").textContent = "Save Note";
-  $("cancelEditBtn").hidden = true;
-}
-
-$("noteForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const title = $("noteTitle").value.trim();
-  const subject = $("noteSubject").value.trim();
-  const content = $("noteContent").value.trim();
-  if(!title || !content) return notify("Enter a title and note content.");
-
-  const existingId = $("noteId").value;
-  const now = Date.now();
-
-  if(existingId){
-    const note = data.notes.find(item => item.id === existingId);
-    if(!note) return notify("Note not found.");
-    Object.assign(note,{title,subject,content,updated:now});
-    notify("Note updated!");
-  }else{
-    data.notes.unshift({id:makeId(),title,subject,content,created:now,updated:now});
-    notify("Note saved!");
-  }
-
-  saveData();
-  resetNoteForm();
-  renderAll();
-});
-
-$("cancelEditBtn").addEventListener("click", resetNoteForm);
-$("noteSearch").addEventListener("input", renderNotes);
-
-function renderNotes(){
-  const query = $("noteSearch").value.trim().toLowerCase();
-  const notes = [...data.notes]
-    .filter(note => `${note.title} ${note.subject} ${note.content}`.toLowerCase().includes(query))
-    .sort((a,b) => b.updated - a.updated);
-
-  $("noteCount").textContent = `${notes.length} note${notes.length === 1 ? "" : "s"}`;
-  $("notesList").innerHTML = notes.length ? notes.map(note => `
-    <article class="note-card">
-      <div class="note-meta">${escapeHTML(note.subject || "General")} • ${new Date(note.updated).toLocaleDateString()}</div>
-      <h4>${escapeHTML(note.title)}</h4>
-      <p>${escapeHTML(note.content.length > 280 ? note.content.slice(0,280) + "…" : note.content)}</p>
-      <div class="note-actions">
-        <button class="btn" data-edit-note="${escapeHTML(note.id)}">Edit</button>
-        <button class="btn danger" data-delete-note="${escapeHTML(note.id)}">Delete</button>
-      </div>
-    </article>
-  `).join("") : '<div class="empty">No matching notes found.</div>';
-}
-
-function editNote(id){
-  const note = data.notes.find(item => item.id === id);
-  if(!note) return;
-  $("noteId").value = note.id;
-  $("noteTitle").value = note.title;
-  $("noteSubject").value = note.subject || "";
-  $("noteContent").value = note.content;
-  $("noteFormTitle").textContent = "Edit Note";
-  $("saveNoteBtn").textContent = "Update Note";
-  $("cancelEditBtn").hidden = false;
-  navigate("notes");
-  $("noteTitle").focus();
-}
-
-document.addEventListener("click", event => {
-  const edit = event.target.closest("[data-edit-note]");
-  const remove = event.target.closest("[data-delete-note]");
-  if(edit) editNote(edit.dataset.editNote);
-  if(remove){
-    const note = data.notes.find(item => item.id === remove.dataset.deleteNote);
-    if(note && confirm(`Delete "${note.title}"?`)){
-      data.notes = data.notes.filter(item => item.id !== note.id);
-      saveData();
-      renderAll();
-      notify("Note deleted.");
-    }
-  }
-});
-
-$("taskForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const title = $("taskTitle").value.trim();
-  if(!title) return;
-  data.tasks.unshift({
-    id:makeId(),title,
-    date:$("taskDate").value,
-    done:false,
-    created:Date.now()
-  });
-  saveData();
-  $("taskForm").reset();
-  renderAll();
-  notify("Task added!");
-});
-
-function renderTasks(){
-  const tasks = [...data.tasks].sort((a,b) => Number(a.done)-Number(b.done) || (a.date || "").localeCompare(b.date || ""));
-  $("tasksList").innerHTML = tasks.length ? tasks.map(task => `
-    <div class="task-row ${task.done ? "done" : ""}">
-      <input type="checkbox" data-task-toggle="${escapeHTML(task.id)}" ${task.done ? "checked" : ""} aria-label="Complete task">
-      <span class="task-text">${escapeHTML(task.title)}${task.date ? `<div class="muted small">Due: ${formatDate(task.date)}</div>` : ""}</span>
-      <button class="btn danger" data-task-delete="${escapeHTML(task.id)}">Delete</button>
-    </div>
-  `).join("") : '<div class="empty">No tasks yet. Add your first task above.</div>';
-}
-
-$("tasksList").addEventListener("change", event => {
-  const id = event.target.dataset.taskToggle;
-  if(!id) return;
-  const task = data.tasks.find(item => item.id === id);
-  if(task){
-    task.done = event.target.checked;
-    saveData();
-    renderAll();
-  }
-});
-$("tasksList").addEventListener("click", event => {
-  const button = event.target.closest("[data-task-delete]");
-  if(!button) return;
-  data.tasks = data.tasks.filter(task => task.id !== button.dataset.taskDelete);
-  saveData();
-  renderAll();
-  notify("Task deleted.");
-});
-$("clearCompleted").addEventListener("click", () => {
-  data.tasks = data.tasks.filter(task => !task.done);
-  saveData();
-  renderAll();
-  notify("Completed tasks cleared.");
-});
-
-$("planDate").value = new Date().toISOString().slice(0,10);
-$("taskDate").min = "";
-$("planForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const subject = $("planSubject").value.trim();
-  const duration = Number($("planDuration").value);
-  const date = $("planDate").value;
-  if(!subject || !date || !Number.isFinite(duration) || duration < 5 || duration > 600){
-    return notify("Check your plan details.");
-  }
-  data.plans.push({id:makeId(),subject,duration,date});
-  saveData();
-  $("planSubject").value = "";
-  renderPlans();
-  notify("Study plan added!");
-});
-
-function renderPlans(){
-  const plans = [...data.plans].sort((a,b) => a.date.localeCompare(b.date));
-  $("planList").innerHTML = plans.length ? plans.map(plan => `
-    <div class="task-row">
-      <span class="task-text"><strong>${escapeHTML(plan.subject)}</strong><div class="muted small">${formatDate(plan.date)} • ${Number(plan.duration)} minutes</div></span>
-      <button class="btn danger" data-plan-delete="${escapeHTML(plan.id)}">Delete</button>
-    </div>
-  `).join("") : '<div class="empty">Your study schedule is empty.</div>';
-}
-$("planList").addEventListener("click", event => {
-  const button = event.target.closest("[data-plan-delete]");
-  if(!button) return;
-  data.plans = data.plans.filter(plan => plan.id !== button.dataset.planDelete);
-  saveData();
-  renderPlans();
-  notify("Plan deleted.");
-});
-
-const questions = [
-  {q:"Which planet is known as the Red Planet?",o:["Venus","Mars","Jupiter","Mercury"],a:1,why:"Mars appears reddish because of iron oxide on its surface."},
-  {q:"What is 12 × 8?",o:["86","92","96","108"],a:2,why:"12 multiplied by 8 equals 96."},
-  {q:"Which gas do plants absorb during photosynthesis?",o:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],a:2,why:"Plants use carbon dioxide, water and light to make sugars."},
-  {q:"What is the largest ocean on Earth?",o:["Atlantic","Indian","Arctic","Pacific"],a:3,why:"The Pacific Ocean is the largest."},
-  {q:"How many sides does a hexagon have?",o:["Five","Six","Seven","Eight"],a:1,why:"A hexagon has six sides."},
-  {q:"Which is the closest star to Earth?",o:["Sirius","Polaris","The Sun","Proxima Centauri"],a:2,why:"The Sun is our nearest star."},
-  {q:"What is the chemical formula for water?",o:["CO2","H2O","O2","NaCl"],a:1,why:"A water molecule contains two hydrogen atoms and one oxygen atom."},
-  {q:"Which organ pumps blood around the human body?",o:["Lungs","Brain","Liver","Heart"],a:3,why:"The heart pumps blood through the circulatory system."}
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const LANGUAGES=[
+["en","English"],["as","অসমীয়া"],["bn","বাংলা"],["brx","बड़ो"],["doi","डोगरी"],
+["gu","ગુજરાતી"],["hi","हिन्दी"],["kn","ಕನ್ನಡ"],["ks","کٲشُر"],["kok","कोंकणी"],
+["mai","मैथिली"],["ml","മലയാളം"],["mni","মেইতেই"],["mr","मराठी"],["ne","नेपाली"],
+["or","ଓଡ଼ିଆ"],["pa","ਪੰਜਾਬੀ"],["sa","संस्कृतम्"],["sat","ᱥᱟᱱᱛᱟᱲᱤ"],
+["sd","سنڌي"],["ta","தமிழ்"],["te","తెలుగు"],["ur","اردو"]
 ];
-
-function renderQuiz(){
-  const area = $("quizArea");
-  $("quizFeedback").textContent = "";
-  $("quizNext").disabled = true;
-  quizAnswered = false;
-
-  if(quizIndex >= questions.length){
-    area.innerHTML = `
-      <h2>Quiz Complete! 🎉</h2>
-      <p>You scored <strong>${quizScore} / ${questions.length}</strong>.</p>
-      <p class="muted">Keep practicing to improve your knowledge.</p>`;
-    $("quizCounter").textContent = "Finished";
-    $("quizProgress").style.width = "100%";
-    $("quizNext").textContent = "Finish";
-    $("quizNext").disabled = false;
-    return;
-  }
-
-  const item = questions[quizIndex];
-  $("quizCounter").textContent = `Question ${quizIndex + 1} of ${questions.length}`;
-  $("quizProgress").style.width = `${quizIndex / questions.length * 100}%`;
-  $("quizNext").textContent = quizIndex === questions.length - 1 ? "See Results →" : "Next Question →";
-  area.innerHTML = `<h3>${escapeHTML(item.q)}</h3>` + item.o.map((option,index) => `
-    <button class="quiz-option" data-answer="${index}">${escapeHTML(option)}</button>
-  `).join("");
-
-  area.querySelectorAll("[data-answer]").forEach(button => {
-    button.addEventListener("click", () => {
-      if(quizAnswered) return;
-      quizAnswered = true;
-      const chosen = Number(button.dataset.answer);
-      if(chosen === item.a) quizScore++;
-      area.querySelectorAll("[data-answer]").forEach(option => {
-        option.disabled = true;
-        if(Number(option.dataset.answer) === item.a) option.classList.add("correct");
-      });
-      if(chosen !== item.a) button.classList.add("wrong");
-      $("quizFeedback").textContent = `${chosen === item.a ? "Correct! " : "Not quite. "}${item.why}`;
-      $("quizNext").disabled = false;
-    });
-  });
-}
-
-$("quizNext").addEventListener("click", () => {
-  if(quizIndex >= questions.length){
-    navigate("dashboard");
-    return;
-  }
-  if(!quizAnswered) return;
-  quizIndex++;
-  if(quizIndex >= questions.length){
-    data.quizAttempts++;
-    saveData();
-    renderDashboard();
-  }
-  renderQuiz();
-});
-$("quizRestart").addEventListener("click", () => {
-  quizIndex = 0;
-  quizScore = 0;
-  renderQuiz();
-});
-
-$("flashForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const front = $("flashFront").value.trim();
-  const back = $("flashBack").value.trim();
-  if(!front || !back) return;
-  data.flashcards.push({id:makeId(),front,back});
-  saveData();
-  $("flashForm").reset();
-  flashIndex = data.flashcards.length - 1;
-  flashFlipped = false;
-  renderAll();
-  renderFlashcards();
-  notify("Flashcard saved!");
-});
-
-function renderFlashcards(){
-  const cards = data.flashcards;
-  if(flashIndex >= cards.length) flashIndex = Math.max(0,cards.length-1);
-  $("flashCounter").textContent = cards.length ? `${flashIndex+1} / ${cards.length}` : "0 cards";
-  const current = cards[flashIndex];
-  $("flashDisplay").textContent = current ? (flashFlipped ? current.back : current.front) : "Create a card to begin";
-  $("flashList").innerHTML = cards.length ? cards.map((card,index) => `
-    <div class="task-row">
-      <span class="task-text"><strong>${escapeHTML(card.front.slice(0,100))}</strong><div class="muted small">${escapeHTML(card.back.slice(0,120))}</div></span>
-      <button class="btn" data-flash-study="${index}">Study</button>
-      <button class="btn danger" data-flash-delete="${escapeHTML(card.id)}">Delete</button>
-    </div>
-  `).join("") : '<div class="empty">No flashcards yet. Create one above.</div>';
-}
-function flipFlash(){
-  if(!data.flashcards.length) return;
-  flashFlipped = !flashFlipped;
-  renderFlashcards();
-}
-$("flashDisplay").addEventListener("click",flipFlash);
-$("flashDisplay").addEventListener("keydown",event => {
-  if(event.key === "Enter" || event.key === " "){
-    event.preventDefault();
-    flipFlash();
-  }
-});
-$("flashFlip").addEventListener("click",flipFlash);
-$("flashPrev").addEventListener("click",() => {
-  if(!data.flashcards.length) return;
-  flashIndex = (flashIndex - 1 + data.flashcards.length) % data.flashcards.length;
-  flashFlipped = false;
-  renderFlashcards();
-});
-$("flashNext").addEventListener("click",() => {
-  if(!data.flashcards.length) return;
-  flashIndex = (flashIndex + 1) % data.flashcards.length;
-  flashFlipped = false;
-  renderFlashcards();
-});
-$("flashList").addEventListener("click",event => {
-  const study = event.target.closest("[data-flash-study]");
-  const remove = event.target.closest("[data-flash-delete]");
-  if(study){
-    flashIndex = Number(study.dataset.flashStudy);
-    flashFlipped = false;
-    renderFlashcards();
-  }
-  if(remove){
-    data.flashcards = data.flashcards.filter(card => card.id !== remove.dataset.flashDelete);
-    flashIndex = Math.min(flashIndex,Math.max(0,data.flashcards.length-1));
-    flashFlipped = false;
-    saveData();
-    renderAll();
-    renderFlashcards();
-    notify("Flashcard deleted.");
-  }
-});
-
-function addChatMessage(text,who){
-  const box = $("chatBox");
-  const msg = document.createElement("div");
-  msg.className = "chat-msg " + who;
-  msg.textContent = text;
-  box.appendChild(msg);
-  box.scrollTop = box.scrollHeight;
-}
-$("chatForm").addEventListener("submit",event => {
-  event.preventDefault();
-  const question = $("chatInput").value.trim();
-  if(!question) return;
-  addChatMessage(question,"user");
-  $("chatInput").value = "";
-  const q = question.toLowerCase();
-  let answer = "I am the built-in VEXO helper, not a connected AI model yet. Try breaking your question into smaller parts, checking your textbook, and saving useful points in My Notes. To get real AI answers, VEXO needs a secure AI service connection.";
-  if(q.includes("study") || q.includes("পড়া") || q.includes("porashona")){
-    answer = "Try this study routine: 1) Choose one small topic. 2) Study for 25 minutes. 3) Close your book and recall what you learned. 4) Test yourself with flashcards. 5) Take a short break.";
-  }else if(q.includes("note")){
-    answer = "Open My Notes, enter a title and your content, then press Save Note. Your notes are saved in this browser.";
-  }else if(q.includes("quiz")){
-    answer = "Open Quick Quiz in the sidebar to practice the built-in questions and see your score.";
-  }else if(q.includes("flashcard")){
-    answer = "Create a question on the front and its answer on the back. Then tap the card to test your memory.";
-  }
-  setTimeout(() => addChatMessage(answer,"bot"),150);
-});
-
-$("exportBtn").addEventListener("click",() => {
-  const blob = new Blob([JSON.stringify({
-    app:"VEXO",version:1,exportedAt:new Date().toISOString(),data
-  },null,2)],{type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "vexo-backup-" + new Date().toISOString().slice(0,10) + ".json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-  notify("Backup exported.");
-});
-
-$("importBtn").addEventListener("click",async() => {
-  const file = $("importFile").files[0];
-  if(!file) return notify("Choose a backup JSON file first.");
-  try{
-    const parsed = JSON.parse(await file.text());
-    const incoming = parsed.data || parsed;
-    if(!incoming || !Array.isArray(incoming.notes) ||
-       !Array.isArray(incoming.tasks) ||
-       !Array.isArray(incoming.plans) ||
-       !Array.isArray(incoming.flashcards)){
-      throw new Error("Invalid backup");
-    }
-    if(!confirm("Restore this backup? Current VEXO data will be replaced.")) return;
-    data = {
-      ...defaultData(),
-      notes:incoming.notes,
-      tasks:incoming.tasks,
-      plans:incoming.plans,
-      flashcards:incoming.flashcards,
-      quizAttempts:Number(incoming.quizAttempts)||0,
-      dark:Boolean(incoming.dark)
-    };
-    if(!saveData()) return;
-    applyTheme();
-    renderAll();
-    renderFlashcards();
-    notify("Backup restored!");
-  }catch(error){
-    notify("Invalid backup file. Your data was not changed.");
-  }
-});
-
-$("clearDataBtn").addEventListener("click",() => {
-  if(!confirm("Delete all VEXO notes, tasks, plans and flashcards from this browser? Export a backup first if needed.")) return;
-  data = defaultData();
-  saveData();
-  applyTheme();
-  resetNoteForm();
-  renderAll();
-  renderFlashcards();
-  notify("Local data cleared.");
-});
-
-function renderAll(){
-  renderDashboard();
-  renderNotes();
-  renderTasks();
-  renderPlans();
-  renderFlashcards();
-}
-
-applyTheme();
-renderAll();
-renderQuiz();
-  document.getElementById("themeBtn").onclick = function () {
-  document.body.classList.toggle("dark");
-
-  const darkOn = document.body.classList.contains("dark");
-  this.textContent = darkOn ? "☀" : "☾";
-
-  try {
-    const saved = JSON.parse(
-      localStorage.getItem("vexo_workspace_v1") || "{}"
-    );
-    saved.dark = darkOn;
-    localStorage.setItem("vexo_workspace_v1", JSON.stringify(saved));
-  } catch (e) {
-    console.log("Theme preference could not be saved.");
-  }
+const TRANSLATIONS={
+en:{Dashboard:"Dashboard","My Notes":"My Notes",Courses:"Courses",Search:"Search",Save:"Save",Guest:"Guest"},
+bn:{Dashboard:"ড্যাশবোর্ড","My Notes":"আমার নোট",Courses:"কোর্স",Search:"খুঁজুন",Save:"সেভ করুন",Guest:"গেস্ট"},
+hi:{Dashboard:"डैशबोर्ड","My Notes":"मेरे नोट्स",Courses:"कोर्स",Search:"खोजें",Save:"सेव करें",Guest:"अतिथि"},
+ta:{Dashboard:"முகப்பு","My Notes":"என் குறிப்புகள்",Courses:"பாடநெறிகள்",Search:"தேடு",Save:"சேமி",Guest:"விருந்தினர்"},
+te:{Dashboard:"డాష్‌బోర్డ్","My Notes":"నా నోట్స్",Courses:"కోర్సులు",Search:"వెతకండి",Save:"సేవ్",Guest:"అతిథి"},
+gu:{Dashboard:"ડેશબોર્ડ","My Notes":"મારી નોંધો",Courses:"કોર્સ",Search:"શોધો",Save:"સાચવો",Guest:"મહેમાન"},
+mr:{Dashboard:"डॅशबोर्ड","My Notes":"माझ्या नोंदी",Courses:"अभ्यासक्रम",Search:"शोधा",Save:"जतन करा",Guest:"अतिथी"},
+pa:{Dashboard:"ਡੈਸ਼ਬੋਰਡ","My Notes":"ਮੇਰੇ ਨੋਟਸ",Courses:"ਕੋਰਸ",Search:"ਖੋਜੋ",Save:"ਸੇਵ",Guest:"ਮਹਿਮਾਨ"}
 };
-</script>
-
-<!-- VEXO Study Notes Library -->
-<style>
-#vexoStudyLibrary {
-  padding: 20px;
-  border-radius: 16px;
-  font-family: inherit;
-}
-#vexoStudyLibrary * { box-sizing: border-box; }
-#vexoStudyLibrary .vsl-controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-  gap: 10px;
-  margin: 16px 0;
-}
-#vexoStudyLibrary input,
-#vexoStudyLibrary select,
-#vexoStudyLibrary button {
-  padding: 11px;
-  border: 1px solid #8886;
-  border-radius: 10px;
-  font: inherit;
-  max-width: 100%;
-}
-#vexoStudyLibrary input,
-#vexoStudyLibrary select {
-  width: 100%;
-  color: inherit;
-  background: var(--card, transparent);
-}
-#vexoStudyLibrary .vsl-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-  gap: 14px;
-}
-#vexoStudyLibrary .vsl-card,
-#vexoStudyLibrary .vsl-reader {
-  padding: 16px;
-  border: 1px solid #8885;
-  border-radius: 14px;
-  overflow-wrap: anywhere;
-}
-#vexoStudyLibrary .vsl-meta {
-  font-size: .88rem;
-  opacity: .75;
-}
-#vexoStudyLibrary .vsl-primary {
-  background: var(--accent,#635bff);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-#vexoStudyLibrary .vsl-secondary {
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
-}
-#vexoStudyLibrary [hidden] { display: none !important; }
-#vexoStudyLibrary .vsl-ad-slot {
-  margin: 22px 0;
-  padding: 14px;
-  border: 1px dashed #8888;
-  border-radius: 12px;
-  text-align: center;
-  opacity: .75;
-}
-</style>
-
-<section id="vexoStudyLibrary">
-  <h2>📚 VEXO Study Notes</h2>
-  <p>Class 1 থেকে Competitive Exams পর্যন্ত প্রস্তুত নোট</p>
-
-  <div class="vsl-controls">
-    <input id="vslSearch" type="search"
-      placeholder="নোট বা অধ্যায় খুঁজুন...">
-
-    <select id="vslLevel">
-      <option value="">সব শিক্ষার স্তর</option>
-      <option>Class 1–5</option>
-      <option>Class 6–8</option>
-      <option>Class 9–10</option>
-      <option>Class 11–12</option>
-      <option>Competitive Exams</option>
-    </select>
-
-    <select id="vslCourse">
-      <option value="">সব বিষয়</option>
-    </select>
-  </div>
-
-  <p id="vslCount" aria-live="polite"></p>
-  <div id="vslList" class="vsl-grid"></div>
-
-  <article id="vslReader" class="vsl-reader" hidden>
-    <button id="vslBack" class="vsl-secondary" type="button">
-      ← সব নোট
-    </button>
-    <h2 id="vslTitle"></h2>
-    <p id="vslMeta" class="vsl-meta"></p>
-    <h3>সহজ ব্যাখ্যা</h3>
-    <p id="vslContent"></p>
-    <h3>দ্রুত রিভিশন</h3>
-    <ul id="vslRevision"></ul>
-  </article>
-
-  <!-- Future AdSense placement.
-       এখানে এখনই কোনো বিজ্ঞাপন চালু নেই। -->
-  <div class="vsl-ad-slot">
-    Advertisement space
-  </div>
-</section>
-
-<script>
-(() => {
-  const notes = [
-    {
-      id: 1,
-      level: "Class 1–5",
-      course: "Mathematics",
-      chapter: "যোগ",
-      title: "যোগের প্রাথমিক ধারণা",
-      summary: "সংখ্যা একসঙ্গে করলে যোগ হয়।",
-      content: "যোগ হলো দুই বা তার বেশি সংখ্যা একত্র করার গাণিতিক প্রক্রিয়া। উদাহরণ: ২ + ৩ = ৫।",
-      revision: ["যোগের চিহ্ন +", "২ + ৩ = ৫"]
-    },
-    {
-      id: 2,
-      level: "Class 6–8",
-      course: "Science",
-      chapter: "উদ্ভিদ",
-      title: "সালোকসংশ্লেষণ",
-      summary: "উদ্ভিদ কীভাবে খাদ্য তৈরি করে।",
-      content: "সবুজ উদ্ভিদ সূর্যের আলো, জল ও কার্বন ডাই-অক্সাইড ব্যবহার করে খাদ্য তৈরি করে। এই প্রক্রিয়াকে সালোকসংশ্লেষণ বলে। এতে অক্সিজেন নির্গত হয়।",
-      revision: ["আলো প্রয়োজন", "জল ও কার্বন ডাই-অক্সাইড ব্যবহৃত হয়", "অক্সিজেন নির্গত হয়"]
-    },
-    {
-      id: 3,
-      level: "Class 9–10",
-      course: "Physics",
-      chapter: "গতি",
-      title: "গড় দ্রুতি",
-      summary: "দূরত্ব ও সময়ের সম্পর্ক।",
-      content: "গড় দ্রুতি = মোট অতিক্রান্ত দূরত্ব ÷ মোট সময়। SI একক হলো মিটার প্রতি সেকেন্ড (m/s)।",
-      revision: ["গড় দ্রুতি = দূরত্ব ÷ সময়", "SI একক m/s"]
-    },
-    {
-      id: 4,
-      level: "Class 11–12",
-      course: "Biology",
-      chapter: "কোষ",
-      title: "কোষের পরিচয়",
-      summary: "জীবদেহের গঠনগত ও কার্যগত মৌলিক একক।",
-      content: "কোষ হলো জীবদেহের গঠনগত ও কার্যগত মৌলিক একক। ইউক্যারিওটিক কোষে কোষঝিল্লি, সাইটোপ্লাজম ও নিউক্লিয়াস থাকে।",
-      revision: ["কোষ জীবনের মৌলিক একক", "নিউক্লিয়াসে জিনগত উপাদান থাকে"]
-    },
-    {
-      id: 5,
-      level: "Competitive Exams",
-      course: "Reasoning",
-      chapter: "সংখ্যার ধারা",
-      title: "সংখ্যার ধারা",
-      summary: "সংখ্যার নিয়ম খুঁজে পরের সংখ্যা বের করা।",
-      content: "ধারা: ২, ৪, ৬, ৮, ? প্রতিবার ২ যোগ হচ্ছে। তাই পরের সংখ্যা ১০।",
-      revision: ["পার্থক্য পরীক্ষা করো", "উত্তর: ১০"]
-    }
-  ];
-
-  const $ = id => document.getElementById(id);
-  const search = $("vslSearch");
-  const level = $("vslLevel");
-  const course = $("vslCourse");
-  const list = $("vslList");
-  const reader = $("vslReader");
-
-  function element(tag, value, className) {
-    const el = document.createElement(tag);
-    el.textContent = value ?? "";
-    if (className) el.className = className;
-    return el;
-  }
-
-  [...new Set(notes.map(n => n.course))].sort().forEach(name => {
-    const option = element("option", name);
-    option.value = name;
-    course.appendChild(option);
-  });
-
-  function render() {
-    list.replaceChildren();
-    list.hidden = false;
-    reader.hidden = true;
-
-    const q = search.value.trim().toLowerCase();
-    const filtered = notes.filter(n =>
-      (!level.value || n.level === level.value) &&
-      (!course.value || n.course === course.value) &&
-      [n.title,n.chapter,n.course,n.level,n.summary,n.content]
-        .join(" ").toLowerCase().includes(q)
-    );
-
-    $("vslCount").textContent =
-      `${filtered.length}টি নোট পাওয়া গেছে • ${notes.length}টি নমুনা নোট লোড হয়েছে`;
-
-    if (!filtered.length) {
-      list.appendChild(element("p","কোনো নোট পাওয়া যায়নি।"));
-      return;
-    }
-
-    filtered.forEach(n => {
-      const card = element("article",null,"vsl-card");
-      card.appendChild(element("h3",n.title));
-      card.appendChild(element("p",`${n.level} • ${n.course}`,"vsl-meta"));
-      card.appendChild(element("p",n.chapter));
-      card.appendChild(element("p",n.summary));
-
-      const button = element("button","নোট পড়ুন →","vsl-primary");
-      button.type = "button";
-      button.addEventListener("click",() => openNote(n));
-
-      card.appendChild(button);
-      list.appendChild(card);
-    });
-  }
-
-  function openNote(n) {
-    list.hidden = true;
-    reader.hidden = false;
-
-    $("vslTitle").textContent = n.title;
-    $("vslMeta").textContent = `${n.level} • ${n.course} • ${n.chapter}`;
-    $("vslContent").textContent = n.content;
-
-    const ul = $("vslRevision");
-    ul.replaceChildren();
-    n.revision.forEach(point => ul.appendChild(element("li",point)));
-
-    reader.scrollIntoView({behavior:"smooth",block:"start"});
-  }
-
-  search.addEventListener("input",render);
-  level.addEventListener("change",render);
-  course.addEventListener("change",render);
-  $("vslBack").addEventListener("click",render);
-
-  render();
-})();
-</script>
-
-<!-- VEXO AI Study Hub -->
-<section id="vexoAIHub" style="
-  padding:20px;
-  margin:20px 0;
-  border:1px solid #8885;
-  border-radius:18px;
-  font-family:inherit;
-">
-  <h2>🤖 VEXO AI Study Hub</h2>
-  <p>তোমার পছন্দের AI খুলে পড়াশোনা করো, প্রশ্ন করো এবং বিষয় বুঝে নাও।</p>
-
-  <div style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:14px;
-  ">
-    <article style="padding:16px;border:1px solid #8885;border-radius:14px">
-      <h3>✨ Google Gemini</h3>
-      <p>পড়াশোনা, ব্যাখ্যা ও প্রশ্নের উত্তর।</p>
-      <a href="https://gemini.google.com/"
-         target="_blank" rel="noopener noreferrer"
-         style="display:inline-block;padding:11px 16px;background:#635bff;color:white;border-radius:9px;text-decoration:none">
-        Open Gemini ↗
-      </a>
-    </article>
-
-    <article style="padding:16px;border:1px solid #8885;border-radius:14px">
-      <h3>🧠 ChatGPT</h3>
-      <p>কঠিন বিষয় সহজ করে শেখো।</p>
-      <a href="https://chatgpt.com/"
-         target="_blank" rel="noopener noreferrer"
-         style="display:inline-block;padding:11px 16px;background:#635bff;color:white;border-radius:9px;text-decoration:none">
-        Open ChatGPT ↗
-      </a>
-    </article>
-
-    <article style="padding:16px;border:1px solid #8885;border-radius:14px">
-      <h3>🚀 Microsoft Copilot</h3>
-      <p>AI সহায়তা ও পড়াশোনার প্রশ্ন।</p>
-      <a href="https://copilot.microsoft.com/"
-         target="_blank" rel="noopener noreferrer"
-         style="display:inline-block;padding:11px 16px;background:#635bff;color:white;border-radius:9px;text-decoration:none">
-        Open Copilot ↗
-      </a>
-    </article>
-  </div>
-
-  <p style="font-size:13px;opacity:.75;margin-top:16px">
-    নোট: এই বাটনগুলো বাইরের AI ওয়েবসাইট খোলে। এগুলো VEXO-র সঙ্গে সরাসরি AI API সংযোগ করে না।
-  </p>
-</section>
-<!-- End VEXO AI Study Hub -->
-  <!-- ================= VEXO AI HUB ================= -->
-<section id="vexoAIHub" style="
-  padding:24px;
-  margin:20px 0;
-  border-radius:24px;
-  background:linear-gradient(135deg,#17152f,#241d4d,#102f38);
-  color:#fff;
-  box-shadow:0 12px 35px rgba(0,0,0,.25);
-  font-family:Arial,sans-serif;
-">
-
-  <div style="text-align:center;margin-bottom:24px;">
-    <div style="
-      display:inline-block;
-      padding:7px 14px;
-      border-radius:50px;
-      background:rgba(255,255,255,.10);
-      font-size:13px;
-      margin-bottom:10px;
-    ">🤖 VEXO AI CENTER</div>
-
-    <h2 style="font-size:30px;margin:5px 0;">
-      AI Study Hub
-    </h2>
-
-    <p style="color:#c9c5df;margin:0;">
-      Choose your AI and start learning
-    </p>
-  </div>
-
-
-  <!-- Search -->
-  <div style="max-width:650px;margin:auto;">
-    <input
-      id="vexoAISearch"
-      type="text"
-      placeholder="🔎 Search AI..."
-      oninput="vexoSearchAI()"
-      style="
-        width:100%;
-        box-sizing:border-box;
-        padding:15px 18px;
-        border:none;
-        outline:none;
-        border-radius:14px;
-        background:rgba(255,255,255,.10);
-        color:white;
-        font-size:15px;
-      "
-    >
-  </div>
-
-
-  <!-- Categories -->
-  <div style="
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin:18px 0 24px;
-  ">
-
-    <button onclick="vexoFilterAI('all')" class="vexoAIFilter">All</button>
-    <button onclick="vexoFilterAI('study')" class="vexoAIFilter">📚 Study</button>
-    <button onclick="vexoFilterAI('search')" class="vexoAIFilter">🔎 Search</button>
-    <button onclick="vexoFilterAI('coding')" class="vexoAIFilter">💻 Coding</button>
-    <button onclick="vexoFilterAI('creative')" class="vexoAIFilter">🎨 Creative</button>
-
-  </div>
-
-
-  <!-- AI Cards -->
-  <div id="vexoAIGrid" style="
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-  "></div>
-
-
-  <!-- Selected AI -->
-  <div id="vexoSelectedAI" style="
-    display:none;
-    margin-top:25px;
-    padding:20px;
-    border-radius:18px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
-  ">
-
-    <h3 id="vexoSelectedTitle" style="margin-top:0;"></h3>
-
-    <p style="color:#c9c5df;">
-      This AI opens separately because many AI websites do not allow
-      their chat page to be embedded inside another website.
-    </p>
-
-    <a
-      id="vexoSelectedLink"
-      href="#"
-      target="_blank"
-      rel="noopener noreferrer"
-      style="
-        display:inline-block;
-        padding:12px 18px;
-        border-radius:12px;
-        background:#ffffff;
-        color:#17152f;
-        text-decoration:none;
-        font-weight:bold;
-      "
-    >
-      🚀 Open AI
-    </a>
-
-  </div>
-
-</section>
-
-
-<style>
-.vexoAIFilter{
-  border:none;
-  padding:9px 14px;
-  border-radius:30px;
-  background:rgba(255,255,255,.10);
-  color:white;
-  cursor:pointer;
-}
-
-.vexoAIFilter:hover{
-  background:rgba(255,255,255,.20);
-}
-
-.vexoAICard{
-  padding:18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.10);
-  transition:.2s;
-}
-
-.vexoAICard:hover{
-  transform:translateY(-4px);
-  background:rgba(255,255,255,.13);
-}
-
-.vexoAIButton{
-  width:100%;
-  border:none;
-  padding:11px;
-  border-radius:11px;
-  background:white;
-  color:#17152f;
-  font-weight:bold;
-  cursor:pointer;
-}
-</style>
-
-
-<script>
-
-const vexoAIList = [
-
-  {
-    name:"Google Gemini",
-    icon:"✨",
-    description:"AI for study, questions, writing and research.",
-    category:"study",
-    url:"https://gemini.google.com/"
-  },
-
-  {
-    name:"ChatGPT",
-    icon:"🤖",
-    description:"AI assistant for learning, writing, coding and ideas.",
-    category:"study",
-    url:"https://chatgpt.com/"
-  },
-
-  {
-    name:"Microsoft Copilot",
-    icon:"🟦",
-    description:"AI assistant for questions, research and productivity.",
-    category:"study",
-    url:"https://copilot.microsoft.com/"
-  },
-
-  {
-    name:"Claude",
-    icon:"🟠",
-    description:"AI assistant for writing, reasoning and learning.",
-    category:"study",
-    url:"https://claude.ai/"
-  },
-
-  {
-    name:"Perplexity",
-    icon:"🔎",
-    description:"AI-powered search and research assistant.",
-    category:"search",
-    url:"https://www.perplexity.ai/"
-  },
-
-  {
-    name:"Grok",
-    icon:"⚡",
-    description:"AI assistant for questions, ideas and information.",
-    category:"creative",
-    url:"https://grok.com/"
-  },
-
-  {
-    name:"DeepSeek",
-    icon:"🔵",
-    description:"AI assistant for reasoning, learning and coding.",
-    category:"coding",
-    url:"https://chat.deepseek.com/"
-  },
-
-  {
-    name:"Qwen",
-    icon:"🟣",
-    description:"AI assistant for questions, coding and learning.",
-    category:"coding",
-    url:"https://chat.qwen.ai/"
-  },
-
-  {
-    name:"Mistral Le Chat",
-    icon:"🟡",
-    description:"AI assistant for writing, research and problem solving.",
-    category:"study",
-    url:"https://chat.mistral.ai/"
-  },
-
-  {
-    name:"Poe",
-    icon:"💬",
-    description:"Platform for accessing multiple AI models.",
-    category:"creative",
-    url:"https://poe.com/"
-  },
-
-  {
-    name:"Phind",
-    icon:"💻",
-    description:"AI assistant focused on developers and coding.",
-    category:"coding",
-    url:"https://www.phind.com/"
-  },
-
-  {
-    name:"You.com",
-    icon:"🌐",
-    description:"AI search and productivity assistant.",
-    category:"search",
-    url:"https://you.com/"
-  }
-
+const SUBJECTS=[
+["Mathematics","🔢"],["Science","🔬"],["English","📚"],["Computer Science","💻"],
+["Physics","⚛️"],["Chemistry","🧪"],["Biology","🌱"],["History","🏛️"],
+["Geography","🌍"],["Civics","⚖️"],["Economics","📈"],["General Knowledge","🧠"],
+["Environmental Science","🌿"],["Art & Design","🎨"],["Logical Reasoning","🧩"],
+["Coding","⌨️"],["Astronomy","🪐"],["Financial Literacy","💰"],["Health Education","❤️"],
+["Communication","💬"]
 ];
-
-
-let vexoCurrentCategory = "all";
-
-
-function vexoRenderAI(){
-
-  const grid = document.getElementById("vexoAIGrid");
-  const search = document
-    .getElementById("vexoAISearch")
-    .value
-    .toLowerCase();
-
-  grid.innerHTML = "";
-
-  const filtered = vexoAIList.filter(ai => {
-
-    const matchesCategory =
-      vexoCurrentCategory === "all" ||
-      ai.category === vexoCurrentCategory;
-
-    const matchesSearch =
-      ai.name.toLowerCase().includes(search) ||
-      ai.description.toLowerCase().includes(search);
-
-    return matchesCategory && matchesSearch;
-
-  });
-
-
-  if(filtered.length === 0){
-
-    grid.innerHTML = `
-      <div style="
-        grid-column:1/-1;
-        text-align:center;
-        padding:30px;
-        color:#c9c5df;
-      ">
-        😕 No AI found
-      </div>
-    `;
-
-    return;
+const COURSES=Array.from({length:60},(_,i)=>{
+ const s=SUBJECTS[i%SUBJECTS.length];
+ const level=["Beginner","Intermediate","Foundation"][i%3];
+ return {id:"c"+(i+1),title:s[0]+" "+(["Foundations","Essentials","Practice","Masterclass","Skills","Explorer"][Math.floor(i/SUBJECTS.length)%6]),
+ subject:s[0],icon:s[1],level,lessons:2+((i%3===0)?1:0),description:"Build your "+s[0].toLowerCase()+" knowledge with guided lessons and practice."};
+});
+const GAMES=Array.from({length:120},(_,i)=>{
+ const s=SUBJECTS[i%SUBJECTS.length];
+ const formats=["Quick Quiz","Memory Challenge","Word Match","Brain Trainer","Speed Round","Knowledge Quest"];
+ return {id:"g"+(i+1),title:s[0]+" "+formats[Math.floor(i/SUBJECTS.length)%formats.length]+" "+(Math.floor(i/SUBJECTS.length)+1),subject:s[0],icon:["🎯","🧠","🧩","🚀","⭐","🎮"][i%6]};
+});
+const DEFAULT={
+notes:[],completed:[],answers:0,correct:0,streak:0,plans:[],flashcards:[
+{q:"What is photosynthesis?",a:"The process plants use to convert light into chemical energy."},
+{q:"What is 7 × 8?",a:"56."},
+{q:"What does CPU stand for?",a:"Central Processing Unit."}
+],history:[],quizScore:0,quizTotal:0,studySeconds:0,activeSince:Date.now(),
+lastDate:new Date().toDateString(),displayName:"Guest",account:null,guest:true,language:"en",
+settings:{theme:"default",accent:"#9b87ff",accent2:"#36d9c4",font:"system",scale:1,space:"normal",radius:"normal",layout:"normal",motion:true,borders:true,contrast:false,gradient:false,sidebar:260},
+notifications:["Welcome to VEXO! Your learning journey starts here."],dailyGoal:30,lesson:null,game:null
+};
+let data;
+try{data={...DEFAULT,...JSON.parse(localStorage.getItem("vexoData")||"{}")};data.settings={...DEFAULT.settings,...data.settings};}
+catch(e){data={...DEFAULT};}
+let currentPage="dashboard",courseFilter="",courseQuery="",gameQuery="",quizIndex=0,quizQuestions=[],gamePoints=0;
+function save(){
+ try{localStorage.setItem("vexoData",JSON.stringify(data));}
+ catch(e){toast("Storage is full. Please export your data and remove some old content.");}
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function toast(msg){let el=$("#toast");if(!el){el=document.createElement("div");el.id="toast";el.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99;background:var(--panel2);border:1px solid var(--border);padding:12px 18px;border-radius:12px;max-width:90%;";document.body.append(el);}el.textContent=msg;el.hidden=false;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.hidden=true,2600);}
+function fmtTime(n){let m=Math.floor(n/60);return m<60?m+" min":Math.floor(m/60)+" h "+m%60+" min";}
+function recordPage(p){
+ data.history.unshift({page:p,time:new Date().toISOString()});
+ data.history=data.history.slice(0,100);
+ save();
+}
+function applySettings(){
+ const s=data.settings;
+ document.body.classList.toggle("light",s.theme==="light");
+ ["compact","rounded","sharp","large-text","serif","mono","no-motion","no-border","wide","centered","high-contrast","gradient","warm","ocean","rose"].forEach(c=>document.body.classList.remove(c));
+ if(s.space==="compact")document.body.classList.add("compact");
+ if(s.radius==="round")document.body.classList.add("rounded");
+ if(s.radius==="sharp")document.body.classList.add("sharp");
+ if(+s.scale>1)document.body.classList.add("large-text");
+ if(s.font==="serif")document.body.classList.add("serif");
+ if(s.font==="mono")document.body.classList.add("mono");
+ if(!s.motion)document.body.classList.add("no-motion");
+ if(!s.borders)document.body.classList.add("no-border");
+ if(s.layout==="wide")document.body.classList.add("wide");
+ if(s.layout==="centered")document.body.classList.add("centered");
+ if(s.contrast)document.body.classList.add("high-contrast");
+ if(s.gradient)document.body.classList.add("gradient");
+ if(["warm","ocean","rose"].includes(s.theme))document.body.classList.add(s.theme);
+ document.documentElement.style.setProperty("--accent",s.accent||"#9b87ff");
+ document.documentElement.style.setProperty("--accent2",s.accent2||"#36d9c4");
+ document.documentElement.style.setProperty("--space",s.space==="compact"?"9px":"16px");
+ document.documentElement.style.setProperty("--sidebar",(s.sidebar||260)+"px");
+}
+function setSetting(k,v){data.settings[k]=v;save();applySettings();render();}
+function tr(s){const d=TRANSLATIONS[data.language]||TRANSLATIONS.en;return d[s]||s;}
+function setLanguage(v){data.language=v;save();render();}
+function optionList(arr,val){return arr.map(([v,l])=>`<option value="${esc(v)}" ${v===val?"selected":""}>${esc(l)}</option>`).join("");}
+$("#languageSelect").innerHTML=LANGUAGES.map(([v,l])=>`<option value="${v}">${esc(l)}</option>`).join("");
+$("#languageSelect").value=data.language;
+$("#languageSelect").addEventListener("change",e=>setLanguage(e.target.value));
+$("#navigation").addEventListener("click",e=>{
+ const b=e.target.closest("[data-page]");if(b)navigate(b.dataset.page);
+});
+$("#menuButton").onclick=()=>$("#sidebar").classList.toggle("open");
+$("#quickGuest").onclick=()=>{data.guest=true;data.displayName="Guest";save();toast("You are using VEXO as a guest.");render();};
+function navigate(p){
+ currentPage=p;recordPage(p);$("#sidebar").classList.remove("open");
+ $$(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
+ render();window.scrollTo({top:0,behavior:data.settings.motion?"smooth":"instant"});
+}
+function titleFor(p){return ({
+dashboard:"Dashboard",notes:"My Notes",courses:"Courses",lessons:"Lessons",
+quiz:"Quiz & Tests",flashcards:"Flashcards",games:"Educational Games",planner:"Study Planner",
+progress:"Your Progress",doubts:"Doubt Room",ai:"AI Study Hub",certificates:"Certificates",
+notifications:"Notifications",guardian:"Guardian Dashboard",customize:"Customize VEXO",
+account:"Account & Guest Mode",settings:"Settings"
+})[p]||"VEXO";}
+function shell(sub,html){$("#pageTitle").textContent=titleFor(currentPage);$("#pageSubtitle").textContent=sub;$("#app").innerHTML=html;}
+function card(icon,title,desc,action,label="Open"){
+ return `<article class="card"><div class="icon">${icon}</div><h3>${esc(title)}</h3><p>${esc(desc)}</p><button class="btn" data-go="${action}">${label} →</button></article>`;
+}
+function metric(icon,title,value,desc){return `<article class="card"><div class="row"><span class="icon">${icon}</span><span class="tag">${esc(title)}</span></div><div class="metric">${esc(value)}</div><p>${esc(desc)}</p></article>`;}
+function dashboard(){
+ const done=data.completed.length,mins=Math.floor(data.studySeconds/60);
+ const pct=Math.min(100,Math.round(done/Math.max(1,COURSES.length*3)*100));
+ return `<section class="hero"><span class="eyebrow">YOUR PERSONAL LEARNING SPACE</span>
+ <h2>Learn beyond limits.<br>Grow every single day.</h2>
+ <p>Welcome, ${esc(data.displayName||"Learner")}. Discover new skills, practise what you learn, and build a routine that works for you.</p>
+ <div class="actions"><button class="btn good" data-go="courses">Explore courses →</button><button class="btn" data-go="quiz">Start a quiz</button><button class="btn" data-go="games">Play & learn</button></div>
+ </section>
+ <div class="grid">${metric("📚","Courses available",COURSES.length,"Explore all subjects")}
+ ${metric("🎮","Game activities",GAMES.length,"Educational game catalogue")}
+ ${metric("⏱️","Study time",fmtTime(mins*60),"Tracked on this device")}
+ ${metric("🏆","Lessons completed",done,"Keep building your progress")}</div>
+ <div class="section-head"><h2>Pick up where you left off</h2><button class="btn" data-go="progress">View progress</button></div>
+ <div class="grid three">${card("📘","Browse courses","Short lessons across many subjects.","courses")}
+ ${card("🧠","Test your knowledge","Take a multiple-choice practice quiz.","quiz")}
+ ${card("🗓️","Plan your study","Set a realistic learning target.","planner")}</div>
+ <div class="section-head"><h2>Today's learning target</h2></div>
+ <div class="card"><div class="row"><div><h3>${data.dailyGoal} minutes a day</h3><p>Consistency matters more than one long session.</p></div><button class="btn" data-go="settings">Change goal</button></div>
+ <div class="progress"><span style="width:${Math.min(100,Math.round(mins/Math.max(1,data.dailyGoal)*100))}%"></span></div><p class="small muted">${mins} of ${data.dailyGoal} minutes tracked in this browser.</p></div>`;
+}
+function coursesPage(){
+ const list=COURSES.filter(c=>(c.title+" "+c.subject+" "+c.level).toLowerCase().includes(courseQuery.toLowerCase()));
+ return `<div class="notice">60 course cards are available. Each course has guided lesson pages; lesson text is introductory learning material, not an official textbook.</div>
+ <div class="searchbar"><input id="courseSearch" class="field" placeholder="Search courses or subjects..." value="${esc(courseQuery)}"><select class="field" id="courseLevel" style="max-width:180px"><option value="">All levels</option><option>Beginner</option><option>Intermediate</option><option>Foundation</option></select></div>
+ <p class="muted small">${list.length} courses found</p><div class="grid three" id="courseGrid">${list.map(c=>`<article class="card"><div class="row"><span class="icon">${c.icon}</span><span class="tag">${c.level}</span></div><h3>${esc(c.title)}</h3><p>${esc(c.description)}</p><p class="small">${c.lessons} lessons • ${esc(c.subject)}</p><div class="progress"><span style="width:${Math.round(c.lessonsDone||0)/c.lessons*100}%"></span></div><button class="btn primary" data-course="${c.id}">Open course →</button></article>`).join("")}</div>`;
+}
+function lessonsPage(){
+ if(!data.lesson)return `<div class="notice">Choose a course to open its lessons.</div><button class="btn primary" data-go="courses">Browse courses</button>`;
+ const c=COURSES.find(x=>x.id===data.lesson.course)||COURSES[0],n=data.lesson.n||1;
+ const texts=[
+ `Welcome to ${c.title}.\n\nLearning goal:\n• Understand the core idea of ${c.subject}.\n• Connect new knowledge to everyday examples.\n• Explain the idea in your own words.\n\nStudy tip: read slowly, write a short summary, then answer the practice question.`,
+ `Let's practise ${c.subject}.\n\n1. Review the key idea from the first lesson.\n2. Find one example in daily life.\n3. Explain why your example fits the concept.\n4. Write one question you still have.\n\nLearning works best when you actively recall information instead of only rereading it.`,
+ `Review and apply.\n\nSummarise three important points from ${c.title}. Try to teach them to someone else, or write a short explanation without looking at your notes.\n\nReflection: what was easiest to understand, and what needs more practice?`
+ ];
+ return `<div class="card"><span class="tag">${esc(c.subject)}</span><span class="tag">Lesson ${n} of ${c.lessons}</span><h2>${esc(c.title)} — Lesson ${n}</h2><div class="lesson-content">${esc(texts[(n-1)%texts.length])}</div><hr><h3>Quick reflection</h3><textarea id="lessonReflection" class="field" placeholder="Write what you learned..."></textarea><div class="actions" style="margin-top:12px"><button class="btn" data-go="courses">Back to courses</button><button class="btn primary" data-complete="${c.id}:${n}">Mark lesson complete ✓</button><button class="btn" data-next="${c.id}:${n}">Next lesson →</button></div></div>`;
+}
+const QUESTIONS=[
+{q:"What is 12 × 8?",o:["86","96","108","92"],a:1,why:"12 × 8 = 96."},
+{q:"Which star is closest to Earth?",o:["Sirius","The Sun","Polaris","Vega"],a:1,why:"The Sun is Earth's nearest star."},
+{q:"Which part of a plant usually absorbs water?",o:["Flower","Leaf","Root","Fruit"],a:2,why:"Roots absorb water and minerals from soil."},
+{q:"What does CPU stand for?",o:["Central Processing Unit","Computer Personal Utility","Core Power Unit","Central Program User"],a:0,why:"CPU stands for Central Processing Unit."},
+{q:"Which gas do plants absorb during photosynthesis?",o:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],a:2,why:"Plants use carbon dioxide, water and light in photosynthesis."},
+{q:"How many sides does a hexagon have?",o:["Five","Six","Seven","Eight"],a:1,why:"A hexagon has six sides."},
+{q:"Which is a renewable energy source?",o:["Coal","Petrol","Solar energy","Natural gas"],a:2,why:"Solar energy is replenished naturally."},
+{q:"What is the capital of India?",o:["Mumbai","Kolkata","New Delhi","Chennai"],a:2,why:"New Delhi is India's capital."},
+{q:"Which number is prime?",o:["21","27","29","33"],a:2,why:"29 has exactly two positive factors: 1 and 29."},
+{q:"Which punctuation ends a direct question?",o:["Comma","Full stop","Question mark","Colon"],a:2,why:"A question mark ends a direct question."},
+{q:"Which organ pumps blood around the body?",o:["Lung","Heart","Kidney","Stomach"],a:1,why:"The heart pumps blood through the circulatory system."},
+{q:"What is H₂O commonly called?",o:["Salt","Oxygen","Water","Hydrogen"],a:2,why:"H₂O is the chemical formula for water."},
+{q:"Which planet is known as the Red Planet?",o:["Venus","Mars","Jupiter","Mercury"],a:1,why:"Iron-rich dust gives Mars its reddish appearance."},
+{q:"What is 15% of 200?",o:["15","20","30","40"],a:2,why:"0.15 × 200 = 30."},
+{q:"What does HTML help define?",o:["Web page structure","Electric current","A database password","A computer's weight"],a:0,why:"HTML describes the structure and content of web pages."}
+];
+function quizPage(){
+ if(!quizQuestions.length)quizQuestions=[...QUESTIONS].sort(()=>Math.random()-.5).slice(0,10);
+ if(quizIndex>=quizQuestions.length)return `<div class="card"><div class="icon">🏆</div><h2>Quiz complete!</h2><div class="metric">${gamePoints}/${quizQuestions.length}</div><p>You answered ${gamePoints} questions correctly.</p><div class="progress"><span style="width:${gamePoints/quizQuestions.length*100}%"></span></div><button class="btn primary" data-action="restartQuiz">Try another quiz</button><button class="btn" data-go="dashboard">Dashboard</button></div>`;
+ const q=quizQuestions[quizIndex];
+ return `<div class="card"><div class="row"><span class="tag">Practice quiz</span><span class="tag">Question ${quizIndex+1} / ${quizQuestions.length}</span></div><div class="progress"><span style="width:${quizIndex/quizQuestions.length*100}%"></span></div><h2>${esc(q.q)}</h2><div class="stack">${q.o.map((o,i)=>`<button class="btn" style="text-align:left;padding:14px" data-answer="${i}">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}</div><p id="quizFeedback" class="muted"></p></div>`;
+}
+function flashcardsPage(){
+ const f=data.flashcards;
+ return `<div class="notice">Use flashcards for active recall. Add your own questions and answers.</div><div class="grid two">${f.map((x,i)=>`<article class="card"><span class="tag">Card ${i+1}</span><h3>${esc(x.q)}</h3><details><summary>Reveal answer</summary><p>${esc(x.a)}</p></details><button class="btn danger" data-delete-card="${i}">Delete</button></article>`).join("")}</div>
+ <div class="card"><h3>Add a flashcard</h3><label>Question<input id="fcQ" class="field" placeholder="Enter a question"></label><label>Answer<textarea id="fcA" class="field" placeholder="Enter the answer"></textarea></label><button class="btn primary" data-action="addCard">Add flashcard</button></div>`;
+}
+function gamesPage(){
+ const list=GAMES.filter(g=>(g.title+" "+g.subject).toLowerCase().includes(gameQuery.toLowerCase()));
+ return `<div class="hero"><span class="eyebrow">PLAY TO LEARN</span><h2>Train your brain.</h2><p>Explore 120 educational activity cards. Some activities launch a shared quick-question game engine rather than a separate bespoke game.</p><button class="btn good" data-game="g1">Play a quick challenge →</button></div>
+ <div class="searchbar"><input class="field" id="gameSearch" value="${esc(gameQuery)}" placeholder="Search games or subjects..."></div><p class="small muted">${list.length} activities found</p>
+ <div class="grid three">${list.map(g=>`<article class="card"><span class="icon">${g.icon}</span><h3>${esc(g.title)}</h3><p>${esc(g.subject)} • Quick learning activity</p><button class="btn" data-game="${g.id}">Play →</button></article>`).join("")}</div>`;
+}
+function plannerPage(){
+ return `<div class="card"><h2>Build your study plan</h2><p>Set one manageable task at a time.</p><label>Task<input id="planTask" class="field" placeholder="e.g. Revise algebra"></label><label>Study date<input id="planDate" type="date" class="field"></label><label>Minutes<input id="planMinutes" type="number" min="5" max="600" value="25" class="field"></label><button class="btn primary" data-action="addPlan">Add task</button></div>
+ <div class="section-head"><h2>Your tasks</h2></div><div class="card">${data.plans.length?data.plans.map((p,i)=>`<div class="list-item"><input type="checkbox" data-plan-done="${i}" ${p.done?"checked":""}><div><strong>${esc(p.task)}</strong><p>${esc(p.date||"No date")} • ${p.minutes} min</p></div><button class="btn danger" data-delete-plan="${i}">Delete</button></div>`).join(""):'<div class="empty">No tasks yet. Add your first study task above.</div>'}</div>`;
+}
+function progressPage(){
+ const done=data.completed.length,mins=Math.floor(data.studySeconds/60),hist=data.history.slice(0,12);
+ return `<div class="grid">${metric("⏱️","Study time",fmtTime(data.studySeconds),"Tracked in this browser")}${metric("✓","Lessons marked done",done,"Across all courses")}${metric("🧠","Quiz answers",data.answers,"Practice attempts")}${metric("⭐","Correct answers",data.correct,"All-time correct answers")}</div>
+ <div class="card"><h2>Learning activity</h2><p>Daily goal: ${data.dailyGoal} minutes</p><div class="progress"><span style="width:${Math.min(100,mins/Math.max(1,data.dailyGoal)*100)}%"></span></div><p class="muted">${mins} minutes recorded today/session total on this device.</p><h3>Recent sections</h3>${hist.length?hist.map(h=>`<div class="list-item"><div><strong>${esc(titleFor(h.page))}</strong><p>${new Date(h.time).toLocaleString()}</p></div></div>`).join(""):'<p class="muted">Visit a section to start your activity history.</p>'}</div>`;
+}
+function notesPage(){
+ return `<div class="card"><h2>Create a note</h2><label>Title<input class="field" id="noteTitle" placeholder="Give your note a title"></label><label>Subject<select id="noteSubject" class="field">${SUBJECTS.map(s=>`<option>${esc(s[0])}</option>`).join("")}</select></label><label>Content<textarea class="field" id="noteBody" placeholder="Write your notes here..." rows="6"></textarea></label><button class="btn primary" data-action="addNote">Save note</button></div>
+ <div class="section-head"><h2>Your notes (${data.notes.length})</h2></div><div class="grid two">${data.notes.map((n,i)=>`<article class="card"><span class="tag">${esc(n.subject||"General")}</span><h3>${esc(n.title)}</h3><p style="white-space:pre-wrap">${esc(n.body)}</p><p class="small muted">${esc(n.date||"")}</p><button class="btn danger" data-delete-note="${i}">Delete</button></article>`).join("")||'<div class="empty">Your saved notes will appear here.</div>'}</div>`;
+}
+function doubtsPage(){
+ return `<div class="card"><h2>Doubt Room</h2><p>Write a question and use these steps to work through it. This page does not send questions to a live tutor.</p><label>Your question<textarea id="doubtQuestion" class="field" placeholder="What are you stuck on?"></textarea></label><label>What have you tried?<textarea id="doubtAttempt" class="field" placeholder="Write what you already understand"></textarea></label><button class="btn primary" data-action="solveDoubt">Build a study checklist</button><div id="doubtOutput"></div></div>`;
+}
+function aiPage(){
+ return `<div class="hero"><span class="eyebrow">AI STUDY HUB</span><h2>Your study tools, together.</h2><p>Open an AI service when you want help explaining a concept. External services may have their own age rules, accounts and privacy policies.</p></div><div class="grid two">
+ ${card("✦","ChatGPT","Ask for an explanation or study plan.","external:chatgpt")}
+ ${card("✧","Google Gemini","Explore another AI study assistant.","external:gemini")}
+ ${card("📘","Course library","Review VEXO's built-in course catalogue.","courses")}
+ ${card("🧠","Practice quiz","Check what you remember.","quiz")}</div>
+ <div class="notice">VEXO does not contain a private, built-in AI model. External AI links are optional, and you should not share passwords, private information or school records with third-party services.</div>`;
+}
+function certificatesPage(){
+ const eligible=data.completed.length>=3;
+ return `<div class="card"><div class="icon">🏅</div><h2>Learning milestones</h2><p>Finish lessons and build consistent study habits.</p><div class="progress"><span style="width:${Math.min(100,data.completed.length/3*100)}%"></span></div><p>${data.completed.length}/3 lessons marked complete for the demo milestone.</p>${eligible?'<div class="notice"><h3>VEXO Practice Milestone</h3><p>This is an informal, locally generated achievement—not an accredited certificate.</p><button class="btn primary" data-action="printCertificate">Print milestone</button></div>':'<p class="muted">Complete three lessons to unlock the demo milestone.</p>'}</div>`;
+}
+function notificationsPage(){
+ return `<div class="card"><div class="row"><h2>Notifications</h2><button class="btn" data-action="clearNotifications">Clear all</button></div>${data.notifications.map(n=>`<div class="list-item"><span>🔔</span><div>${esc(n)}</div></div>`).join("")||'<div class="empty">You are all caught up.</div>'}</div>`;
+}
+function guardianPage(){
+ const mins=Math.floor(data.studySeconds/60);
+ return `<div class="notice"><strong>Privacy note:</strong> This guardian dashboard is a local summary on this device. It is not a separate guardian account, cannot monitor another device, and is not protected by a server login.</div>
+ <div class="grid">${metric("⏱️","Study time",fmtTime(data.studySeconds),"Local tracking")}${metric("📚","Lessons complete",data.completed.length,"Learner progress")}${metric("🧠","Quiz answers",data.answers,"Practice attempts")}${metric("🎯","Daily target",data.dailyGoal+" min","Current learning goal")}</div>
+ <div class="card"><h2>Learning overview</h2><p>Study time is counted while VEXO is open in this browser. Background time, other devices and offline activity may not be captured.</p><p>Encourage a balanced routine with breaks, sleep, exercise and time away from screens.</p><button class="btn" data-go="progress">View detailed activity</button></div>`;
+}
+function accountPage(){
+ return `<div class="notice">Guest progress is stored in this browser. The demo account form does not create a secure online account or synchronise progress between devices.</div>
+ <div class="grid two"><div class="card"><h2>${data.guest?"Guest mode":"Current session"}</h2><p>Current profile: <strong>${esc(data.displayName)}</strong></p><button class="btn" data-action="guest">Continue as guest</button></div>
+ <div class="card"><h2>Demo login / register</h2><label>Display name<input id="accountName" class="field" placeholder="Your name" value="${esc(data.displayName==="Guest"?"":data.displayName)}"></label><label>Email<input id="accountEmail" type="email" class="field" placeholder="name@example.com"></label><label>Password<input id="accountPassword" type="password" class="field" placeholder="Demo only; do not use a real password"></label><button class="btn primary" data-action="demoLogin">Continue (local demo)</button><p class="small muted">Do not enter a real password. This form is not secure authentication.</p></div></div>`;
+}
+function customizePage(){
+ const s=data.settings;
+ const toggle=(key,label)=>`<label><input type="checkbox" data-setting="${key}" ${s[key]?"checked":""}> ${label}</label>`;
+ return `<div class="notice">Personalise the look and feel. Your settings are saved locally in this browser.</div>
+ <div class="grid two">
+ <div class="card"><h3>1. Theme</h3><select class="field" data-setting-select="theme">${optionList([["default","Dark purple"],["light","Light"],["warm","Warm sunset"],["ocean","Ocean blue"],["rose","Rose"],["system","Use default dark"]],s.theme)}</select></div>
+ <div class="card"><h3>2. Main accent colour</h3><input type="color" data-setting-color="accent" value="${esc(s.accent)}"></div>
+ <div class="card"><h3>3. Secondary colour</h3><input type="color" data-setting-color="accent2" value="${esc(s.accent2)}"></div>
+ <div class="card"><h3>4. Font family</h3><select class="field" data-setting-select="font">${optionList([["system","System sans-serif"],["serif","Serif"],["mono","Monospace"]],s.font)}</select></div>
+ <div class="card"><h3>5. Text size</h3><select class="field" data-setting-select="scale">${optionList([["1","Normal"],["1.12","Large"]],String(s.scale))}</select></div>
+ <div class="card"><h3>6. Content spacing</h3><select class="field" data-setting-select="space">${optionList([["normal","Comfortable"],["compact","Compact"]],s.space)}</select></div>
+ <div class="card"><h3>7. Corner style</h3><select class="field" data-setting-select="radius">${optionList([["normal","Standard"],["round","Extra round"],["sharp","Square"]],s.radius)}</select></div>
+ <div class="card"><h3>8. Page layout</h3><select class="field" data-setting-select="layout">${optionList([["normal","Standard"],["wide","Narrow sidebar"],["centered","Centered content"]],s.layout)}</select></div>
+ <div class="card"><h3>9. Sidebar width</h3><input class="field" type="range" min="210" max="310" step="10" value="${s.sidebar}" data-setting-range="sidebar"><p class="small muted">Adjust the desktop sidebar width.</p></div>
+ <div class="card"><h3>10. Gradient hero</h3>${toggle("gradient","Use an alternate gradient")}</div>
+ <div class="card"><h3>11. Reduce motion</h3>${toggle("motion","Allow interface transitions")}</div>
+ <div class="card"><h3>12. Borders</h3>${toggle("borders","Show card borders")}</div>
+ <div class="card"><h3>13. High contrast</h3>${toggle("contrast","Increase muted text contrast")}</div>
+ <div class="card"><h3>14. Quick light mode</h3><button class="btn" data-action="toggleLight">Toggle light / dark</button></div>
+ <div class="card"><h3>15. Density</h3><button class="btn" data-action="toggleDensity">Toggle compact spacing</button></div>
+ <div class="card"><h3>16. Corners</h3><button class="btn" data-action="toggleCorners">Cycle corner style</button></div>
+ <div class="card"><h3>17. Display reset</h3><button class="btn" data-action="resetDisplay">Reset appearance</button></div>
+ <div class="card"><h3>18. Export data</h3><button class="btn" data-action="export">Download a backup</button></div>
+ <div class="card"><h3>19. Import data</h3><input class="field" type="file" id="importFile" accept=".json,application/json"><button class="btn" data-action="import">Import backup</button></div>
+ <div class="card"><h3>20. Interface language</h3><select class="field" id="customLanguage">${LANGUAGES.map(([v,l])=>`<option value="${v}" ${v===data.language?"selected":""}>${esc(l)}</option>`).join("")}</select></div>
+ <div class="card"><h3>21. Keyboard and accessibility</h3><p class="muted">Use Tab to navigate and Enter to activate buttons.</p><button class="btn" data-action="accessibility">Show accessibility tip</button></div>
+ </div>`;
+}
+function settingsPage(){
+ return `<div class="card"><h2>Study preferences</h2><label>Daily study goal (minutes)<input class="field" id="dailyGoal" type="number" min="5" max="600" value="${data.dailyGoal}"></label><button class="btn primary" data-action="saveGoal">Save goal</button><hr><h3>Data management</h3><p>Export a backup before clearing local data. Clearing browser storage can permanently erase your local progress.</p><button class="btn" data-action="export">Export my data</button> <button class="btn danger" data-action="resetData">Reset all VEXO data</button><hr><h3>About</h3><p>VEXO is a browser-based study demo. It does not provide secure accounts, cloud sync, official accreditation or a built-in AI model.</p></div>`;
+}
+function render(){
+ applySettings();
+ const pages={dashboard,notes:notesPage,courses:coursesPage,lessons:lessonsPage,quiz:quizPage,flashcards:flashcardsPage,games:gamesPage,planner:plannerPage,progress:progressPage,doubts:doubtsPage,ai:aiPage,certificates:certificatesPage,notifications:notificationsPage,guardian:guardianPage,customize:customizePage,account:accountPage,settings:settingsPage};
+ shell(currentPage==="dashboard"?"Your learning space, your pace.":"Explore your tools and keep making progress.",(pages[currentPage]||dashboard)());
+ $("#languageSelect").value=data.language;
+}
+function markComplete(id,n){
+ const key=id+":"+n;
+ if(!data.completed.includes(key)){data.completed.push(key);data.notifications.unshift("Lesson completed: "+(COURSES.find(c=>c.id===id)?.title||id)+" — Lesson "+n);save();}
+ toast("Lesson marked complete!");render();
+}
+function startQuiz(){quizQuestions=[...QUESTIONS].sort(()=>Math.random()-.5).slice(0,10);quizIndex=0;gamePoints=0;navigate("quiz");}
+function startGame(id){
+ const g=GAMES.find(x=>x.id===id)||GAMES[0];
+ data.game={id:g.id,title:g.title,subject:g.subject};quizQuestions=[...QUESTIONS].sort(()=>Math.random()-.5).slice(0,5);quizIndex=0;gamePoints=0;navigate("quiz");toast("Game challenge started: "+g.title);
+}
+function downloadData(){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="vexo-backup.json";a.click();URL.revokeObjectURL(url);toast("Backup download started.");
+}
+$("#app").addEventListener("input",e=>{
+ if(e.target.id==="courseSearch"){courseQuery=e.target.value;const pos=e.target.selectionStart;render();const el=$("#courseSearch");el?.focus();el?.setSelectionRange(pos,pos);}
+ if(e.target.id==="gameSearch"){gameQuery=e.target.value;const pos=e.target.selectionStart;render();const el=$("#gameSearch");el?.focus();el?.setSelectionRange(pos,pos);}
+});
+$("#app").addEventListener("change",e=>{
+ if(e.target.id==="courseLevel"){const level=e.target.value;courseQuery=level;render();}
+ const s=e.target.dataset.settingSelect;
+ if(s){let v=e.target.value;if(s==="scale")v=Number(v);setSetting(s,v);}
+ const color=e.target.dataset.settingColor;
+ if(color)setSetting(color,e.target.value);
+ const range=e.target.dataset.settingRange;
+ if(range)setSetting(range,Number(e.target.value));
+ const toggle=e.target.dataset.setting;
+ if(toggle)setSetting(toggle,e.target.checked);
+ if(e.target.id==="customLanguage")setLanguage(e.target.value);
+ if(e.target.dataset.planDone!==undefined){data.plans[+e.target.dataset.planDone].done=e.target.checked;save();render();}
+});
+$("#app").addEventListener("click",e=>{
+ const go=e.target.closest("[data-go]");
+ if(go){navigate(go.dataset.go);return;}
+ const ext=e.target.closest("[data-action]");
+ if(ext){
+  const a=ext.dataset.action;
+  if(a==="restartQuiz"){startQuiz();return;}
+  if(a==="addCard"){
+   const q=$("#fcQ").value.trim(),ans=$("#fcA").value.trim();
+   if(!q||!ans){toast("Enter both a question and answer.");return;}
+   data.flashcards.push({q,a:ans});save();render();return;
   }
-
-
-  filtered.forEach(ai => {
-
-    const card = document.createElement("div");
-
-    card.className = "vexoAICard";
-
-    card.innerHTML = `
-
-      <div style="
-        font-size:35px;
-        margin-bottom:10px;
-      ">
-        ${ai.icon}
-      </div>
-
-      <h3 style="margin:0 0 8px;">
-        ${ai.name}
-      </h3>
-
-      <p style="
-        color:#c9c5df;
-        min-height:45px;
-        font-size:14px;
-      ">
-        ${ai.description}
-      </p>
-
-      <button class="vexoAIButton">
-        Open ${ai.name}
-      </button>
-    `;
-
-
-    card
-      .querySelector("button")
-      .onclick = () => vexoSelectAI(ai);
-
-
-    grid.appendChild(card);
-
-  });
-
-}
-
-
-function vexoSelectAI(ai){
-
-  document.getElementById("vexoSelectedAI").style.display = "block";
-
-  document.getElementById("vexoSelectedTitle").textContent =
-    ai.icon + " " + ai.name;
-
-  const link = document.getElementById("vexoSelectedLink");
-
-  link.href = ai.url;
-  link.textContent = "🚀 Open " + ai.name;
-
-  document.getElementById("vexoSelectedAI")
-    .scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-}
-
-
-function vexoFilterAI(category){
-
-  vexoCurrentCategory = category;
-
-  vexoRenderAI();
-
-}
-
-
-function vexoSearchAI(){
-
-  vexoRenderAI();
-
-}
-
-
-vexoRenderAI();
-
+  if(a==="addPlan"){
+   const task=$("#planTask").value.trim();if(!task){toast("Enter a task first.");return;}
+   data.plans.push({task,date:$("#planDate").value,minutes:Math.max(5,Math.min(600,+$("#planMinutes").value||25)),done:false});save();render();return;
+  }
+  if(a==="addNote"){
+   const title=$("#noteTitle").value.trim(),body=$("#noteBody").value.trim();
+   if(!title||!body){toast("Enter a title and some note content.");return;}
+   data.notes.unshift({title,body,subject:$("#noteSubject").value,date:new Date().toLocaleDateString()});save();render();return;
+  }
+  if(a==="solveDoubt"){
+   const q=$("#doubtQuestion").value.trim(),attempt=$("#doubtAttempt").value.trim();
+   if(!q){toast("Write your question first.");return;}
+   $("#doubtOutput").innerHTML=`<div class="notice"><h3>Your problem-solving checklist</h3><ol><li>Underline the key words in your question.</li><li>Write down what you know.</li><li>Identify the exact step where you get stuck.</li><li>Try one small example.</li><li>Check your result against a textbook or teacher's explanation.</li></ol><p><strong>Your question:</strong> ${esc(q)}</p><p><strong>What you tried:</strong> ${esc(attempt||"Not entered yet")}</p></div>`;return;
+  }
+  if(a==="guest"){data.guest=true;data.displayName="Guest";data.account=null;save();render();toast("Guest mode enabled.");return;}
+  if(a==="demoLogin"){
+   const name=$("#accountName").value.trim()||"Learner";
+   if(!$("#accountEmail").value.trim()||!$("#accountPassword").value){toast("Enter a display name, email and demo password.");return;}
+   data.displayName=name;data.account={displayName:name,localDemo:true};data.guest=false;save();render();toast("Local demo profile created. No secure account was created.");return;
+  }
+  if(a==="saveGoal"){data.dailyGoal=Math.max(5,Math.min(600,+$("#dailyGoal").value||30));save();render();toast("Daily goal saved.");return;}
+  if(a==="toggleLight"){setSetting("theme",data.settings.theme==="light"?"default":"light");return;}
+  if(a==="toggleDensity"){setSetting("space",data.settings.space==="compact"?"normal":"compact");return;}
+  if(a==="toggleCorners"){setSetting("radius",data.settings.radius==="normal"?"round":data.settings.radius==="round"?"sharp":"normal");return;}
+  if(a==="resetDisplay"){data.settings={...DEFAULT.settings};save();applySettings();render();return;}
+  if(a==="export"){downloadData();return;}
+  if(a==="import"){const f=$("#importFile").files[0];if(!f){toast("Choose a JSON backup file first.");return;}const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!x||typeof x!=="object")throw Error();data={...DEFAULT,...x,settings:{...DEFAULT.settings,...x.settings}};save();render();toast("Backup imported.");}catch(e){toast("That backup file could not be read.");}};reader.readAsText(f);return;}
+  if(a==="accessibility"){toast("Tip: use Tab to move through controls and Enter to activate them.");return;}
+  if(a==="clearNotifications"){data.notifications=[];save();render();return;}
+  if(a==="printCertificate"){window.print();return;}
+  if(a==="resetData"){if(confirm("Delete all VEXO data saved in this browser? This cannot be undone.")){localStorage.removeItem("vexoData");data={...DEFAULT,settings:{...DEFAULT.settings}};render();}return;}
+ }
+ const c=e.target.closest("[data-course]");
+ if(c){const course=COURSES.find(x=>x.id===c.dataset.course);data.lesson={course:course.id,n:1};save();navigate("lessons");return;}
+ const l=e.target.closest("[data-complete]");
+ if(l){const [id,n]=l.dataset.complete.split(":");markComplete(id,+n);return;}
+ const nx=e.target.closest("[data-next]");
+ if(nx){const [id,n]=nx.dataset.next.split(":");const c=COURSES.find(x=>x.id===id);data.lesson={course:id,n:+n<c.lessons?+n+1:1};save();render();return;}
+ const g=e.target.closest("[data-game]");
+ if(g){startGame(g.dataset.game);return;}
+ const ans=e.target.closest("[data-answer]");
+ if(ans){
+  const q=quizQuestions[quizIndex],correct=+ans.dataset.answer===q.a;
+  data.answers++;if(correct){gamePoints++;data.correct++;}
+  data.quizTotal++;if(correct)data.quizScore++;
+  save();
+  $("#app").innerHTML=`<div class="card"><div class="icon">${correct?"✅":"📘"}</div><h2>${correct?"Correct!":"Not quite."}</h2><p>${esc(q.why)}</p><p>Score: ${gamePoints}/${quizIndex+1}</p><button class="btn primary" id="nextQuestion">${quizIndex===quizQuestions.length-1?"See results":"Next question →"}</button></div>`;
+  $("#nextQuestion").onclick=()=>{quizIndex++;render();};return;
+ }
+ const delN=e.target.closest("[data-delete-note]");
+ if(delN){data.notes.splice(+delN.dataset.deleteNote,1);save();render();return;}
+ const delC=e.target.closest("[data-delete-card]");
+ if(delC){data.flashcards.splice(+delC.dataset.deleteCard,1);save();render();return;}
+ const delP=e.target.closest("[data-delete-plan]");
+ if(delP){data.plans.splice(+delP.dataset.deletePlan,1);save();render();return;}
+});
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-external]");
+ if(b)window.open(b.dataset.external,"_blank","noopener,noreferrer");
+});
+$("#app").addEventListener("click",e=>{
+ const b=e.target.closest("[data-go]");
+ if(b&&b.dataset.go==="external:chatgpt"){window.open("https://chatgpt.com/","_blank","noopener,noreferrer");}
+ if(b&&b.dataset.go==="external:gemini"){window.open("https://gemini.google.com/","_blank","noopener,noreferrer");}
+});
+let lastTick=Date.now();
+setInterval(()=>{
+ const now=Date.now(),elapsed=Math.max(0,Math.min(10,Math.floor((now-lastTick)/1000)));
+ lastTick=now;
+ if(!document.hidden&&elapsed>0){data.studySeconds+=elapsed;save();}
+},5000);
+render();
 </script>
-
-<!-- ============== END VEXO AI
-  
-<!-- VEXO LEARNING MODULE START -->
-<style>
-#vexo-learning{font-family:Arial,sans-serif;color:var(--text-color,#eee);margin:24px 0;padding:18px;border-radius:18px;background:linear-gradient(135deg,#17152d,#102c38);border:1px solid #514b83}
-#vexo-learning *{box-sizing:border-box}
-#vexo-learning h2,#vexo-learning h3{margin-top:8px}
-#vexo-learning .vx-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
-#vexo-learning button,#vexo-learning input,#vexo-learning textarea{font:inherit;border-radius:9px;padding:10px;border:1px solid #625c8c}
-#vexo-learning button{background:#7255df;color:white;cursor:pointer}
-#vexo-learning input,#vexo-learning textarea{background:#202039;color:white;width:100%;margin:6px 0}
-#vexo-learning .vx-card{background:#24223f;padding:14px;border-radius:12px;margin:10px 0}
-#vexo-learning .vx-muted{opacity:.8;font-size:14px}
-#vexo-learning .vx-answer{display:block;width:100%;text-align:left;margin:7px 0}
-#vexo-learning .vx-good{color:#7ff0b0}
-#vexo-learning .vx-bad{color:#ffaaa8}
-</style>
-
-<section id="vexo-learning">
-  <h2>🚀 VEXO Learning Centre</h2>
-  <p class="vx-muted">Learn • Practise • Track your progress</p>
-
-  <div class="vx-tabs">
-    <button onclick="vxShow('notes')">My Notes</button>
-    <button onclick="vxShow('courses')">Courses</button>
-    <button onclick="vxShow('quiz')">Quiz</button>
-    <button onclick="vxShow('cards')">Flashcards</button>
-    <button onclick="vxShow('planner')">Study Planner</button>
-  </div>
-
-  <div id="vx-content"></div>
-</section>
-
-<script>
-
-<!-- VEXO EXTRA SECTIONS -->
-<style>
-#vexo-extra{font-family:Arial,sans-serif;background:#17152b;color:#f7f5ff;padding:18px;border-radius:18px;margin:20px 0}
-#vexo-extra *{box-sizing:border-box}
-#vexo-extra button,#vexo-extra select,#vexo-extra input{padding:10px;border-radius:9px;border:1px solid #62558c;margin:4px}
-#vexo-extra button{background:#7455e8;color:white;cursor:pointer}
-#vexo-extra input,#vexo-extra select{background:#24213d;color:white;max-width:100%}
-#vexo-extra .ve-nav{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
-#vexo-extra .ve-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-#vexo-extra .ve-card{background:#272441;border:1px solid #484268;border-radius:13px;padding:14px}
-#vexo-extra .ve-muted{opacity:.8;font-size:14px}
-#vexo-extra h2{margin-top:6px}
-#vexo-extra .ve-gamearea{background:#211e39;padding:15px;border-radius:12px;margin-top:12px}
-</style>
-
-<section id="vexo-extra">
-  <h2>🎓 VEXO — Learn, Play & Customize</h2>
-  <p>Free educational games, online learning courses and study tools for students.</p>
-
-  <nav class="ve-nav" aria-label="VEXO sections">
-    <button onclick="vePage('courses')">📚 Courses</button>
-    <button onclick="vePage('games')">🎮 100+ Games</button>
-    <button onclick="vePage('custom')">🎨 Customization</button>
-  </nav>
-
-  <div id="ve-content"></div>
-</section>
-
-<script>
-(function(){
- const $=id=>document.getElementById(id);
- const host=$('vexo-extra');
- if(!host||host.dataset.ready)return;
- host.dataset.ready='1';
-
- const read=(k,d)=>{try{return JSON.parse(localStorage.getItem('vexo_extra_'+k))??d}catch{return d}};
- const save=(k,v)=>localStorage.setItem('vexo_extra_'+k,JSON.stringify(v));
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
- const courses=[
- ['Class 1–5 Learning','Maths, English, science and general knowledge.'],
- ['Class 6 Mathematics','Fractions, integers, algebra and geometry.'],
- ['Class 6 Science','Living things, materials and the environment.'],
- ['Class 7 Mathematics','Rational numbers, equations and shapes.'],
- ['Class 7 Science','Nutrition, heat, motion and ecosystems.'],
- ['Class 8 Mathematics','Linear equations, squares and data handling.'],
- ['Class 8 Science','Force, sound, cells and chemical effects.'],
- ['Class 9 Mathematics','Number systems, polynomials and geometry.'],
- ['Class 9 Science','Matter, atoms, motion and biology.'],
- ['Class 10 Mathematics','Real numbers, algebra, trigonometry and statistics.'],
- ['Class 10 Science','Life processes, light, electricity and chemistry.'],
- ['English Grammar','Parts of speech, tenses and vocabulary.'],
- ['Computer Basics','Hardware, software, internet and digital safety.'],
- ['Coding for Beginners','Algorithms, HTML, CSS and JavaScript.'],
- ['General Knowledge','Geography, history, science and civics.'],
- ['Reasoning Practice','Patterns, logic, sequences and puzzles.']
- ];
-
- const groups={
- 'Maths':['Number Ninja','Fraction Quest','Times Table Challenge','Decimal Dash','Algebra Arena','Geometry Explorer','Shape Sorter','Math Memory','Equation Escape','Prime Number Hunt'],
- 'Science':['Space Explorer','Solar System Quiz','Human Body Challenge','Animal Kingdom','Plant Power','Science Lab Quiz','Energy Quest','Weather Detective','Eco Hero','Periodic Table Challenge'],
- 'English':['Word Wizard','Spelling Sprint','Grammar Galaxy','Synonym Search','Antonym Attack','Sentence Builder','Vocabulary Voyage','Punctuation Patrol','Reading Detective','Parts of Speech Quest'],
- 'Geography':['World Capitals','Country Finder','Flag Challenge','Map Explorer','River Race','Mountain Master','Ocean Explorer','Continent Quest','Indian States Quiz','Landmark Hunt'],
- 'History & Civics':['History Timeline','Ancient Civilizations','Freedom Fighters Quiz','Indian History Quest','Constitution Challenge','World History Quiz','Monument Mystery','Leaders and Legends','Democracy Challenge','Culture Explorer'],
- 'Logic':['Pattern Detective','Number Sequence','Logic Master','Odd One Out','Riddle Room','Code Breaker','Visual Patterns','Brain Teasers','Strategy Challenge','Critical Thinking'],
- 'Memory':['Picture Memory','Number Memory','Word Recall','Sequence Recall','Color Memory','Match the Pairs','Memory Grid','Symbol Recall','Quick Recall','Concentration Challenge'],
- 'Computers':['Keyboard Master','Computer Parts Quiz','Internet Safety Quest','Coding Logic','HTML Challenge','CSS Selector Quiz','JavaScript Basics','Cyber Safety','Digital Skills','Algorithm Adventure'],
- 'General Knowledge':['Daily GK Challenge','Inventions Quiz','Amazing Facts Quiz','World Records Quiz','Famous Scientists','Sports Knowledge','Book and Author Quiz','National Symbols','Discover India','Mixed GK Challenge'],
- 'Environment':['Recycle Right','Wildlife Protector','Climate Challenge','Save Water Quest','Forest Explorer','Clean Earth Game','Renewable Energy Quiz','Food Chain Challenge','Pollution Detective','Biodiversity Quest'],
- 'Exam Practice':['Speed Maths','Reasoning Sprint','Science Revision','English Revision','GK Sprint','Mixed Practice','Exam Time Challenge','Accuracy Challenge','Quick Recall Test','Final Revision']
- };
-
- const games=[];
- Object.entries(groups).forEach(([category,names])=>
-   names.forEach(name=>games.push({name,category}))
- );
- // Add another 10 categories x 10 titles = 100 more game cards.
- const extraGroups={
- 'Maths Plus':['Addition Race','Subtraction Sprint','Multiplication Master','Division Dash','Percentage Puzzle','Ratio Rumble','Measurement Quest','Fraction Match','Coordinate Quest','Mental Maths'],
- 'Science Plus':['Force and Motion','Magnets Mystery','Light and Shadow','Sound Detective','States of Matter','Chemical Change','Cell Explorer','Food Web Builder','Human Organ Quiz','Earth Science'],
- 'English Plus':['Crossword Vocabulary','Word Scramble','Missing Letter','Plural Power','Tense Trainer','Pronoun Practice','Verb Challenge','Adjective Hunt','Preposition Puzzle','Comprehension Quest'],
- 'Geography Plus':['Climate Zones','Time Zones Quiz','Natural Resources','Indian Rivers','World Wonders','Border and Country','Map Symbols','Desert Challenge','Forest Regions','Earth Layers'],
- 'History Plus':['Indus Valley Quiz','Medieval India','Modern India','Historical Dates','World Leaders','Ancient Inventions','Art and Culture','Historical Places','Civics Basics','Rights and Duties'],
- 'Logic Plus':['Sudoku Starter','Shape Sequence','Logical Deduction','Direction Sense','Analogy Challenge','Coding-Decoding','Calendar Puzzles','Clock Challenge','Missing Number','Brain Workout'],
- 'Memory Plus':['Emoji Recall','Letter Sequence','Number Pairs','Pattern Memory','Quick Image Recall','Order the Objects','Remember the Words','Sequence Builder','Spot the Change','Recall Race'],
- 'Computers Plus':['Binary Basics','Input Output Quiz','File Types Quiz','Web Basics','HTML Tags Game','CSS Colors Game','Programming Terms','Data Safety','Keyboard Shortcuts','Tech Vocabulary'],
- 'GK Plus':['Space Facts','Animals and Habitats','Famous Places','Science Discoveries','Indian Geography GK','World Organisations','Languages of India','Food Around the World','Famous Personalities','Mixed Knowledge'],
- 'Environment Plus':['Water Cycle','Plant Identification','Animal Habitats','Waste Sorting','Energy Saver','Ocean Protection','Air Quality Quiz','Nature Detective','Sustainable Living','Green Choices']
- };
- Object.entries(extraGroups).forEach(([category,names])=>
-   names.forEach(name=>games.push({name,category}))
- );
-
- const questionBank=[
- {cat:'Maths',q:'What is 8 × 7?',a:['54','56','64','48'],c:1,why:'8 multiplied by 7 equals 56.'},
- {cat:'Science',q:'Which planet is known as the Red Planet?',a:['Venus','Mars','Jupiter','Mercury'],c:1,why:'Iron-rich dust gives Mars its reddish appearance.'},
- {cat:'English',q:'Which word is a noun?',a:['Quickly','Garden','Beautiful','Run'],c:1,why:'Garden names a place.'},
- {cat:'Geography',q:'Which is the largest ocean?',a:['Atlantic','Indian','Pacific','Arctic'],c:2,why:'The Pacific Ocean is the largest.'},
- {cat:'History & Civics',q:'How many houses does the Indian Parliament have?',a:['One','Two','Three','Four'],c:1,why:'India has the Lok Sabha and Rajya Sabha.'},
- {cat:'Logic',q:'What comes next: 2, 4, 6, 8, ...?',a:['9','10','11','12'],c:1,why:'The sequence increases by 2.'},
- {cat:'Memory',q:'Which pair contains the same number?',a:['3 and 8','5 and 5','2 and 7','1 and 9'],c:1,why:'Both numbers in the pair are 5.'},
- {cat:'Computers',q:'What does CPU commonly stand for?',a:['Central Processing Unit','Computer Personal Utility','Control Power User','Central Program Upload'],c:0,why:'CPU stands for Central Processing Unit.'},
- {cat:'General Knowledge',q:'How many days are in a leap year?',a:['364','365','366','367'],c:2,why:'A leap year has 366 days.'},
- {cat:'Environment',q:'Which energy source is renewable?',a:['Coal','Sunlight','Petrol','Diesel'],c:1,why:'Sunlight is naturally replenished.'}
- ];
-
- window.vePage=function(page){
- const out=$('ve-content');
- if(page==='courses'){
-  out.innerHTML='<h2>📚 Courses</h2><p>Choose a subject to start learning.</p><div class="ve-grid">'+courses.map((c,i)=>
-  `<article class="ve-card"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><button onclick="veCourse(${i})">Explore course</button></article>`).join('')+'</div><div id="ve-course-detail"></div>';
- }
- if(page==='games'){
-  out.innerHTML=`<h2>🎮 Educational Games</h2>
-  <p>Explore more than 100 learning game ideas and quiz activities.</p>
-  <input id="ve-search" placeholder="Search free educational games..." style="width:100%">
-  <select id="ve-category" style="width:100%"><option value="">All categories</option>${Object.keys({...groups,...extraGroups}).map(c=>`<option>${esc(c)}</option>`).join('')}</select>
-  <p id="ve-count"></p><div id="ve-game-list" class="ve-grid"></div><div id="ve-play-area"></div>`;
-  const draw=()=>{
-   const q=$('ve-search').value.toLowerCase(),cat=$('ve-category').value;
-   const list=games.filter(g=>g.name.toLowerCase().includes(q)&&(!cat||g.category===cat));
-   $('ve-count').textContent=`${list.length} games found`;
-   $('ve-game-list').innerHTML=list.map(g=>`<article class="ve-card"><h3>🎯 ${esc(g.name)}</h3><p class="ve-muted">${esc(g.category)}</p><button onclick="vePlay('${esc(g.name).replace(/'/g,'&#39;')}','${esc(g.category)}')">Play quiz</button></article>`).join('');
-  };
-  $('ve-search').oninput=draw;$('ve-category').onchange=draw;draw();
- }
- if(page==='custom'){
-  const cfg=read('theme',{bg:'#17152b',accent:'#7455e8',size:'16'});
-  out.innerHTML=`<h2>🎨 App Customization</h2><p>Personalize this VEXO section.</p>
-  <div class="ve-card"><label>Background colour</label><input id="ve-bg" type="color" value="${cfg.bg}">
-  <label>Accent colour</label><input id="ve-accent" type="color" value="${cfg.accent}">
-  <label>Font size</label><select id="ve-size"><option value="14">Small</option><option value="16">Normal</option><option value="19">Large</option><option value="22">Extra large</option></select>
-  <button id="ve-save-theme">Save customization</button> <button id="ve-reset-theme">Reset</button>
-  <p class="ve-muted">Settings are saved in this browser. They do not yet change the entire existing VEXO sidebar or every page.</p></div>`;
-  $('ve-size').value=cfg.size;
-  $('ve-save-theme').onclick=()=>{
-   const v={bg:$('ve-bg').value,accent:$('ve-accent').value,size:$('ve-size').value};
-   save('theme',v);applyTheme(v);alert('Customization saved on this device.');
-  };
-  $('ve-reset-theme').onclick=()=>{localStorage.removeItem('vexo_extra_theme');vePage('custom');applyTheme({bg:'#17152b',accent:'#7455e8',size:'16'});};
- }
- };
- window.veCourse=function(i){
- const c=courses[i];
- $('ve-course-detail').innerHTML=`<article class="ve-card"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><p>Course outline</p><ul><li>Lesson 1: Introduction and key concepts</li><li>Lesson 2: Examples and guided practice</li><li>Lesson 3: Revision and practice questions</li></ul><p class="ve-muted">This is a course outline starter. Full lesson content needs to be added for each course.</p></article>`;
- };
- window.vePlay=function(name,category){
- const match=questionBank.filter(q=>q.cat===category);
- const q=(match.length?match:questionBank)[Math.floor(Math.random()*(match.length||questionBank.length))];
- const opts=q.a.map((a,i)=>({a,i})).sort(()=>Math.random()-.5);
- const area=$('ve-play-area');
- area.innerHTML=`<div class="ve-gamearea"><h3>${esc(name)}</h3><p>${esc(q.q)}</p>${opts.map(o=>`<button onclick="veAnswer(this,${o.i===q.c},'${esc(q.why)}')">${esc(o.a)}</button>`).join('')}<p id="ve-feedback"></p><p class="ve-muted">Demo quiz engine: each game card currently uses shared sample questions, not a unique game-specific question bank.</p></div>`;
- };
- window.veAnswer=function(btn,correct,why){
- const area=$('ve-feedback');if(area.dataset.done)return;area.dataset.done='1';
- area.textContent=(correct?'Correct! ':'Try again. ')+why;
- };
- function applyTheme(c){
- host.style.background=c.bg;host.style.fontSize=c.size+'px';
- host.querySelectorAll('button').forEach(b=>b.style.background=c.accent);
- }
- applyTheme(read('theme',{bg:'#17152b',accent:'#7455e8',size:'16'}));
- vePage('courses');
-})();
-</script>
-<!-- VEXO EXTRA SECTIONS END -->
-
 </body>
 </html>
