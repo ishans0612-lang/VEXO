@@ -249,7 +249,7 @@ function optionList(arr,val){return arr.map(([v,l])=>`<option value="${esc(v)}" 
 $("#languageSelect").innerHTML=LANGUAGES.map(([v,l])=>`<option value="${v}">${esc(l)}</option>`).join("");
 $("#languageSelect").value=data.language;
 $("#languageSelect").addEventListener("change",e=>setLanguage(e.target.value));
-$("#navigation").addEventListener("click",e=>{
+$("#sidebar").addEventListener("click",e=>{
  const b=e.target.closest("[data-page]");if(b)navigate(b.dataset.page);
 });
 $("#menuButton").onclick=()=>$("#sidebar").classList.toggle("open");
