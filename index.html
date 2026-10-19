@@ -223,7 +223,10 @@ notifications:["Welcome to VEXO! Your learning journey starts here."],dailyGoal:
 let data;
 try{data={...DEFAULT,...JSON.parse(localStorage.getItem("vexoData")||"{}")};data.settings={...DEFAULT.settings,...data.settings};}
 catch(e){data={...DEFAULT};}
+
 let currentPage="dashboard",courseFilter="",courseQuery="",gameQuery="",quizIndex=0,quizQuestions=[],gamePoints=0;
+let courseBoardFilter="",courseClassFilter="",courseLevelFilter="";
+
 function save(){
  try{localStorage.setItem("vexoData",JSON.stringify(data));}
  catch(e){toast("Storage is full. Please export your data and remove some old content.");}
